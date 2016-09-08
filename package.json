@@ -1,7 +1,7 @@
 {
   "name": "flippy",
-  "version": "0.0.0-semantically-released",
   "description": "A leafy library for books, comics and magazines",
+  "version": "0.0.0-semantically-released",  
   "main": "index.js",
   "scripts": {
     "build": "webpack",
