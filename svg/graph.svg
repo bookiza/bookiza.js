@@ -1,0 +1,43 @@
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1" width="400" height="400" id="svg2180">
+    <style>
+    .s0 {
+        stroke: #a9a9a9;
+    }
+    
+    .s1 {
+        stroke: #366;
+    }
+    
+    .s2 {
+        fill: none;
+        stroke: #366;
+    }
+    </style>
+    <defs id="defs2182" />
+    <g id="layer1">
+        <g id="g8191" stroke="#a9a9a9">
+            <path d="M20 0L20 400" id="path1872" style="fill:none;stroke:#a9a9a9" />
+            <use transform="translate(20,0)" id="use8185" x="0" y="0" width="400" height="400" xlink:href="#path1872" stroke="#a9a9a9" />
+            <use transform="translate(40,0)" id="use8187" x="0" y="0" width="400" height="400" xlink:href="#path1872" stroke="#a9a9a9" />
+            <use transform="translate(60,0)" id="use8189" x="0" y="0" width="400" height="400" xlink:href="#path1872" stroke="#a9a9a9" />
+        </g>
+        <use transform="translate(100,0)" id="use8197" x="0" y="0" width="400" height="400" xlink:href="#g8191" />
+        <use transform="translate(200,0)" id="use8199" x="0" y="0" width="400" height="400" xlink:href="#g8191" />
+        <use transform="translate(300,0)" id="use8201" x="0" y="0" width="400" height="400" xlink:href="#g8191" />
+        <use transform="matrix(0,1,-1,0,400,0)" id="use8203" x="0" y="0" width="400" height="400" xlink:href="#g8191" />
+        <use transform="translate(0,100)" id="use8205" x="0" y="0" width="400" height="400" xlink:href="#use8203" />
+        <use transform="translate(0,200)" id="use8207" x="0" y="0" width="400" height="400" xlink:href="#use8203" />
+        <use transform="translate(0,300)" id="use8209" x="0" y="0" width="400" height="400" xlink:href="#use8203" />
+    </g>
+    <g id="layer2">
+        <g id="g8225" stroke="#366">
+            <path d="M100 0L100 400" id="path8215" class="s2" />
+            <use transform="translate(100,0)" id="use8217" x="0" y="0" width="400" height="400" xlink:href="#path8215" stroke="#366" />
+            <use transform="translate(200,0)" id="use8219" x="0" y="0" width="400" height="400" xlink:href="#path8215" stroke="#366" />
+        </g>
+        <use transform="matrix(0,1,-1,0,400,0)" id="use8232" x="0" y="0" width="400" height="400" xlink:href="#g8225" />
+    </g>
+    <g id="layer3">
+        <rect width="399" height="399" x="0.5" y="0.5" id="rect10078" class="s2" />
+    </g>
+</svg>
