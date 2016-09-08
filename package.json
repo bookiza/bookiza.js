@@ -7,21 +7,21 @@
     "build": "webpack",
     "start": "webpack-dev-server ./lib/script.js --content-base html/",
     "test": "mocha ./tests/start.tests.js -w",
-    "test:single": " mocha ./tests/start.tests.js",
+    "test:once": " mocha ./tests/start.tests.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commit": "git cz"
   },
   "keywords": [],
   "repository": {
     "type": "git",
-    "url": "https://github.com/marvindanig/superbook.git"
+    "url": "https://github.com/marvindanig/flippy.JS.git"
   },
   "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
   "license": "UNLICENSED",
   "bugs": {
-    "url": "https://github.com/marvindanig/superbook/issues"
+    "url": "https://github.com/marvindanig/flippy.JS/issues"
   },
-  "homepage": "https://github.com/marvindanig/superbook/blob/master/README.markdown",
+  "homepage": "https://github.com/marvindanig/flippy.JS/blob/master/README.markdown",
   "devDependencies": {
     "autoprefixer": "6.4.1",
     "babel-core": "6.14.0",
@@ -50,7 +50,7 @@
       "path": "cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run test:single"
+      "pre-commit": "npm run test:once"
     }
   }
 }

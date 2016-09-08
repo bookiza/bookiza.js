@@ -1,0 +1,24 @@
+sudo: false
+language: node_js
+cache:
+  directories:
+    - node_modules
+notifications:
+  email: false
+node_js:
+  - '6'
+  - '6.1'
+  - '6.2'
+  - '6.3'
+   
+before_install:
+  - "npm i -g npm@latest"  
+before_script:
+  - npm prune
+script:
+  - npm run test:once
+after_success:
+  - travis_wait 30 npm run semantic-release
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$
