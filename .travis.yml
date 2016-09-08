@@ -18,7 +18,7 @@ before_script:
 script:
   - npm run test:once
 after_success:
-  - travis_wait 30 npm run semantic-release
+  - npm run semantic-release
 branches:
   except:
     - /^v\d+\.\d+\.\d+$

@@ -1,0 +1,45 @@
+.turn {
+  -moz-transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -moz-transition: all 3s;
+  -o-transition: all 3s;
+  -webkit-transition: all 3s;
+  transition: all 3s;
+}
+
+.forward {
+  animation-name: forward;
+  animation-iteration-count: once;
+  animation-timing-function: ease, step-start, cubic-bezier(0.1, 0.7, 1.0, 0.1);
+  animation-delay: 0;
+  animation-duration: 6s;  
+  transform-origin: 0 50% 0;
+}
+
+@keyframes forward { 
+    from {
+        transform: rotateY(0deg); 
+    }
+    to {
+        transform: rotateY(180deg); 
+    }
+}
+
+.backward {
+  animation-name: backward;
+  animation-iteration-count: once;
+  animation-timing-function: ease;
+  animation-delay: 0;
+  animation-duration: 6s;  
+  transform-origin: 100% 50% 0;
+}
+
+@keyframes backward { 
+    from {
+        transform: rotateY(0deg); 
+    }
+    to {
+        transform: rotateY(-180deg); 
+    }
+}
