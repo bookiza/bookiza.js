@@ -1,12 +1,56 @@
 {
   "name": "flippy",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0-semantically-released",
+  "description": "A leafy library for books, comics and magazines",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack",
+    "start": "webpack-dev-server ./lib/script.js --content-base html/",
+    "test": "mocha ./tests/start.tests.js -w",
+    "test:single": " mocha ./tests/start.tests.js",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "commit": "git cz"
   },
   "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marvindanig/superbook.git"
+  },
   "author": "Marvin Danig <marvin@bubbl.in> (https://bubbl.in/marvin)",
-  "license": "MIT"
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/marvindanig/superbook/issues"
+  },
+  "homepage": "https://github.com/marvindanig/superbook/blob/master/README.markdown",
+  "devDependencies": {
+    "autoprefixer": "6.4.1",
+    "babel-core": "6.14.0",
+    "babel-loader": "6.2.5",
+    "babel-preset-es2015": "6.14.0",
+    "chai": "3.5.0",
+    "cracks": "3.1.2",
+    "css-loader": "0.24.0",
+    "cz-conventional-changelog": "1.2.0",
+    "file-loader": "0.9.0",
+    "ghooks": "1.3.2",
+    "mocha": "3.0.2",
+    "postcss-loader": "0.11.1",
+    "precss": "1.4.0",
+    "semantic-release": "^4.3.5",
+    "style-loader": "0.13.1",
+    "url-loader": "0.5.7",
+    "webpack": "1.13.2",
+    "webpack-dev-server": "1.15.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "6.13.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    },
+    "ghooks": {
+      "pre-commit": "npm run test:single"
+    }
+  }
 }
