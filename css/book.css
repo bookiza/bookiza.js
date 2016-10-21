@@ -86,6 +86,10 @@ html, body {
         backface-visibility: hidden;
         width: 100%;
     }
+    body .page iframe{
+        backface-visibility: hidden;
+        width: 100%;
+    }    
     body .flipped {
         transform: rotateY( 0deg );
     }
@@ -99,6 +103,10 @@ html, body {
         max-height: calc(50vw * 1443/1114);
     }
     body .page {
+        backface-visibility: visible;
+        width: 50%;
+    }
+    body .page iframe{
         backface-visibility: visible;
         width: 50%;
     }
@@ -222,6 +230,7 @@ html, body {
     min-width: 100%;
     min-height: 100%;
     margin: 0;
+    overflow: hidden;
 }
 
 

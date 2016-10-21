@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='//fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'> 
+
+<title> Bubblin's Official Guide </title>
+
+  
+  <style>
+    body {
+  font: 3.1vw/1.35 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  margin: 0 0;
+  overflow: hidden;
+  color: #454545;
+}
+
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 1vw 0 2vw;
+  padding: 0;
+  color: #444;
+  width: 100%;
+  text-align: center;
+}
+
+p {
+  margin: 3vw 0;
+}
+
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+
+a {
+  color: #0077ff;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility;
+}
+
+
+a:focus,
+a:active,
+a:hover {
+  outline: 0 none;
+  color: #0a4;
+}
+
+a:active {
+  text-shadow: 0 0 1px #050;
+}
+
+strong {
+  font-weight: bold;
+}
+
+/* Page specific */
+
+.leaf {
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto;
+}
+
+.inner {
+  margin: 10% auto;
+  width: 100%;
+}
+
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.justify {
+  text-align: justify;
+}
+
+/* Your custom styles below */
+
+
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 'Roboto', sans-serif;
+  width: 70vw;
+  background: #fff;
+  border: 1px solid #fa0;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+}
+
+.code {
+  background: #fff;
+  border: 1px solid #fa0;
+  padding: 0 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 'Roboto', sans-serif;
+}
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;  
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
+}
+
+.center { text-align: center; }
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.center {
+  text-align: center;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
+  margin: 0;
+  padding: 1vw 5vw;
+}
+
+.small {
+  font-size: 80%;
+}
+
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
+}
+
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
+}
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
+}
+
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+    
+  </style>
+</head>
+<body>
+  <div class="leaf ">
+  <div class="inner justify ">
+    <h1> Code playground </h1>
+    <p> Let's step back a little and take a look at the <em>in-browser</em> book editor — i.e. the Code Playground — on Bubblin. </p>
+    <p> Below is a screenshot: </p> <img src="https://raw.githubusercontent.com/bubblin/Official-Handbook/master/assets/images/bubblin-editor-browser-frame.jpg" width="100%" />
+    <p> In the editing mode only one of the pages of the book is <em> highlighted</em> outlined in green color (see above). The highlighted page is in <strong>ActiveMode</strong> and is available for live editing through the code playground. </p>
+  </div>
+</div>
+  <script></script>
+</body>
+</html>

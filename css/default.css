@@ -12,7 +12,7 @@
 
 html, body {
     margin: 0;
-    width: 100vw;
+    width: 100%;
     height: auto;
     pointer-events: none;
     display: flex;
@@ -34,6 +34,12 @@ html, body {
         width: calc(100vw * 900/1000);
         height: calc((100vw * 900/1000)*1443/1115);
     }
+
+    body .page iframe{
+        width: calc(100vw * 900/1000);
+        height: calc((100vw * 900/1000)*1443/1115);
+    }
+
 }
 
 @media (min-width: 871px) {
@@ -41,6 +47,12 @@ html, body {
         width: calc(100vh * 1);
         height: calc(100vh * 1443 / 1115);
     }
+
+    body .page iframe{
+        width: calc(100vh * 1);
+        height: calc(100vh * 1443 / 1115);
+    }
+
 }
 
 .arrow-controls { 
@@ -48,11 +60,6 @@ html, body {
 }
 
 .page iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
     border: 0px none;
-    min-width: 100%;
-    min-height: 100%;
     margin: 0;
 }

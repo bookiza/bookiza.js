@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href='//fonts.googleapis.com/css?family=Playfair+Display:400,700,900,400italic,700italic,900italic|Roboto:400,300|Bevan|Open+Sans|PT Sans Narrow' rel='stylesheet' type='text/css'> 
+
+<title> Bubblin's Official Guide </title>
+
+  
+  <style>
+    body {
+  font: 3.1vw/1.35 'Playfair Display', serif;
+  color: #2f2f2f;
+  background-color: #f9f7f1;
+  margin: 0 0;
+  overflow: hidden;
+  color: #454545;
+}
+
+
+h1 {
+  font-weight: 900;
+  font-size: 6vw;
+  text-transform: uppercase;
+  display: inline-block;
+  line-height: 1.5;
+  margin: 1vw 0 2vw;
+  padding: 0;
+  color: #444;
+  width: 100%;
+  text-align: center;
+}
+
+p {
+  margin: 3vw 0;
+}
+
+img {
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+
+a {
+  color: #0077ff;
+  outline: 0 none;
+  text-decoration: none;
+  text-rendering: optimizelegibility;
+}
+
+
+a:focus,
+a:active,
+a:hover {
+  outline: 0 none;
+  color: #0a4;
+}
+
+a:active {
+  text-shadow: 0 0 1px #050;
+}
+
+strong {
+  font-weight: bold;
+}
+
+/* Page specific */
+
+.leaf {
+  height: 100%;
+  height: 100vh;
+  width: 80%;
+  margin: auto;
+}
+
+.inner {
+  margin: 10% auto;
+  width: 100%;
+}
+
+.flex {
+  display: -webkit-box;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.justify {
+  text-align: justify;
+}
+
+/* Your custom styles below */
+
+
+.code-block {
+  margin: 3vw 0;
+  font: 2vw/1.0 'Roboto', sans-serif;
+  width: 70vw;
+  background: #fff;
+  border: 1px solid #fa0;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+}
+
+.code {
+  background: #fff;
+  border: 1px solid #fa0;
+  padding: 0 1vw;
+  border-radius: 1vw;
+  font: 2.7vw/1.1 'Roboto', sans-serif;
+}
+
+.monospace, .highlight {
+  font-family: monospace;
+  font-size: 2.5vw;
+  background: #ff0;
+  border: 1px solid #ff0;  
+  color: #444;
+  padding: .2vw 1vw;
+  border-radius: .5vw;
+  margin: 0 .5vw;
+}
+
+.center { text-align: center; }
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.center {
+  text-align: center;
+}
+
+ol {
+  list-style-type: lower-roman;
+  list-style-position: inside;
+  list-style-image: none;
+  margin: 0;
+  padding: 1vw 5vw;
+}
+
+.small {
+  font-size: 80%;
+}
+
+.gray {
+  background: #666;
+  color: #fff;
+  font-size: 60%;
+  padding: 1vw;
+}
+
+
+.terminal {
+  background-color: black;
+  color: #55ff55;
+  margin: 3vw 0;
+  width: 70vw;
+  border: 1px solid #ccc;
+  padding: 2vw 5vw;
+  border-radius: 1vw;
+  font-family: monospace;
+  font-size: 2.5vw;
+  white-space: nowrap;
+  overflow-x: auto;
+  text-align: left;
+}
+
+.prompt {
+  background: #55ff55;
+  height: 1em;
+  width: 0.75em;
+  -webkit-animation: blink 1s linear infinite;
+  animation: blink 1s linear infinite;
+}
+
+
+@-webkit-keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+@keyframes blink {
+  0% {
+    background: #55ff55;
+  }
+  49% {
+    background: #55ff55;
+  }
+  50% {
+    background: transparent;
+  }
+  100% {
+    background: transparent;
+  }
+}
+    @font-face {
+  font-family: 'Great Vibes';
+  font-style: normal;
+  font-weight: 400;
+  src: local("Great Vibes"), local("GreatVibes-Regular"), url(//themes.googleusercontent.com/static/fonts/greatvibes/v1/6q1c0ofG6NKsEhAc2eh-3YbN6UDyHWBl620a-IRfuBk.woff) format("woff");
+}
+
+body {
+  font: 2vw "Palatino Linotype", Georgia, serif;
+  margin: 0;
+  padding: 0;
+  color: #646464;
+}
+
+.split {
+  position: absolute;
+  bottom: 0;
+  padding: 3vh 10vw;
+  width: 80vw;
+  height: 65vh;
+  text-align: justify;
+  box-shadow: rgba(0, 0, 0, 0.3) 2px 2px 10px;
+}
+
+.heading {
+  height: 35vw;
+  width: 100vw;
+}
+
+.ribbon {
+  width: 60vw;
+  height: 6vh;
+  margin: 12vw auto 0;
+  position: relative;
+  color: #fff;
+  font: 4vw/8vw sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  background: #3D79D0;
+  -webkit-animation: main 250ms;
+  -moz-animation: main 250ms;
+  -ms-animation: main 250ms;
+  animation: main 250ms;
+}
+
+.ribbon i {
+  position: absolute;
+}
+
+.ribbon i:first-child,
+.ribbon i:nth-child(2) {
+  position: absolute;
+  left: -3.3vw;
+  bottom: -3.3vw;
+  z-index: -1;
+  border: 3vw solid transparent;
+  border-right-color: #043140;
+  -webkit-animation: edge 1000ms;
+  -moz-animation: edge 1000ms;
+  -ms-animation: edge 1000ms;
+  animation: edge 1000ms;
+}
+
+.ribbon i:nth-child(2) {
+  left: auto;
+  right: -3.3vw;
+  border-right-color: transparent;
+  border-left-color: #043140;
+}
+
+.ribbon i:nth-child(3),
+.ribbon i:last-child {
+  width: 3.2vw;
+  bottom: -3.3vw;
+  left: -9vw;
+  z-index: -2;
+  border: 4.2vw solid #1D53C0;
+  border-left-color: transparent;
+  -webkit-animation: back 2000ms;
+  -moz-animation: back 2000ms;
+  -ms-animation: back 2000ms;
+  animation: back 2000ms;
+  -webkit-transform-origin: 100% 0;
+  -moz-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+}
+
+.ribbon i:last-child {
+  bottom: -3.3vw;
+  left: auto;
+  right: -9vw;
+  border: 4.2vw solid #1D53C0;
+  border-right-color: transparent;
+  -webkit-transform-origin: 0 0;
+  -moz-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+/* animations */
+
+@-webkit-keyframes main {
+  0% {
+    -webkit-transform: scaleX(0);
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+  }
+}
+
+@-webkit-keyframes edge {
+  0%, 50% {
+    -webkit-transform: scaleY(0);
+  }
+  100% {
+    -webkit-transform: scaleY(1);
+  }
+}
+
+@-webkit-keyframes back {
+  0%, 75% {
+    -webkit-transform: scaleX(0);
+  }
+  100% {
+    -webkit-transform: scaleX(1);
+  }
+}
+
+@-moz-keyframes main {
+  0% {
+    -moz-transform: scaleX(0);
+  }
+  100% {
+    -moz-transform: scaleX(1);
+  }
+}
+
+@-moz-keyframes edge {
+  0%, 50% {
+    -moz-transform: scaleY(0);
+  }
+  100% {
+    -moz-transform: scaleY(1);
+  }
+}
+
+@-moz-keyframes back {
+  0%, 75% {
+    -moz-transform: scaleX(0);
+  }
+  100% {
+    -moz-transform: scaleX(1);
+  }
+}
+
+@keyframes main {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes edge {
+  0%, 50% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes back {
+  0%, 75% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Trajan Pro";
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 4vw;
+}
+
+h2 {
+  display: inline-block;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  line-height: 1;
+  padding-top: 0.5em;
+  border-top: 1px dotted #333;
+}
+
+p {
+  text-indent: vw;
+}
+
+p.autor {
+  font-family: 'Great Vibes', cursive;
+  text-align: center;
+  margin-top: 0;
+  font-size: 150%;
+  text-indent: 0;
+}
+
+p.capitular {
+  text-indent: 0;
+  padding-left: 0vw;
+}
+
+p.capitular:first-letter {
+  font-size: 16vw;
+  float: left;
+  line-height: 0.8;
+  margin: 0vw 1vw 0 0;
+}
+
+p + h2,
+p + h3,
+p + h4,
+p + h5,
+p + h6 {
+  margin-top: 2vw;
+}
+
+h2 + p {
+  display: inline;
+}
+
+blockquote {
+  padding: 10px;
+  font-size: 1.3em;
+}
+
+blockquote:before {
+  content: open-quote;
+  font-size: 2em;
+}
+
+blockquote:after {
+  content: close-quote;
+}
+
+blockquote.dir {
+  float: right;
+  width: 33%;
+  margin: 1vw;
+  text-align: left;
+  font-weight: bold;
+  font-style: italic;
+  border-left: 1px dotted #333;
+}
+  </style>
+</head>
+<body>
+  <div class="heading center">
+  <h1 class="ribbon">
+    Sample
+    <i></i>
+    <i></i>
+    <i></i>
+    <i></i>
+  </h1>
+  <p> Resize your browser to test: </p>
+</div>
+<div class="split">
+  <h1>Lorem ipsum ullamco veniam</h1>
+  <p class="autor">por Leonardo Baptista Lopes</p>
+  <p>Quero ver se tento fazer um projeto de estilização tipográfica baseada em classes do body que determinem se há capitulares ou não, se os parágrafos são indentados, espaçados, se os títulos são ao lado dos textos, como são as capitulares...</p>
+  <h2>Lorem ipsum minim.</h2>
+  <p>Lorem ipsum minim magna amet commodo in ex ex sint Excepteur nostrud velit aliqua aliquip laborum ex sint Excepteur quis enim aute est non elit laborum Excepteur nisi deserunt est culpa ex dolore dolore occaecat ex amet ullamco velit esse id Duis consequat
+    quis Duis id laboris in amet dolore anim deserunt.</p>
+  <blockquote class="dir">Cupidatat culpa esse cupidatat ullamco dolore ad nostrud eiusmod</blockquote>
+  <p>Lorem ipsum minim magna amet commodo in ex ex sint Excepteur nostrud velit aliqua aliquip laborum ex sint Excepteur quis enim aute est non elit laborum Excepteur nisi deserunt est culpa ex dolore dolore occaecat ex amet ullamco velit esse id Duis consequat
+    quis Duis id laboris in amet dolore anim deserunt.</p>
+  <p class="capitular">Meu et minim elit ullamco minim id mollit anim cupidatat reprehenderit reprehenderit ullamco fugiat pariatur minim consequat ullamco culpa amet cupidatat enim anim in enim dolor in et est fugiat commodo culpa incididunt est deserunt labore commodo ex
+    non id proident laboris incididunt amet adipisicing veniam magna elit ea.</p>
+</div>
+  <script></script>
+</body>
+</html>
