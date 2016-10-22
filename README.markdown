@@ -25,12 +25,38 @@ In your HTML:
 Invocation with `script.js`:
 
 ```
-  let superbook = document.getElementById('book');
-  
+import 'YOUR_APP/css/book.css'
 
-  superbook.flippy({
-      boolean: true,
-      iframeSupport: true
-  });
+import 'babel-polyfill'
+
+import 'YOUR_APP/lib/flippy.js'
+
+let settings = {
+  duration: 100,
+  animation: true,
+  curl: true,
+  allowZoom: false
+}
+
+Book.init(settings, 5)
+
+Book.next()
+
+Book.prev()
+
+let content = '<div> Hello world</div>'
+
+Book.addPage(4, content)
+
+Book.removePage(4)
+
+console.log(Book.flippy) // Outputs version of the library.
+
+console.log(Book.edition)
+
+Book.view() // Outputs the pages in view of the reader
+
+Book.stack() // Outputs the pages in the render tree.
+
 
 ```
