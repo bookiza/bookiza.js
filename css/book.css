@@ -248,8 +248,10 @@ html, body {
     cursor: -webkit-grabbing;
 }
 
-@import './animation.css';
 
 /* To be removed eventually */
+
+@import './animation.css';
+
 @import './plotter.css';
 
