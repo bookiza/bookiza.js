@@ -1,86 +1,83 @@
 +!~-((w, d, undefined) => {
 
-    module.exports = graph;
+  module.exports = graph
 
-    let graph = {};
+  let graph = {}
 
+  //  1.
+  w.addEventListener('resize', getDimensions)
+  w.onload = getDimensions
 
-    //  1.
-    w.addEventListener('resize', getDimensions);
-    w.onload = getDimensions;
+  function getDimensions () {
+    let book = {}
 
-    function getDimensions() {
+    book.bounds = d.getElementById('plotter').getBoundingClientRect(); // http://caniuse.com/#feat=getboundingclientrect
 
-        let book = {};
+    d.getElementById('pwidth').textContent = book.bounds.width
+    d.getElementById('pheight').textContent = book.bounds.height
+    d.getElementById('ptop').textContent = book.bounds.top
+    d.getElementById('pleft').textContent = book.bounds.left
+    d.getElementById('pright').textContent = book.bounds.right
+    d.getElementById('pbottom').textContent = book.bounds.bottom
 
+    // origin = d.getElementById('origin').getBoundingClientRect()
 
-        book.bounds = d.getElementById('plotter').getBoundingClientRect(); // http://caniuse.com/#feat=getboundingclientrect
+    let origin = {}
 
-        d.getElementById("pwidth").textContent = book.bounds.width;
-        d.getElementById("pheight").textContent = book.bounds.height;
-        d.getElementById("ptop").textContent = book.bounds.top;
-        d.getElementById("pleft").textContent = book.bounds.left;
-        d.getElementById("pright").textContent = book.bounds.right;
-        d.getElementById("pbottom").textContent = book.bounds.bottom;
+    origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
 
-        // origin = d.getElementById('origin').getBoundingClientRect();
+    d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
+    d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
+  }
 
-        let origin = {};
+  // 2.
+  d.getElementById('plotter').onmousemove = handleMouseMove
 
-        origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect();
+  function handleMouseMove (e) {
+    let eventDoc
+    let doc
+    let body
+    let pageX
+    let pageY
 
-        d.getElementById("originX").textContent = parseInt(origin.bounds.width) / 2;
-        d.getElementById("originY").textContent = parseInt(origin.bounds.height) / 2;
+    e = e || w.e
 
+    if (e.pageX === null && e.clientX !== null) {
+      eventDoc = (e.target && e.target.ownerDocument) || document
+
+      doc = eventDoc.documentElement
+
+      body = eventDoc.body
+
+      e.pageX = e.clientX +
+        (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+        (doc && doc.clientLeft || body && body.clientLeft || 0)
+      e.pageY = e.clientY +
+        (doc && doc.scrollTop || body && body.scrollTop || 0) -
+        (doc && doc.clientTop || body && body.clientTop || 0)
     }
 
-    // 2.
-    d.getElementById('plotter').onmousemove = handleMouseMove;
+    d.getElementById('xaxis').textContent = e.pageX
+    d.getElementById('yaxis').textContent = e.pageY
+  }
 
-    function handleMouseMove(e) {
-        var eventDoc, doc, body, pageX, pageY;
+  // 3.
 
-        e = e || w.e;
+  // (function() {
+  //     var elem = d.getElementById('plotter')
 
-        if (e.pageX === null && e.clientX !== null) {
+  //     function updateLog(x, y) {
+  //         console.log('X: ' + x + '; Y: ' + y)
+  //     }
 
-            eventDoc = (e.target && e.target.ownerDocument) || document;
+  //     d.addEventListener('touchstart', function(e) {
+  //         updateLog(e.changedTouches[0].pageX, e.changedTouches[0].pageY)
+  //     }, false)
 
-            doc = eventDoc.documentElement;
+  //     d.addEventListener('touchmove', function(e) {
+  //         e.preventDefault()
+  //         updateLog(e.targetTouches[0].pageX, e.targetTouches[0].pageY)
+  //     }, false)
+  // })(d)
 
-            body = eventDoc.body;
-
-            e.pageX = e.clientX +
-                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                (doc && doc.clientLeft || body && body.clientLeft || 0);
-            e.pageY = e.clientY +
-                (doc && doc.scrollTop || body && body.scrollTop || 0) -
-                (doc && doc.clientTop || body && body.clientTop || 0);
-        }
-
-        d.getElementById("xaxis").textContent = e.pageX;
-        d.getElementById("yaxis").textContent = e.pageY;
-    }
-
-
-    // 3.
-
-    // (function() {
-    //     var elem = d.getElementById('plotter');
-
-    //     function updateLog(x, y) {
-    //         console.log('X: ' + x + '; Y: ' + y);
-    //     }
-
-    //     d.addEventListener('touchstart', function(e) {
-    //         updateLog(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
-    //     }, false);
-
-    //     d.addEventListener('touchmove', function(e) {
-    //         e.preventDefault();
-    //         updateLog(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
-    //     }, false);
-    // })(d);
-
-
-})(window, document);
+})(window, document)
