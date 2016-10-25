@@ -43,6 +43,16 @@ html, body {
     overflow: hidden;
 }
 
+.page iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0px none;
+    min-width: 100%;
+    min-height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
 
 .left {
     float: left;
@@ -88,6 +98,7 @@ html, body {
     }
     body .page iframe{
         backface-visibility: hidden;
+        width: 100%;
     }    
     body .flipped {
         transform: rotateY( 0deg );
@@ -106,7 +117,8 @@ html, body {
         width: 50%;
     }
     body .page iframe{
-        backface-visibility: visible;        
+        backface-visibility: visible;
+        width: 50%;
     }
     body .flipped {
         transform: rotateY( 180deg );
@@ -220,18 +232,6 @@ html, body {
     }
 }
 
-.page iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    border: 0px none;
-    min-height: 100%;
-    min-width: 100%;
-    margin: 0;
-    overflow: hidden;
-}
-
-
 .grabbable {
     cursor: move; /* fallback if grab cursor is unsupported */
     cursor: grab;
@@ -249,7 +249,7 @@ html, body {
 
 /* To be removed eventually */
 
-@import './animation.css';
+/*@import './animation.css';*/
 
 @import './plotter.css';
 
