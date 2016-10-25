@@ -80,7 +80,7 @@ html, body {
     body .viewer {
         width: calc(100vh * 1540/(1000 * 2));
         height: 100vh;
-        max-height: calc(100vw * 1443/1114);
+        max-height: calc(100vw * 1443/1114); /* Default CSS when JS is turned off */
     }
     body .page {
         backface-visibility: hidden;
@@ -88,7 +88,6 @@ html, body {
     }
     body .page iframe{
         backface-visibility: hidden;
-        width: 100%;
     }    
     body .flipped {
         transform: rotateY( 0deg );
@@ -107,8 +106,7 @@ html, body {
         width: 50%;
     }
     body .page iframe{
-        backface-visibility: visible;
-        width: 50%;
+        backface-visibility: visible;        
     }
     body .flipped {
         transform: rotateY( 180deg );
@@ -227,8 +225,8 @@ html, body {
     top: 0;
     left: 0;
     border: 0px none;
-    min-width: 100%;
     min-height: 100%;
+    min-width: 100%;
     margin: 0;
     overflow: hidden;
 }
