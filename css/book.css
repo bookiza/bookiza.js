@@ -86,7 +86,7 @@ html, body {
 }
 
 
-@media (max-width: 870px) {
+@media (orientation: portrait) {
     body .viewer {
         width: calc(100vh * 1540/(1000 * 2));
         height: 100vh;
@@ -106,7 +106,7 @@ html, body {
 
 }
 
-@media (min-width: 871px) {
+@media (orientation: landscape) {
     body .viewer {
         width: calc(100vh * 1540/1000);
         height: 100vh;
