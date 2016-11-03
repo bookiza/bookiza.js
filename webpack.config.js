@@ -3,7 +3,8 @@ const debug = process.env.NODE_ENV !== 'production';
 const webpack       = require('webpack');
 const precss        = require('precss');
 const autoprefixer  = require('autoprefixer');
-const fwp           = require('favicons-webpack-plugin')
+const fwp           = require('favicons-webpack-plugin');
+const hwp           = require('html-webpack-plugin');
 
 module.exports = {
     context: __dirname,
@@ -23,8 +24,16 @@ module.exports = {
     postcss: function () {
         return [precss, autoprefixer];
     },
-    plugins: debug ? [] : [
-        new fwp('./svg/dolphin.svg'),
+    //plugins: debug ? [] : []
+    plugins: [
+        new fwp({
+            logo:'./svg/dolphin.png',
+            // Inject the html into the html-webpack-plugin
+            inject: true
+        }),
+        new hwp({
+            template : `${__dirname}/html/index.html`
+        }),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
