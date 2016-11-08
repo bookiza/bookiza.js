@@ -8,6 +8,7 @@
     "start": "webpack-dev-server ./lib/script.js --content-base html/",
     "test": "mocha ./tests/start.tests.js -w",
     "test:once": " mocha ./tests/start.tests.js",
+    "test:jest": "jest",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post",
     "commit": "git cz"
   },
@@ -35,6 +36,7 @@
     "file-loader": "0.9.0",
     "ghooks": "1.3.2",
     "html-webpack-plugin": "^2.24.1",
+    "jest-cli": "^16.0.2",
     "mocha": "3.0.2",
     "postcss-loader": "0.11.1",
     "precss": "1.4.0",
@@ -54,5 +56,8 @@
     "ghooks": {
       "pre-commit": "npm run test:once"
     }
+  },
+  "jest":{
+    "testEnvironment":"node"
   }
 }
