@@ -86,47 +86,6 @@ html, body {
 }
 
 
-@media (orientation: portrait) {
-    body .viewer {
-        width: calc(100vh * 1540/(1000 * 2));
-        height: 100vh;
-        max-height: calc(100vw * 1443/1114); /* Default CSS when JS is turned off */
-    }
-    body .page {
-        backface-visibility: hidden;
-        width: 100%;
-    }
-    body .page iframe{
-        backface-visibility: hidden;
-        width: 100%;
-    }    
-    body .flipped {
-        transform: rotateY( 0deg );
-    }
-
-}
-
-@media (orientation: landscape) {
-    body .viewer {
-        width: calc(100vh * 1540/1000);
-        height: 100vh;
-        max-height: calc(50vw * 1443/1114);
-    }
-    body .page {
-        backface-visibility: visible;
-        width: 50%;
-    }
-    body .page iframe{
-        backface-visibility: visible;
-        width: 50%;
-    }
-    body .flipped {
-        transform: rotateY( 180deg );
-    }
-}
-
-
-
 /* Arrow buttons for desktops */
 
 .arrow-controls {
@@ -253,3 +212,42 @@ html, body {
 
 @import './plotter.css';
 
+
+@media (orientation: portrait) {
+    body .viewer {
+        width: calc(100vh * 1540/(1000 * 2));
+        height: 100vh;
+        max-height: calc(100vw * 1443/1114); /* Default CSS when JS is turned off */
+    }
+    body .page {
+        backface-visibility: hidden;
+        width: 100%;
+    }
+    body .page iframe{
+        backface-visibility: hidden;
+        width: 100%;
+    }    
+    body .flipped {
+        transform: rotateY( 0deg );
+    }
+
+}
+
+@media (orientation: landscape) {
+    body .viewer {
+        width: calc(100vh * 1540/1000);
+        height: 100vh;
+        max-height: calc(50vw * 1443/1114);
+    }
+    body .page {
+        backface-visibility: visible;
+        width: 50%;
+    }
+    body .page iframe{
+        backface-visibility: visible;
+        width: 50%;
+    }
+    body .flipped {
+        transform: rotateY( 180deg );
+    }
+}
