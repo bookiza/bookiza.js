@@ -29,6 +29,15 @@ html, body {
     box-shadow: inset 1px 1px 0 rgba(0, 0, 0,.1), inset 0 -1px 0 rgba(0,0,0,.07);
 }
 
+.arrow-controls { 
+    display:none;
+}
+
+.page iframe {
+    border: 0px none;
+    margin: 0;
+}
+
 @media (orientation: portrait) {
     body .page {
         width: calc(100vw * 900/1000);
@@ -53,13 +62,4 @@ html, body {
         height: calc(100vh * 1443 / 1115);
     }
 
-}
-
-.arrow-controls { 
-    display:none;
-}
-
-.page iframe {
-    border: 0px none;
-    margin: 0;
 }

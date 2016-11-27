@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Superbook JS</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/default.css" />
+    
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="../css/book.css" /> -->
+
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="../css/plotter.css" /> -->
+
+<link rel="apple-touch-icon" sizes="57x57" href="icons-916f0582924b66916754424198089274/apple-touch-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="icons-916f0582924b66916754424198089274/apple-touch-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="icons-916f0582924b66916754424198089274/apple-touch-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="icons-916f0582924b66916754424198089274/apple-touch-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="icons-916f0582924b66916754424198089274/apple-touch-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="icons-916f0582924b66916754424198089274/apple-touch-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="icons-916f0582924b66916754424198089274/apple-touch-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="icons-916f0582924b66916754424198089274/apple-touch-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="icons-916f0582924b66916754424198089274/apple-touch-icon-180x180.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="flippy"><meta name="mobile-web-app-capable" content="yes"><meta name="theme-color" content="#fff"><meta name="application-name" content="flippy"><link rel="icon" type="image/png" sizes="32x32" href="icons-916f0582924b66916754424198089274/favicon-32x32.png"><link rel="icon" type="image/png" sizes="192x192" href="icons-916f0582924b66916754424198089274/android-chrome-192x192.png"><link rel="icon" type="image/png" sizes="16x16" href="icons-916f0582924b66916754424198089274/favicon-16x16.png"><link rel="shortcut icon" href="icons-916f0582924b66916754424198089274/favicon.ico"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 1)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-320x460.png"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-640x920.png"><link rel="apple-touch-startup-image" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-640x1096.png"><link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-750x1294.png"><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 3)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-1182x2208.png"><link rel="apple-touch-startup-image" media="(device-width: 414px) and (device-height: 736px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 3)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-1242x2148.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 1)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-748x1024.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 1)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-768x1004.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: landscape) and (-webkit-device-pixel-ratio: 2)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-1496x2048.png"><link rel="apple-touch-startup-image" media="(device-width: 768px) and (device-height: 1024px) and (orientation: portrait) and (-webkit-device-pixel-ratio: 2)" href="icons-916f0582924b66916754424198089274/apple-touch-startup-image-1536x2008.png"></head>
+
+<body class="noselect">
+    <div class="noselect viewer" id="plotter">
+        <div id="book">
+            <a class="arrow-controls next-page flex" id="next">
+                <?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                    <path fill="#fff" d="M5 20c-0.128 0-0.256-0.049-0.354-0.146-0.195-0.195-0.195-0.512 0-0.707l8.646-8.646-8.646-8.646c-0.195-0.195-0.195-0.512 0-0.707s0.512-0.195 0.707 0l9 9c0.195 0.195 0.195 0.512 0 0.707l-9 9c-0.098 0.098-0.226 0.146-0.354 0.146z"></path>
+                </svg>
+            </a>
+            <a class="arrow-controls previous-page flex" id="prev">
+                <?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                    <path fill="#fff" d="M14 20c0.128 0 0.256-0.049 0.354-0.146 0.195-0.195 0.195-0.512 0-0.707l-8.646-8.646 8.646-8.646c0.195-0.195 0.195-0.512 0-0.707s-0.512-0.195-0.707 0l-9 9c-0.195 0.195-0.195 0.512 0 0.707l9 9c0.098 0.098 0.226 0.146 0.354 0.146z"></path>
+                </svg>
+            </a>
+            <div class="page  ">
+                <iframe src="./renders/page-1.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-2.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-4.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-3.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-5.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-6.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="./renders/page-7.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-8.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-9.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-10.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-11.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-12.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-13.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-14.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-15.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-16.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-17.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-18.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-19.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-20.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-21.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-22.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-23.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-24.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-25.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-26.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-27.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-28.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="./renders/page-29.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="./renders/page-30.html"></iframe>
+            </div>
+
+
+        </div>
+    </div>
+    <table id="coordinates">
+        <tr>
+            <td> X-Pos</td>
+            <td id="xaxis"> </td>
+        </tr>
+        <tr>
+            <td> Y-Pos </td>
+            <td id="yaxis"> </td>
+        </tr>
+        <tr>
+            <td> Top </td>
+            <td id="ptop"> </td>
+        </tr>
+        <tr>
+            <td> Left </td>
+            <td id="pleft"> </td>
+        </tr>
+        <tr>
+            <td> Right </td>
+            <td id="pright"> </td>
+        </tr>
+        <tr>
+            <td> Bottom </td>
+            <td id="pbottom"> </td>
+        </tr>
+        <tr>
+            <td> Width </td>
+            <td id="pwidth"> </td>
+        </tr>
+        <tr>
+            <td> Height </td>
+            <td id="pheight"> </td>
+        </tr>
+        <tr>
+            <td> Origin </td>
+            <td>
+                <div> X: <span id="originX"></span> </div>
+                <div> Y: <span id="originY"></span> </div>
+            </td>
+        </tr>
+    </table>
+    <script src="../bundle.js"></script>
+<script type="text/javascript" src="bundle.js"></script></body>
+
+</html>
