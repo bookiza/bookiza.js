@@ -1,4 +1,4 @@
-+!~-((w, d, undefined) => {
+((w, d, undefined) => {
   module.exports = {
     getMatch(query, usePolyfill) {
       return testMedia(query, usePolyfill).matches
@@ -15,7 +15,7 @@
   }
 
   // Private
-  function testMedia (query, usePolyfill) {
+  function testMedia(query, usePolyfill) {
     const isMatchMediaSupported = !!(w && w.matchMedia) && !usePolyfill
 
     if (isMatchMediaSupported) {
