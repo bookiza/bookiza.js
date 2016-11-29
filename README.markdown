@@ -4,7 +4,7 @@
 
 # flippy.JS
 
-A leafy responsive alternative to Turnjs. No jQuery dependency. No javascript fallback.
+A leafy responsive alternative to Turnjs. No jQuery dependency along with a no javascript fallback.
 
 ## API
 
