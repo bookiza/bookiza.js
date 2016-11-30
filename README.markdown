@@ -11,52 +11,92 @@ A leafy responsive alternative to Turnjs. No jQuery dependency along with a no j
 In your HTML:
 
 ```
-  <div id = "book"> 
-      <div class = "page"> Page-1 content here…</div>
-      <div class = "page"> Page-2 content here…</div>
-      <div class = "page"> Page-3 content here…</div>
+  <div id = "book">
+      <div class = "page"> Page-1 HTML </div>
+      <div class = "page"> Page-2 HTML </div>
+      <div class = "page"> Page-3 HTML </div>
       …
       …
       <div class = "page"> Page-2N content here…</div>
   </div>
 
 ```
+Note the `2N` number of `pages` in the book because a `leaf` has two sides to it.
 
 Invocation with `script.js`:
 
 ```
-import 'YOUR_APP/css/book.css'
-
 import 'babel-polyfill'
 
-import 'YOUR_APP/lib/flippy.js'
+import '../css/book.css'
 
-let settings = {
-  duration: 100,
-  animation: true,
-  curl: true,
-  allowZoom: false
-}
+import '../lib/flippy.js'
 
-Book.init(settings, 5)
+document.addEventListener('DOMContentLoaded', function(event) {
 
-Book.next()
+    /**********************************/
+    /****** Initialize  Flippy ********/
+    /**********************************/
 
-Book.prev()
+    let settings = { duration: 100, animation: true, curl: true, allowZoom: false, start_page: 20 }
 
-let content = '<div> Hello world</div>'
+    let node = document.getElementById('book')
 
-Book.addPage(4, content)
+    const superbook = Flippy.init(node, settings)
 
-Book.removePage(4)
+    console.table(superbook)
 
-console.log(Book.flippy) // Outputs version of the library.
+    /**********************************/
+    /******** Work in progress ********/
+    /**********************************/
 
-console.log(Book.edition)
+    // superbook.flipping = false
 
-Book.view() // Outputs the pages in view of the reader
+    // superbook.flipped = true // Custom event?
 
-Book.stack() // Outputs the pages in the render tree.
+    // superbook.zooming = false // boolean state
 
+    // superbook.zoomed = true // boolean state
+
+    // superbook.page = () => 'current_page'
+
+    // superbook.area = () => '[height, width]'
+
+    // superbook.direction = 'forward'
+
+    // superbook.next = () => {
+    //     superbook.direction = 'forward'
+    //     return superbook.direction
+    // }
+
+    // superbook.prev = () => {
+    //     superbook.direction = 'backward'
+    //     return superbook.direction
+    // }
+
+    // superbook.hasPage = pageNo => {
+    //     console.log('Returns if page exist: ', pageNo)
+    // }
+
+    // superbook.addPage = (pageNo, content) => {
+    //     console.log('Adding page number: ', content, 'at', pageNo)
+    // }
+
+    // superbook.removePage = pageNo => {
+    //     console.log('Remove page number: ', pageNo)
+    // }
+
+    /**********************************/
+    /******** Implemented  API ********/
+    /**********************************/
+
+    let booklength = superbook.flippy('length')
+
+    console.log('Book length', booklength)
+
+    superbook.flippy('flip', 7)
+
+
+}, true)
 
 ```
