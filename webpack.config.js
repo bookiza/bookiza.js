@@ -1,10 +1,10 @@
-const debug = process.env.NODE_ENV !== 'production';
+const debug = process.env.NODE_ENV !== 'production'
 
-const webpack       = require('webpack');
-const precss        = require('precss');
-const autoprefixer  = require('autoprefixer');
-const fwp           = require('favicons-webpack-plugin');
-const hwp           = require('html-webpack-plugin');
+const webpack = require('webpack')
+const precss = require('precss')
+const autoprefixer = require('autoprefixer')
+const fwp = require('favicons-webpack-plugin')
+const hwp = require('html-webpack-plugin')
 
 module.exports = {
     context: __dirname,
@@ -21,21 +21,21 @@ module.exports = {
             { test: /\.js$/, exclude: ['/node_modules/', '/css/'], loader: 'babel-loader' }
         ]
     },
-    postcss: function () {
-        return [precss, autoprefixer];
+    postcss: function() {
+        return [precss, autoprefixer]
     },
     //plugins: debug ? [] : []
     plugins: [
         new fwp({
-            logo:'./svg/dolphin.png',
+            logo: './svg/dolphin.png',
             // Inject the html into the html-webpack-plugin
             inject: true
         }),
         new hwp({
-            template : `${__dirname}/html/index.html`
+            template: `${__dirname}/html/index.html`
         }),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-    ],
-};
+        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false })
+    ]
+}
