@@ -1,32 +1,40 @@
 ((w, d, undefined) => {
-  module.exports = {
-    getMatch(query, usePolyfill) {
-      return testMedia(query, usePolyfill).matches
-    },
+    module.exports = {
+        getMatch(query, usePolyfill) {
+            // TODO: Consider d.addEventListener('DOMContentLoaded', function(event) { }
 
-    onChange(query, cb, usePolyfill) {
-      let res = testMedia(query, usePolyfill)
+            return testMedia(query, usePolyfill).matches
+        },
 
-      res.addListener(changed => {
-        cb.apply({}, [changed.matches, changed.media])
-      })
+        onChange(query, cb, usePolyfill) {
+            let res = testMedia(query, usePolyfill)
+
+            res.addListener(changed => {
+                cb.apply({}, [changed.matches, changed.media])
+            })
+        }
+
     }
 
-  }
+    // Private
+    function testMedia(query, usePolyfill) {
+        const isMatchMediaSupported = !!(w && w.matchMedia) && !usePolyfill
 
-  // Private
-  function testMedia(query, usePolyfill) {
-    const isMatchMediaSupported = !!(w && w.matchMedia) && !usePolyfill
+        if (isMatchMediaSupported) {
+            const res = w.matchMedia(query)
 
-    if (isMatchMediaSupported) {
-      const res = w.matchMedia(query)
-
-      return res
-    } else {
-      // ... polyfill
+            return res
+        } else {
+            // ... polyfill
+        }
     }
-  }
+
 })(window, document)
+
+
+
+
+
 
 // 1.
 // const mq = (query, cb, usePolyfill) => {
