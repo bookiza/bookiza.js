@@ -33,28 +33,17 @@
 
 
 
+// let mode = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait'
 
+// console.log('FIRSTMODE', mode, 'innerWidth=', window.innerWidth, 'innerHeight=', window.innerHeight)
 
+// window.addEventListener('resize', e => { 
 
-// 1.
-// const mq = (query, cb, usePolyfill) => {
-//     const host = {}
-//     const isMatchMediaSupported = !!(w && w.matchMedia) && !usePolyfill
+//     let newMode = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait'
 
-//     if (isMatchMediaSupported) {
-//         const res = w.matchMedia(query)
-
-//         cb.apply(host, [res.matches, res.media])
-
-//         res.addListener(changed => {
-//             cb.apply(host, [changed.matches, changed.media])
-//         })
-//     } else {
-//         // ... polyfill
+//     if(newMode !== mode) {
+//         console.log('RESIZEDMODE', mode, 'innerWidth=', window.innerWidth, 'innerHeight=', window.innerHeight)
 //     }
-// }
+// }, true);
 
-// mq('all and (min-width: 870px)', function(match) {
-//     mode = match ? 'double' : 'single'
-//     console.log(mode); 
-// })
+

@@ -24,7 +24,6 @@ module.exports = {
     postcss: function() {
         return [precss, autoprefixer]
     },
-    //plugins: debug ? [] : []
     plugins: [
         new fwp({
             logo: './svg/dolphin.png',
