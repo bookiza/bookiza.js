@@ -1,8 +1,6 @@
 ((w, d, undefined) => {
     module.exports = {
         getMatch(query, usePolyfill) {
-            // TODO: Consider d.addEventListener('DOMContentLoaded', function(event) { }
-
             return testMedia(query, usePolyfill).matches
         },
 
@@ -33,17 +31,20 @@
 
 
 
+// console.log(Math.max(document.documentElement.clientWidth, window.innerWidth || 0))
+
 // let mode = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait'
 
 // console.log('FIRSTMODE', mode, 'innerWidth=', window.innerWidth, 'innerHeight=', window.innerHeight)
 
-// window.addEventListener('resize', e => { 
+
+
+// window.addEventListener('resize', e => {
 
 //     let newMode = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait'
 
-//     if(newMode !== mode) {
+//     if (newMode !== mode) {
 //         console.log('RESIZEDMODE', mode, 'innerWidth=', window.innerWidth, 'innerHeight=', window.innerHeight)
 //     }
 // }, true);
-
 
