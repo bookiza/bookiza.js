@@ -26,7 +26,7 @@ html, body {
     pointer-events: none;
     cursor: default;
    -webkit-perspective: 200px; /* Apply perspective to children */
-    perspective: 200px; 
+    perspective: 200px;
     perspective-origin: 50% 50%;
 }
 
@@ -199,7 +199,7 @@ html, body {
 }
 
  /* (Optional) Apply a "closed-hand" cursor during drag operation. */
-.grabbable:active { 
+.grabbable:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
@@ -226,7 +226,7 @@ html, body {
     body .page iframe{
         backface-visibility: hidden;
         width: 100%;
-    }    
+    }
     body .flipped {
         transform: rotateY( 0deg );
     }
