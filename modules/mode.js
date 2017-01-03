@@ -30,7 +30,6 @@
 })(window, document)
 
 
-
 // console.log(Math.max(document.documentElement.clientWidth, window.innerWidth || 0))
 
 // let mode = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait'

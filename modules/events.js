@@ -1,3 +1,8 @@
+var transitionsSupported = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style);
+
+console.log(transitionsSupported, 'SUPPORTED')
+
+
 if (window.PointerEvent) {
   console.log('hello')
 } else {
@@ -32,3 +37,6 @@ if (window.PointerEvent) {
         alert('You clicked me!');
     });
 }());
+
+
+

@@ -1,4 +1,4 @@
-+!~-((w, d, undefined) => {
+((w, d, undefined) => {
 
   module.exports = graph
 
@@ -25,6 +25,8 @@
     let origin = {}
 
     origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
+
+    // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
 
     d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
     d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
