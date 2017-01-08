@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Superbook JS</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/default.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/book.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../css/plotter.css" />
+</head>
+
+<body class="noselect">
+    <div class="noselect viewer" id="plotter">
+        <div id="book">
+            <a class="arrow-controls next-page flex" id="next">
+                <?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                    <path fill="#fff" d="M5 20c-0.128 0-0.256-0.049-0.354-0.146-0.195-0.195-0.195-0.512 0-0.707l8.646-8.646-8.646-8.646c-0.195-0.195-0.195-0.512 0-0.707s0.512-0.195 0.707 0l9 9c0.195 0.195 0.195 0.512 0 0.707l-9 9c-0.098 0.098-0.226 0.146-0.354 0.146z"></path>
+                </svg>
+            </a>
+            <a class="arrow-controls previous-page flex" id="prev">
+                <?xml version="1.0" encoding="utf-8"?>
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="20" viewBox="0 0 20 20">
+                    <path fill="#fff" d="M14 20c0.128 0 0.256-0.049 0.354-0.146 0.195-0.195 0.195-0.512 0-0.707l-8.646-8.646 8.646-8.646c0.195-0.195 0.195-0.512 0-0.707s-0.512-0.195-0.707 0l-9 9c-0.195 0.195-0.195 0.512 0 0.707l9 9c0.098 0.098 0.226 0.146 0.354 0.146z"></path>
+                </svg>
+            </a>
+            <div class="page">
+                <iframe src="../html/renders/page-1.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-2.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="../html/renders/page-4.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="../html/renders/page-3.html"></iframe>
+            </div>
+            <div class="page  ">
+                <iframe src="../html/renders/page-5.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="../html/renders/page-6.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-7.html"></iframe>
+            </div>
+            <div class="page ">
+                <iframe src="../html/renders/page-8.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-9.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-10.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-11.html"></iframe>
+            </div>
+            <div class="page">
+                <iframe src="../html/renders/page-12.html"></iframe>
+            </div>
+        </div>
+    </div>
+    <table id="coordinates">
+        <tr>
+            <td> X-Pos</td>
+            <td id="xaxis"> </td>
+        </tr>
+        <tr>
+            <td> Y-Pos </td>
+            <td id="yaxis"> </td>
+        </tr>
+        <tr>
+            <td> Top </td>
+            <td id="ptop"> </td>
+        </tr>
+        <tr>
+            <td> Left </td>
+            <td id="pleft"> </td>
+        </tr>
+        <tr>
+            <td> Right </td>
+            <td id="pright"> </td>
+        </tr>
+        <tr>
+            <td> Bottom </td>
+            <td id="pbottom"> </td>
+        </tr>
+        <tr>
+            <td> Width </td>
+            <td id="pwidth"> </td>
+        </tr>
+        <tr>
+            <td> Height </td>
+            <td id="pheight"> </td>
+        </tr>
+        <tr>
+            <td> Origin </td>
+            <td>
+                <div> X: <span id="originX"></span> </div>
+                <div> Y: <span id="originY"></span> </div>
+            </td>
+        </tr>
+    </table>
+    <script src="js/flippy.js"></script>
+    <script src="js/invoker.js"></script>
+</body>
+
+</html>

@@ -1,6 +1,32 @@
-var transitionsSupported = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style);
+var transitionsSupported = ('transition' in document.documentElement.style) || ('WebkitTransition' in document.documentElement.style)
 
 console.log(transitionsSupported, 'SUPPORTED')
+
+function whichTransitionEvent(){
+    let t
+    const el = document.createElement('fakeelement')
+    const transitions = {
+      'transition':'transitionend',
+      'OTransition':'oTransitionEnd',
+      'MozTransition':'transitionend',
+      'WebkitTransition':'webkitTransitionEnd'
+    }
+
+    for(t in transitions){
+        if( el.style[t] !== undefined ){
+            return transitions[t]
+        }
+    }
+}
+
+/* Listen for a transition! */
+const transitionEvent = whichTransitionEvent();
+transitionEvent && document.addEventListener(transitionEvent, (e) => {
+    console.log(e)
+    // console.log('Transition complete!  This is the callback, no library needed!');
+});
+
+
 
 
 if (window.PointerEvent) {
@@ -33,9 +59,15 @@ if (window.PointerEvent) {
         });
     }
 
-    on('#plotter', 'click', 'a.next', function() {
+    on('.viewer', 'click', 'a.next-page', function() {
+
+    });
+
+    on('.viewer', 'click', 'a.previous-page', function() {
         alert('You clicked me!');
     });
+
+
 }());
 
 

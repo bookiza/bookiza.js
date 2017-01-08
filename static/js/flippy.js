@@ -2,8 +2,8 @@
 // FLIPPY VERSION::0.0.1'
 
 import viewer from '../modules/mode.js'
-import '../modules/graph.js'
-import events from '../modules/events.js'
+// import '../modules/graph.js'
+// import events from '../modules/events.js'
 
 (((w, d, undefined) => {
     /***********************************
