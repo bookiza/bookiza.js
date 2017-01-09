@@ -1,7 +1,7 @@
 // Copyright Notice: All rights reserved. © 2016 - 2017 Marvin Danig
 // FLIPPY VERSION::0.0.1'
 
-import viewer from '../modules/mode.js'
+// import viewer from '../modules/mode.js'
 // import '../modules/graph.js'
 // import events from '../modules/events.js'
 
@@ -74,6 +74,33 @@ import viewer from '../modules/mode.js'
     /***********************************
      ********** Private Methods ********
      ***********************************/
+
+
+     let viewer = {
+        getMatch(query, usePolyfill) {
+            return this.testMedia(query, usePolyfill).matches
+        },
+
+        onChange(query, cb, usePolyfill) {
+            let res = this.testMedia(query, usePolyfill)
+
+            res.addListener(changed => {
+                cb.apply({}, [changed.matches, changed.media])
+            })
+        },
+
+        testMedia(query, usePolyfill) {
+            const isMatchMediaSupported = !!(w && w.matchMedia) && !usePolyfill
+
+            if (isMatchMediaSupported) {
+                const res = w.matchMedia(query)
+                return res
+            } else { 
+                // ... polyfill
+            }
+        }
+    }
+    
 
     let _book = new Book()
 
@@ -433,6 +460,12 @@ import viewer from '../modules/mode.js'
     function isOdd(n) {
         return Math.abs(n % 2) == 1
     }
+
+
+ 
+
+
+   
 
     /********************************/
     /********* Cone geometry ********/
