@@ -75,7 +75,6 @@
      ********** Private Methods ********
      ***********************************/
 
-
      let viewer = {
         getMatch(query, usePolyfill) {
             return this.testMedia(query, usePolyfill).matches
@@ -95,12 +94,12 @@
             if (isMatchMediaSupported) {
                 const res = w.matchMedia(query)
                 return res
-            } else { 
+            } else {
                 // ... polyfill
             }
         }
     }
-    
+
 
     let _book = new Book()
 
@@ -116,8 +115,6 @@
         _book.pages = nodes.map((page, currentIndex) => {
             return _addBaseClasses(page, currentIndex)
         })
-
-        console.log(_book.pages[2])
 
         _removeChildren(node)
 
@@ -366,11 +363,12 @@
     }
 
     function _applyStyles(pageObj, currentIndex, type) {
+        let cssString = ''
         switch (_book.mode) {
             case 'portrait':
                 switch (type) {
                     case 'view':
-                        let cssString = 'position: absolute; top: 0; z-index: 2; float: left; left: 0;'
+                        cssString = 'position: absolute; top: 0; z-index: 2; float: left; left: 0;'
 
                         pageObj.style.cssText = cssString
 
@@ -406,7 +404,7 @@
             case 'landscape':
                 switch (type) {
                     case 'view':
-                        let cssString = 'position: absolute; top: 0; z-index: 3;'
+                        cssString = 'position: absolute; top: 0; z-index: 3;'
 
                         pageObj.style.cssText = cssString
 
@@ -462,10 +460,10 @@
     }
 
 
- 
 
 
-   
+
+
 
     /********************************/
     /********* Cone geometry ********/

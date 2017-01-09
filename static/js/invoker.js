@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
     /**********************************/
     /** **** Initialize  Flippy ********/
     /**********************************/
-    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false }
+    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 5 }
 
     let node = document.getElementById('book')
 
@@ -34,6 +34,10 @@ document.addEventListener('DOMContentLoaded', function(event) {
     //     return superbook.direction
     // }
 
+    // let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
+
+    // console.log('dimensions', dims)
+
 
     /**********************************/
     /******** Implemented  API ********/
@@ -58,28 +62,24 @@ document.addEventListener('DOMContentLoaded', function(event) {
     console.log('Mode', mode)
 
 
-    // let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
-
-    // console.log('dimensions', dims)
-
-
 
     // METHODS:
 
-    superbook.flippy('page', 6)
+    superbook.flippy('page', 9)
 
-    // console.log(superbook.flippy('page')) // Logs the current page of the book
+    console.log(superbook.flippy('page')) // Logs the current page of the book
 
-    // console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
+    console.log(superbook.flippy('view')) // Logs the current view of the book
 
-    // superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
+    console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
 
+    superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
 
-    // let pageObj = document.createElement('div')
+    let pageObj = document.createElement('div')
 
-    // pageObj.innerHTML = 'something'
+    pageObj.innerHTML = 'something'
 
-    // superbook.flippy('addPage', pageObj, 3)
+    superbook.flippy('addPage', pageObj, 3)
 
     // THE BOOK
     // console.log(superbook)
