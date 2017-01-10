@@ -75,7 +75,7 @@
      ********** Private Methods ********
      ***********************************/
 
-     let viewer = {
+    let viewer = {
         getMatch(query, usePolyfill) {
             return this.testMedia(query, usePolyfill).matches
         },
@@ -443,6 +443,67 @@
     /**********************************/
     /********* Events / Touch *********/
     /**********************************/
+
+
+    //  1.
+    w.addEventListener('resize', getDimensions)
+    w.onload = getDimensions
+
+    function getDimensions() {
+        let book = {}
+
+        book.bounds = d.getElementById('plotter').getBoundingClientRect(); // http://caniuse.com/#feat=getboundingclientrect
+
+        d.getElementById('pwidth').textContent = book.bounds.width
+        d.getElementById('pheight').textContent = book.bounds.height
+        d.getElementById('ptop').textContent = book.bounds.top
+        d.getElementById('pleft').textContent = book.bounds.left
+        d.getElementById('pright').textContent = book.bounds.right
+        d.getElementById('pbottom').textContent = book.bounds.bottom
+
+        // origin = d.getElementById('origin').getBoundingClientRect()
+
+        let origin = {}
+
+        origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
+
+        // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
+
+        d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
+        d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
+    }
+
+    // 2.
+    d.getElementById('plotter').onmousemove = handleMouseMove
+
+    function handleMouseMove(e) {
+        let eventDoc
+        let doc
+        let body
+        let pageX
+        let pageY
+
+        e = e || w.e
+
+        if (e.pageX === null && e.clientX !== null) {
+            eventDoc = (e.target && e.target.ownerDocument) || document
+
+            doc = eventDoc.documentElement
+
+            body = eventDoc.body
+
+            e.pageX = e.clientX +
+                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                (doc && doc.clientLeft || body && body.clientLeft || 0)
+            e.pageY = e.clientY +
+                (doc && doc.scrollTop || body && body.scrollTop || 0) -
+                (doc && doc.clientTop || body && body.clientTop || 0)
+        }
+
+        d.getElementById('xaxis').textContent = e.pageX
+        d.getElementById('yaxis').textContent = e.pageY
+    }
+
 
 
 
