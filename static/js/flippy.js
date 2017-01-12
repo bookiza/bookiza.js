@@ -480,11 +480,14 @@
 
     let handler = (event) => {
 
-        event.cancelBubble = true;
+        event.stopPropagation()
 
         switch (event.type) {
             case 'mousemove':
                 handleMouseMove(event)
+                break
+            case 'wheel':
+                handleWheelEvent(event)
                 break
             case 'mouseover':
                 handleMouseOver(event)
@@ -495,43 +498,56 @@
             case 'dblclick':
                 handleMouseDoubleClicks(event)
                 break
+            case 'mousedown':
+                handleMouseDown(event)
+                break
+            case 'mouseup':
+                handleMouseUp(event)
+                break
+            case 'mouseout':
+                handleMouseOut(event)
+                break
             default:
                 console.log(event);
                 break
         }
     }
 
-    ['mousemove', 'mouseover', 'click'].forEach(event => {
+    ['wheel', 'mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick'].forEach(event => {
         delegateElement.addEventListener(event, handler)
 
     })
 
-    function handleMouseMove(e) {
+    function handleWheelEvent(event){
+        console.log('wheel')
+    }
+
+    function handleMouseMove(event) {
         let eventDoc
         let doc
         let body
         let pageX
         let pageY
 
-        e = e || w.e
+        event = event || w.event
 
-        if (e.pageX === null && e.clientX !== null) {
-            eventDoc = (e.target && e.target.ownerDocument) || document
+        if (event.pageX === null && event.clientX !== null) {
+            eventDoc = (event.target && event.target.ownerDocument) || d
 
             doc = eventDoc.documentElement
 
             body = eventDoc.body
 
-            e.pageX = e.clientX +
+            event.pageX = event.clientX +
                 (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
                 (doc && doc.clientLeft || body && body.clientLeft || 0)
-            e.pageY = e.clientY +
+            event.pageY = event.clientY +
                 (doc && doc.scrollTop || body && body.scrollTop || 0) -
                 (doc && doc.clientTop || body && body.clientTop || 0)
         }
 
-        d.getElementById('xaxis').textContent = e.pageX
-        d.getElementById('yaxis').textContent = e.pageY
+        d.getElementById('xaxis').textContent = event.pageX
+        d.getElementById('yaxis').textContent = event.pageY
     }
 
 
@@ -550,6 +566,7 @@
                 console.log('WUT')
                 return
         }
+
         // if (event.target && event.target.matches('a#next')) {
         //     console.log("Anchor next was clicked!");
         // }
@@ -567,6 +584,20 @@
         console.log('Do you wanna make a snowman?')
     }
 
+    function handleMouseDown(event) {
+        console.log('Down!')
+    }
+
+    function handleMouseUp(event) {
+        console.log('Up!')
+    }
+
+    function handleMouseOut(event) {
+        console.log('Out!')
+    }
+
+
+    /* Listen for CSS3 TransitionEnds */
 
     function whichTransitionEvent() {
         let t
@@ -585,13 +616,10 @@
         }
     }
 
-    /* Listen for a transitionEnd */
+    const transitionEvent = whichTransitionEvent()
 
-    const transitionEvent = whichTransitionEvent();
-
-    transitionEvent && document.addEventListener(transitionEvent, (e) => {
-        console.log(e)
-        console.log('Transition complete!  This is the callback, no library needed!');
+    transitionEvent && document.addEventListener(transitionEvent, (event) => {
+        console.log(event.type)
     });
 
 
@@ -606,8 +634,6 @@
     function isOdd(n) {
         return Math.abs(n % 2) == 1
     }
-
-
 
 
 
