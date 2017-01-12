@@ -19,7 +19,7 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    /*transition-duration: 200ms;*/
+    transition-duration: 200ms;
 }
 
 .viewer {

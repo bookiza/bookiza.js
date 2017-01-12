@@ -445,7 +445,8 @@
     /**********************************/
 
 
-    //  1.
+    //  Window level listener.
+
     w.addEventListener('resize', getDimensions)
     w.onload = getDimensions
 
@@ -473,8 +474,37 @@
         d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
     }
 
-    // 2.
-    d.getElementById('plotter').onmousemove = handleMouseMove
+    //  Book level event listeners.
+
+    let delegateElement = d.getElementById('plotter')
+
+    let handler = (event) => {
+
+        event.cancelBubble = true;
+
+        switch (event.type) {
+            case 'mousemove':
+                handleMouseMove(event)
+                break
+            case 'mouseover':
+                handleMouseOver(event)
+                break
+            case 'click':
+                handleMouseClicks(event)
+                break
+            case 'dblclick':
+                handleMouseDoubleClicks(event)
+                break
+            default:
+                console.log(event);
+                break
+        }
+    }
+
+    ['mousemove', 'mouseover', 'click'].forEach(event => {
+        delegateElement.addEventListener(event, handler)
+
+    })
 
     function handleMouseMove(e) {
         let eventDoc
@@ -505,7 +535,64 @@
     }
 
 
+    function handleMouseClicks(event) {
 
+        if (!event.target) return
+
+        switch (event.target.nodeName) {
+            case 'A':
+                console.log("Button", event.target.id, " was clicked!");
+                break
+            case 'DIV':
+                console.log("A page was clicked!");
+                break
+            default:
+                console.log('WUT')
+                return
+        }
+        // if (event.target && event.target.matches('a#next')) {
+        //     console.log("Anchor next was clicked!");
+        // }
+
+
+    }
+
+
+    function handleMouseOver(event) {
+        console.log('Prepare docFrags for left and right')
+    }
+
+
+    function handleMouseDoubleClicks(event) {
+        console.log('Do you wanna make a snowman?')
+    }
+
+
+    function whichTransitionEvent() {
+        let t
+        const el = document.createElement('fakeelement')
+        const transitions = {
+            'transition': 'transitionend',
+            'OTransition': 'oTransitionEnd',
+            'MozTransition': 'transitionend',
+            'WebkitTransition': 'webkitTransitionEnd'
+        }
+
+        for (t in transitions) {
+            if (el.style[t] !== undefined) {
+                return transitions[t]
+            }
+        }
+    }
+
+    /* Listen for a transitionEnd */
+
+    const transitionEvent = whichTransitionEvent();
+
+    transitionEvent && document.addEventListener(transitionEvent, (e) => {
+        console.log(e)
+        console.log('Transition complete!  This is the callback, no library needed!');
+    });
 
 
     /**********************************/
@@ -573,7 +660,6 @@
     Number.prototype.between = function(min, max) {
         return this > min && this < max;
     };
-
 
     /**********************************/
     /*********** Exposed API **********/
