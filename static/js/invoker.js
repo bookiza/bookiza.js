@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
     // METHODS:
 
-    superbook.flippy('page', 9)
+    superbook.flippy('page', 3)
 
     console.log(superbook.flippy('page')) // Logs the current page of the book
 
@@ -80,6 +80,12 @@ document.addEventListener('DOMContentLoaded', function(event) {
     pageObj.innerHTML = 'something'
 
     superbook.flippy('addPage', pageObj, 3)
+
+    // On keypress (next)
+
+    superbook.flippy('next')
+
+    superbook.flippy('previous')
 
     // THE BOOK
     // console.log(superbook)

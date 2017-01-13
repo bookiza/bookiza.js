@@ -5,7 +5,7 @@
 // import '../modules/graph.js'
 // import events from '../modules/events.js'
 
-(((w, d, undefined) => {
+(((n, w, d, undefined) => {
     /***********************************
      ************* Public API **********
      ***********************************/
@@ -62,7 +62,13 @@
             if (index.between(0, _book.pages.length)) _addPage(theArgs[0], index)
         }
 
+        next() {
+            console.log('next page')
+        }
 
+        previous() {
+            console.log('previous page')
+        }
 
         // EVENTS
 
@@ -481,6 +487,7 @@
     let handler = (event) => {
 
         event.stopPropagation()
+        event.preventDefault()
 
         switch (event.type) {
             case 'mousemove':
@@ -635,8 +642,9 @@
         return Math.abs(n % 2) == 1
     }
 
-
-
+    function isTouch() {
+        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
+    }
 
 
     /********************************/
@@ -723,4 +731,4 @@
             }
         }
     }
-}))(window, document)
+}))(navigator, window, document)
