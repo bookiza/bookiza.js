@@ -63,7 +63,7 @@
         }
 
         next() {
-            console.log('next page')
+            _next(increment(_book.mode))
         }
 
         previous() {
@@ -71,8 +71,6 @@
         }
 
         // EVENTS
-
-
 
 
     }
@@ -446,6 +444,12 @@
     }
 
 
+    function _next(increment) {
+        newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+        console.log('new', newCurrentPage)
+    }
+
     /**********************************/
     /********* Events / Touch *********/
     /**********************************/
@@ -453,10 +457,10 @@
 
     //  Window level listener.
 
-    w.addEventListener('resize', getDimensions)
-    w.onload = getDimensions
+    w.addEventListener('resize', _getDimensions)
+    w.onload = _getDimensions
 
-    function getDimensions() {
+    function _getDimensions() {
         let book = {}
 
         book.bounds = d.getElementById('plotter').getBoundingClientRect(); // http://caniuse.com/#feat=getboundingclientrect
@@ -487,6 +491,7 @@
     let handler = (event) => {
 
         event.stopPropagation()
+
         event.preventDefault()
 
         switch (event.type) {
@@ -520,12 +525,12 @@
         }
     }
 
-    ['wheel', 'mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick'].forEach(event => {
+    ['mousemove', 'wheel', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick'].forEach(event => {
         delegateElement.addEventListener(event, handler)
 
     })
 
-    function handleWheelEvent(event){
+    function handleWheelEvent(event) {
         console.log('wheel')
     }
 
@@ -643,7 +648,12 @@
     }
 
     function isTouch() {
-        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
+        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0)) // TODO: Do we need this? Consider PointerEvents.
+    }
+
+
+    function increment(mode) {
+        return (mode === 'portrait') ? 1 : 2
     }
 
 

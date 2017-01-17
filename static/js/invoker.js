@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function(event) {
+// document.addEventListener('DOMContentLoaded', function(event) {
     /**********************************/
     /** **** Initialize  Flippy ********/
     /**********************************/
@@ -89,6 +89,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
     // THE BOOK
     // console.log(superbook)
-})
+// })
 
 /************ Z' END **************/
