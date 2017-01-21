@@ -67,7 +67,7 @@
         }
 
         previous() {
-            console.log('previous page')
+            _previous(increment(_book.mode))
         }
 
         // EVENTS
@@ -99,7 +99,7 @@
                 const res = w.matchMedia(query)
                 return res
             } else {
-                // ... polyfill
+                // ... polyfill?
             }
         }
     }
@@ -198,7 +198,7 @@
 
         newWrapper.innerHTML = `<h1> ${parseInt(currentIndex) + 1}  </h1>`
 
-        //TODO: Attach clip & shadow element into the DOM.
+        // TODO: Attach clip & shadow element into the DOM.
 
         // newWrapper.appendChild(pageObj)
 
@@ -263,11 +263,15 @@
         switch (_book.mode) {
             case 'portrait':
 
-                let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
-                let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
+                // let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                // let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
+                // let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? (currentIndex + 1) - parseInt(_book.pages.length) : (currentIndex + 1)
+                // let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
 
-                let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? (currentIndex + 1) - parseInt(_book.pages.length) : (currentIndex + 1)
-                let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
+                let p = _leftCircularIndex(currentIndex, 2)
+                let q = _leftCircularIndex(currentIndex, 1)
+                let r = _rightCircularIndex(currentIndex, 1)
+                let s = _rightCircularIndex(currentIndex, 2)
 
                 _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
                 _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
@@ -276,20 +280,31 @@
 
             case 'landscape':
                 if (isEven(parseInt(currentPage))) {
-                    let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
-                    let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
 
-                    let r = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
-                    let s = (currentIndex + 3 >= parseInt(_book.pages.length)) ? (currentIndex + 3) - parseInt(_book.pages.length) : (currentIndex + 3)
+                    // let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                    // let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
+                    // let r = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
+                    // let s = (currentIndex + 3 >= parseInt(_book.pages.length)) ? (currentIndex + 3) - parseInt(_book.pages.length) : (currentIndex + 3)
+
+
+                    let p = _leftCircularIndex(currentIndex, 2)
+                    let q = _leftCircularIndex(currentIndex, 1)
+                    let r = _rightCircularIndex(currentIndex, 2)
+                    let s = _rightCircularIndex(currentIndex, 3)
 
                     _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
                     _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
                 } else {
-                    let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
-                    let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
 
-                    let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 1)
-                    let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 2)
+                    // let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
+                    // let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
+                    // let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 1)
+                    // let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 2)
+
+                    let p = _leftCircularIndex(currentIndex, 3)
+                    let q = _leftCircularIndex(currentIndex, 2)
+                    let r = _rightCircularIndex(currentIndex, 1)
+                    let s = _rightCircularIndex(currentIndex, 2)
 
                     _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
                     _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
@@ -444,11 +459,24 @@
     }
 
 
-    function _next(increment) {
-        newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+    /***********************************
+     *********** DOM/Book flips **********
+     ***********************************/
 
-        console.log('new', newCurrentPage)
+
+    function _next(increment) {
+        // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+        // console.log('newCurrentPage', newCurrentPage)
     }
+
+
+    function _previous(increment) {
+        // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+        // console.log('newCurrentPage', newCurrentPage)
+    }
+
 
     /**********************************/
     /********* Events / Touch *********/
@@ -519,19 +547,27 @@
             case 'mouseout':
                 handleMouseOut(event)
                 break
+            case 'touchstart':
+                handleTouchStart(event)
+                break
+            case 'touchmove':
+                handleTouchMove(event)
+                break
+            case 'touchend':
+                handleTouchEnd(event)
+                break
             default:
                 console.log(event);
                 break
         }
     }
 
-    ['mousemove', 'wheel', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick'].forEach(event => {
+    ['mousemove', 'wheel', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchend', 'touchmove'].forEach(event => {
         delegateElement.addEventListener(event, handler)
-
     })
 
     function handleWheelEvent(event) {
-        console.log('wheel')
+        // TODO: Determine forward / backward swipe.
     }
 
     function handleMouseMove(event) {
@@ -567,45 +603,102 @@
 
         if (!event.target) return
 
+        let currentIndex = parseInt(_book.currentPage) - 1
+
         switch (event.target.nodeName) {
             case 'A':
-                console.log("Button", event.target.id, " was clicked!");
+
+                if (event.target.matches('a#next')) {
+
+                    let increment = isEven(_book.currentPage) ? 2 : 1
+
+                    _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+
+                    _setView(_book.currentPage)
+
+                    _setRange(_book.currentPage)
+
+                    _printBook()
+
+                }
+
+                if (event.target.matches('a#previous')) {
+
+                    let increment = isOdd(_book.currentPage) ? 2 : 1
+
+                    _book.currentPage = _leftCircularIndex(currentIndex, increment) + 1
+
+                    _setView(_book.currentPage)
+
+                    _setRange(_book.currentPage)
+
+                    _printBook()
+
+                }
+
+
                 break
             case 'DIV':
-                console.log("A page was clicked!");
+                console.log("A page was clicked!", event);
                 break
             default:
-                console.log('WUT')
+                console.log('WUT', event.target)
                 return
         }
-
-        // if (event.target && event.target.matches('a#next')) {
-        //     console.log("Anchor next was clicked!");
-        // }
 
 
     }
 
 
     function handleMouseOver(event) {
-        console.log('Prepare docFrags for left and right')
+        let currentIndex = parseInt(_book.currentPage) - 1
+
+        if (!event.srcElement.getAttribute('page')) return
+
+        // TODO Trigger a peel?
+
+        switch (_book.mode) {
+            case 'portrait':
+                let previousPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
+                let nextPages = _rightCircularIndex(currentIndex, 3)
+
+                break
+            case 'landscape':
+                console.log(event.srcElement.getAttribute('page'))
+
+                // let leftAppendage = _leftCircularIndex
+        }
+
+
     }
 
 
     function handleMouseDoubleClicks(event) {
-        console.log('Do you wanna make a snowman?')
+        // console.log('Do you wanna make a snowman?')
     }
 
     function handleMouseDown(event) {
-        console.log('Down!')
+        // console.log('Down!')
     }
 
     function handleMouseUp(event) {
-        console.log('Up!')
+        // console.log('Up!')
     }
 
     function handleMouseOut(event) {
-        console.log('Out!')
+        // console.log('Out!')
+    }
+
+    function handleTouchStart(event) {
+        // console.log('Touch started')
+    }
+
+    function handleTouchMove(event) {
+        // console.log('Touch moving')
+    }
+
+    function handleTouchEnd(event) {
+        // console.log('Touch moving')
     }
 
 
@@ -613,7 +706,7 @@
 
     function whichTransitionEvent() {
         let t
-        const el = document.createElement('fakeelement')
+        const el = d.createElement('fakeelement')
         const transitions = {
             'transition': 'transitionend',
             'OTransition': 'oTransitionEnd',
@@ -630,8 +723,8 @@
 
     const transitionEvent = whichTransitionEvent()
 
-    transitionEvent && document.addEventListener(transitionEvent, (event) => {
-        console.log(event.type)
+    transitionEvent && d.addEventListener(transitionEvent, (event) => {
+        console.log(event.propertyName)
     });
 
 
@@ -648,12 +741,23 @@
     }
 
     function isTouch() {
-        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0)) // TODO: Do we need this? Consider PointerEvents.
+        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0)) // TODO: Do we need this? Consider pointerEvents.
     }
 
+    function _leftCircularIndex(currentIndex, indice) {
+        return (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
+    }
+
+    function _rightCircularIndex(currentIndex, indice) {
+        return (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
+    }
 
     function increment(mode) {
         return (mode === 'portrait') ? 1 : 2
+    }
+
+    function direction(mode) {
+        // return (mode === 'portrait') ? 'forward' : 'backward'
     }
 
 
