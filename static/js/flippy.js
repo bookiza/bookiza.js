@@ -188,7 +188,7 @@
     function _wrapHtml(pageObj, currentIndex) {
         const newWrapper = document.createElement('div')
 
-        let classes = 'wrapper promoted'
+        let classes = 'wrapper'
 
         classes += isEven(currentIndex) ? ' red' : ' blue'
 
@@ -196,7 +196,7 @@
 
         newWrapper.setAttribute('page', parseInt(currentIndex) + 1)
 
-        // newWrapper.innerHTML = `<div class="gradient"><h1> ${parseInt(currentIndex) + 1}  </h1> </div>`
+        newWrapper.innerHTML = `<div class="gradient"><h1> ${parseInt(currentIndex) + 1}  </h1> </div>`
 
         // TODO: Attach clip & shadow element into the DOM.
 
@@ -394,6 +394,8 @@
                         // cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0; '
 
                         pageObj.style.cssText = cssString
+
+                        pageObj.id = promoted
 
                         break
                     case 'rightPages':
@@ -643,7 +645,9 @@
 
                 // event.target.className += ' flip forward'
 
-                _printElements('rightPages', _book.sidePagesRight)
+                // _printElements('rightPages', _book.sidePagesRight)
+
+                _printBook()
 
 
 
