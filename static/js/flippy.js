@@ -564,7 +564,15 @@
         }
     }
 
-    ['mousemove', 'wheel', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick', 'touchstart', 'touchend', 'touchmove'].forEach(event => {
+    let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick']
+
+    let touchEvents = ['touchstart', 'touchend', 'touchmove']
+
+    let keyEvents   = ['wheel']
+
+    let eventList = [].concat(mouseEvents).concat(touchEvents).concat(keyEvents)
+
+    eventList.forEach(event => {
         delegateElement.addEventListener(event, handler)
     })
 
