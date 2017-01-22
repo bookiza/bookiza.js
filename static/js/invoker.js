@@ -2,7 +2,7 @@
     /**********************************/
     /** **** Initialize  Flippy ********/
     /**********************************/
-    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 7 }
+    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 6 }
 
     let node = document.getElementById('book')
 
@@ -22,17 +22,10 @@
 
     // superbook.area = () => '[height, width]'
 
-    // superbook.direction = 'forward'
+    // superbook.flippy('next')
 
-    // superbook.next = () => {
-    //     superbook.direction = 'forward'
-    //     return superbook.direction
-    // }
+    // superbook.flippy('previous')
 
-    // superbook.prev = () => {
-    //     superbook.direction = 'backward'
-    //     return superbook.direction
-    // }
 
     // let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
 
@@ -80,12 +73,6 @@
     // pageObj.innerHTML = 'something something'
 
     // superbook.flippy('addPage', pageObj, 3)
-
-    // On keypress (next)
-
-    superbook.flippy('next')
-
-    superbook.flippy('previous')
 
     // THE BOOK
     // console.log(superbook)

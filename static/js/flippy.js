@@ -196,7 +196,7 @@
 
         newWrapper.setAttribute('page', parseInt(currentIndex) + 1)
 
-        newWrapper.innerHTML = `<h1> ${parseInt(currentIndex) + 1}  </h1>`
+        // newWrapper.innerHTML = `<div class="gradient"><h1> ${parseInt(currentIndex) + 1}  </h1> </div>`
 
         // TODO: Attach clip & shadow element into the DOM.
 
@@ -607,34 +607,44 @@
 
         switch (event.target.nodeName) {
             case 'A':
+                switch (_book.mode) {
+                    case 'portrait':
 
-                if (event.target.matches('a#next')) {
+                        if (event.target.matches('a#next')) {
+                            let increment = 1 // Forward
+                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                        }
 
-                    let increment = isEven(_book.currentPage) ? 2 : 1
+                        if (event.target.matches('a#previous')) {
+                            let decrement = 1 // Backward
+                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                        }
 
-                    _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                        break
+                    case 'landscape':
+                        if (event.target.matches('a#next')) {
+                            let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
+                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                        }
 
-                    _setView(_book.currentPage)
+                        if (event.target.matches('a#previous')) {
+                            let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
+                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                        }
 
-                    _setRange(_book.currentPage)
-
-                    _printBook()
-
+                        break
                 }
 
-                if (event.target.matches('a#previous')) {
+                console.log('new current', _book.currentPage)
 
-                    let increment = isOdd(_book.currentPage) ? 2 : 1
+                _setView(_book.currentPage)
 
-                    _book.currentPage = _leftCircularIndex(currentIndex, increment) + 1
+                _setRange(_book.currentPage)
 
-                    _setView(_book.currentPage)
+                // event.target.className += ' flip forward'
 
-                    _setRange(_book.currentPage)
+                _printElements('rightPages', _book.sidePagesRight)
 
-                    _printBook()
-
-                }
 
 
                 break
@@ -664,7 +674,7 @@
 
                 break
             case 'landscape':
-                console.log(event.srcElement.getAttribute('page'))
+                // console.log(event.srcElement.getAttribute('page'))
 
                 // let leftAppendage = _leftCircularIndex
         }
