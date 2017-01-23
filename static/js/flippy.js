@@ -21,7 +21,7 @@
         // PROPERTIES
 
         // dimensions() {
-        //     return _book.bounds = d.getElementById('viewer').getBoundingClientRect();
+        //     return _book.bounds = d.getElementById('viewer').getBoundingClientRect()
         // }
 
         view() {
@@ -150,7 +150,7 @@
     function _removePage(index) {
         // WARNING: Remove eventListeners please. Avoid memory leakages.
 
-        _book.pages.splice(index, 1);
+        _book.pages.splice(index, 1)
 
         _setView(_book.currentPage)
 
@@ -164,7 +164,7 @@
 
         let wrappedObj = _addBaseClasses(pageObj, index)
 
-        _book.pages.splice(index, 0, wrappedObj);
+        _book.pages.splice(index, 0, wrappedObj)
 
         _setView(_book.currentPage)
 
@@ -493,7 +493,7 @@
     function _getDimensions() {
         let book = {}
 
-        book.bounds = d.getElementById('plotter').getBoundingClientRect(); // http://caniuse.com/#feat=getboundingclientrect
+        book.bounds = d.getElementById('plotter').getBoundingClientRect() // http://caniuse.com/#feat=getboundingclientrect
 
         d.getElementById('pwidth').textContent = book.bounds.width
         d.getElementById('pheight').textContent = book.bounds.height
@@ -559,7 +559,7 @@
                 handleTouchEnd(event)
                 break
             default:
-                console.log(event);
+                console.log(event)
                 break
         }
     }
@@ -649,23 +649,20 @@
                         break
                 }
 
-                console.log('new current', _book.currentPage)
+                // event.target.className += ' flip forward'
+
+                // _printElements('rightPages', _book.sidePagesRight)
 
                 _setView(_book.currentPage)
 
                 _setRange(_book.currentPage)
 
-                // event.target.className += ' flip forward'
-
-                // _printElements('rightPages', _book.sidePagesRight)
 
                 _printBook()
 
-
-
                 break
             case 'DIV':
-                console.log("A page was clicked!", event);
+                console.log("A page was clicked!", event)
                 break
             default:
                 console.log('WUT', event.target)
@@ -704,7 +701,7 @@
     }
 
     function handleMouseDown(event) {
-        // console.log('Down!')
+
     }
 
     function handleMouseUp(event) {
@@ -751,7 +748,7 @@
 
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
         console.log(event.propertyName)
-    });
+    })
 
 
     /**********************************/
@@ -832,8 +829,8 @@
     }
 
     Number.prototype.between = function(min, max) {
-        return this > min && this < max;
-    };
+        return this > min && this < max
+    }
 
     /**********************************/
     /*********** Exposed API **********/
