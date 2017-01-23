@@ -325,9 +325,9 @@
 
         _printElements('view', _book.viewablePages)
 
-        _printElements('rightPages', _book.sidePagesRight)
+        // _printElements('rightPages', _book.sidePagesRight)
 
-        _printElements('leftPages', _book.sidePagesLeft)
+        // _printElements('leftPages', _book.sidePagesLeft)
 
         return
     }
@@ -564,15 +564,19 @@
         }
     }
 
+
+
     let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick']
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    let keyEvents   = ['wheel']
+    let keyEvents   = ['wheel', 'keypress']
 
-    let eventList = [].concat(mouseEvents).concat(touchEvents).concat(keyEvents)
+    const events = [].concat(mouseEvents).concat(keyEvents)
 
-    eventList.forEach(event => {
+    if (isTouch()) events.concat(touchEvents)
+
+    events.forEach(event => {
         delegateElement.addEventListener(event, handler)
     })
 
