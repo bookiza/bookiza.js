@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/marvindanig/flippy.JS.svg?branch=master)](https://travis-ci.org/marvindanig/flippy.JS) 
+[![Build Status](https://travis-ci.org/marvindanig/flippy.JS.svg?branch=master)](https://travis-ci.org/marvindanig/flippy.JS)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![npm](https://img.shields.io/npm/dt/flippy.JS.svg?maxAge=2592000)](https://www.npmjs.com/package/flippy)
 
@@ -32,22 +32,18 @@ import '../css/book.css'
 
 import '../lib/flippy.js'
 
-document.addEventListener('DOMContentLoaded', function(event) {
-
+// document.addEventListener('DOMContentLoaded', function(event) {
     /**********************************/
-    /****** Initialize  Flippy ********/
+    /** **** Initialize  Flippy ********/
     /**********************************/
-
-    let settings = { duration: 100, animation: true, curl: true, allowZoom: false, start_page: 20 }
+    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 1 }
 
     let node = document.getElementById('book')
 
     const superbook = Flippy.init(node, settings)
 
-    console.table(superbook)
-
     /**********************************/
-    /******** Work in progress ********/
+    /** ****** Work in progress ********/
     /**********************************/
 
     // superbook.flipping = false
@@ -58,45 +54,61 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
     // superbook.zoomed = true // boolean state
 
-    // superbook.page = () => 'current_page'
-
     // superbook.area = () => '[height, width]'
 
-    // superbook.direction = 'forward'
+    // superbook.flippy('next')
 
-    // superbook.next = () => {
-    //     superbook.direction = 'forward'
-    //     return superbook.direction
-    // }
+    // superbook.flippy('previous')
 
-    // superbook.prev = () => {
-    //     superbook.direction = 'backward'
-    //     return superbook.direction
-    // }
 
-    // superbook.hasPage = pageNo => {
-    //     console.log('Returns if page exist: ', pageNo)
-    // }
+    // let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
 
-    // superbook.addPage = (pageNo, content) => {
-    //     console.log('Adding page number: ', content, 'at', pageNo)
-    // }
+    // console.log('dimensions', dims)
 
-    // superbook.removePage = pageNo => {
-    //     console.log('Remove page number: ', pageNo)
-    // }
 
     /**********************************/
     /******** Implemented  API ********/
     /**********************************/
 
-    let booklength = superbook.flippy('length')
+    // PROPERTIES:
 
-    console.log('Book length', booklength)
+    // let booklength = superbook.flippy('length')
 
-    superbook.flippy('flip', 7)
+    // console.log('Book length', booklength)
+
+    // let currentPage = superbook.flippy('page')
+
+    // console.log('Current page', currentPage)
+
+    // let view = superbook.flippy('view')
+
+    // console.log('Current view', view)
+
+    // let mode = superbook.flippy('mode')
+
+    // console.log('Mode', mode)
 
 
-}, true)
 
+    // METHODS:
+
+    // superbook.flippy('page', 5)
+
+    // console.log(superbook.flippy('page')) // Logs the current page of the book
+
+    // console.log(superbook.flippy('view')) // Logs the current view of the book
+
+    // console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
+
+    // superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
+
+    // let pageObj = document.createElement('div')
+
+    // pageObj.innerHTML = 'something something'
+
+    // superbook.flippy('addPage', pageObj, 3)
+
+    // THE BOOK
+    // console.log(superbook)
+// }, true)
 ```

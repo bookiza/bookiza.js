@@ -2,7 +2,7 @@
     /**********************************/
     /** **** Initialize  Flippy ********/
     /**********************************/
-    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 7 }
+    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 1 }
 
     let node = document.getElementById('book')
 
@@ -76,6 +76,6 @@
 
     // THE BOOK
     // console.log(superbook)
-// })
+// }, true)
 
 /************ Z' END **************/

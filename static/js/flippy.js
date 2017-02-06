@@ -200,7 +200,7 @@
 
         // TODO: Attach clip & shadow element into the DOM.
 
-        // newWrapper.appendChild(pageObj)
+        newWrapper.appendChild(pageObj)
 
         return newWrapper
     }
