@@ -395,7 +395,7 @@
 
                         pageObj.style.cssText = cssString
 
-                        pageObj.id = promoted
+                        pageObj.id = 'promoted'
 
                         break
                     case 'rightPages':

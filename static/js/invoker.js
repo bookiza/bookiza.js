@@ -38,9 +38,9 @@
 
     // PROPERTIES:
 
-    // let booklength = superbook.flippy('length')
+    let booklength = superbook.flippy('length')
 
-    // console.log('Book length', booklength)
+    console.log('Book length', booklength)
 
     // let currentPage = superbook.flippy('page')
 
