@@ -10,7 +10,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     width: 100vw;
     height: 100vh;
@@ -25,7 +26,8 @@ html, body {
 .viewer {
     pointer-events: none;
     cursor: default;
-   -webkit-perspective: 200px; /* Apply perspective to children */
+    -webkit-perspective: 200px;
+    /* Apply perspective to children */
     perspective: 200px;
     perspective-origin: 50% 50%;
 }
@@ -34,16 +36,37 @@ html, body {
     pointer-events: auto;
     width: 100%;
     height: 100%;
-    transform: translateZ(0px); /* Implement pinch2zoom? */
-    transform-style: preserve-3d; /* Gets faux 3D space for pages */
+    transform: translateZ(0px);
+    /* Implement pinch2zoom? */
+    transform-style: preserve-3d;
+    /* Gets faux 3D space for pages */
 }
 
-.page, .wrapper {
+.wrapper {
     height: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
-.page iframe {
+.outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.inner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.inner iframe {
     position: absolute;
     top: 0;
     left: 0;
@@ -52,25 +75,43 @@ html, body {
     min-height: 100%;
     margin: 0;
     overflow: hidden;
+    pointer-events: none;
 }
+
 
 @media (orientation: portrait) {
     body .viewer {
         width: calc(100vh * 1540/(1000 * 2));
         height: 100vh;
-        max-height: calc(100vw * 1443/1114); /* Default CSS when JS is turned off */
+        max-height: calc(100vw * 1443/1114);
+        /* Default CSS when JS is turned off */
     }
-    body .page, body .wrapper {
+    body .wrapper {
         backface-visibility: visible;
         width: 100%;
     }
-    body .page iframe{
+    body .inner iframe {
         backface-visibility: visible;
         width: 100%;
     }
-    body .flipped {
-        transform: rotateY( 0deg );
+
+    body .even > .gradient {
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
     }
+    body .odd > .gradient {
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+    }
+
 
 }
 
@@ -80,20 +121,31 @@ html, body {
         height: 100vh;
         max-height: calc(50vw * 1443/1114);
     }
-    body .page, body .wrapper {
-        backface-visibility: visible;
+    body .wrapper {
+        backface-visibility: hidden;
         width: 50%;
     }
-    body .page iframe{
-        backface-visibility: visible;
+    body .inner iframe {
+        backface-visibility: hidden;
         width: 50%;
     }
-    body .flipped {
-        transform: rotateY( 180deg );
+    body .even > .gradient {
+        background: -webkit-gradient(linear, left top, right top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+    }
+    body .odd > .gradient {
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
     }
 }
-
-
 
 .left {
     float: left;
@@ -110,8 +162,8 @@ html, body {
 }
 
 .promoted {
-  will-change: transform;
-  transform: translateZ(0);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .flex {
@@ -156,9 +208,8 @@ html, body {
 }
 
 svg {
-  pointer-events: none;
+    pointer-events: none;
 }
-
 
 .noselect {
     -webkit-touch-callout: none;
@@ -238,13 +289,16 @@ svg {
 }
 
 .grabbable {
-    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: move;
+    /* fallback if grab cursor is unsupported */
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
 }
 
- /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+
+/* (Optional) Apply a "closed-hand" cursor during drag operation. */
+
 .grabbable:active {
     cursor: grabbing;
     cursor: -moz-grabbing;
@@ -252,13 +306,21 @@ svg {
 }
 
 
+
+/*.odd .even,
+.even .odd {
+    transform-origin: 0% 0% 0px;
+    transform: translate3d(10px, 0px, 0px) rotate(180deg) scale3d(-0.9, 1, 1);
+}
+*/
+
+
 /* To be removed eventually */
+
 
 /*@import './animation.css';*/
 
 @import './plotter.css';
-
-
 .red {
     background: tomato;
 }

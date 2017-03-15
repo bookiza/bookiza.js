@@ -175,9 +175,11 @@
 
     function _addBaseClasses(pageObj, currentIndex) {
 
-        pageObj.classList.add(`page-${parseInt(currentIndex) + 1}`)
+        let classes = `inner page-${parseInt(currentIndex) + 1} `
 
-        isEven(currentIndex) ? pageObj.classList.add('page-even') : pageObj.classList.add('page-odd')
+        classes += isEven(currentIndex) ? 'even' : 'odd'
+
+        addClasses(pageObj, classes)
 
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
@@ -190,15 +192,13 @@
 
         let classes = 'wrapper'
 
-        classes += isEven(currentIndex) ? ' red' : ' blue'
+        classes += isEven(currentIndex) ? ' odd' : ' even'
 
         addClasses(newWrapper, classes)
 
         newWrapper.setAttribute('page', parseInt(currentIndex) + 1)
 
-        newWrapper.innerHTML = `<div class="gradient"><h1> ${parseInt(currentIndex) + 1}  </h1> </div>`
-
-        // TODO: Attach clip & shadow element into the DOM.
+        newWrapper.innerHTML = `<div class="outer gradient"><h1> ${parseInt(currentIndex) + 1}  </h1></div>`
 
         newWrapper.appendChild(pageObj)
 
@@ -325,9 +325,9 @@
 
         _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
-        // _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.sidePagesLeft)
 
         return
     }
@@ -439,7 +439,7 @@
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 2; ' : 'z-index: 1;'
+                        cssString += isEven(currentIndex) ? 'z-index: 2;' : 'z-index: 1;'
 
                         pageObj.style.cssText = cssString
 
@@ -488,6 +488,7 @@
     //  Window level listener.
 
     w.addEventListener('resize', _getDimensions)
+
     w.onload = _getDimensions
 
     function _getDimensions() {
@@ -570,7 +571,7 @@
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    let keyEvents   = ['wheel', 'keypress']
+    let keyEvents = ['wheel', 'keypress']
 
     const events = [].concat(mouseEvents).concat(keyEvents)
 
@@ -649,7 +650,6 @@
                         break
                 }
 
-                // event.target.className += ' flip forward'
 
                 // _printElements('rightPages', _book.sidePagesRight)
 
@@ -662,7 +662,22 @@
 
                 break
             case 'DIV':
-                console.log("A page was clicked!", event)
+                console.log("A page was clicked!", event.target)
+                switch (_book.mode) {
+                    case 'portrait':
+
+                        break
+                    case 'landscape':
+                        if (event.target.matches('div.even')) {
+                            console.log('forward')
+                            event.target.className += ' flip forward'
+                        }
+                        if (event.target.matches('div.odd')) {
+                            console.log('backward')
+                            event.target.className += ' flip backward'
+                        }
+                        break
+                }
                 break
             default:
                 console.log('WUT', event.target)
@@ -747,7 +762,8 @@
     const transitionEvent = whichTransitionEvent()
 
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
-        console.log(event.propertyName)
+        console.log('yay, transition ended')
+        console.log(event.target)
     })
 
 

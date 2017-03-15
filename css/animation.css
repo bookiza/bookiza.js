@@ -13,7 +13,7 @@
   animation-iteration-count: once;
   animation-timing-function: ease, step-start, cubic-bezier(0.1, 0.7, 1.0, 0.1);
   animation-delay: 0;
-  animation-duration: 3s;
+  animation-duration: 6s;
   transform-origin: 0 50% 0;
 }
 
@@ -22,7 +22,7 @@
         transform: rotateY(0deg);
     }
     to {
-        transform: rotateY(180deg);
+        transform: rotateY(90deg);
     }
 }
 
@@ -31,7 +31,7 @@
   animation-iteration-count: once;
   animation-timing-function: ease;
   animation-delay: 0;
-  animation-duration: 3s;
+  animation-duration: 6s;
   transform-origin: 100% 50% 0;
 }
 
