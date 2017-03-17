@@ -15,7 +15,7 @@
         // CONSTRUCTOR
 
         constructor() {
-            this.mode = viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
+            this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
         }
 
         // PROPERTIES
@@ -79,7 +79,7 @@
      ********** Private Methods ********
      ***********************************/
 
-    let viewer = {
+    let _viewer = {
         getMatch(query, usePolyfill) {
             return this.testMedia(query, usePolyfill).matches
         },
@@ -133,7 +133,7 @@
         return
     }
 
-    viewer.onChange('(orientation: landscape)', match => {
+    _viewer.onChange('(orientation: landscape)', match => {
         _book.mode = match ? 'landscape' : 'portrait'
 
         _setView(_book.currentPage)
@@ -328,10 +328,7 @@
 
         _printElements('leftPages', _book.sidePagesLeft)
 
-
-        let raster = [...node.children]
-
-        console.log(raster)
+        _liveBookHandler()
 
         return
     }
@@ -588,7 +585,7 @@
     function handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
 
-        console.log(event)
+        // console.log(event)
 
     }
 
@@ -771,6 +768,13 @@
         console.log('yay, transition ended')
         console.log(event.target)
     })
+
+    function _liveBookHandler() {
+        let raster = [...node.children]
+
+        console.log(raster)
+    }
+
 
 
     /**********************************/

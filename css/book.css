@@ -321,6 +321,7 @@ svg {
 /*@import './animation.css';*/
 
 @import './plotter.css';
+
 .red {
     background: tomato;
 }
