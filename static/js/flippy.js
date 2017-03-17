@@ -99,7 +99,7 @@
                 const res = w.matchMedia(query)
                 return res
             } else {
-                // ... polyfill?
+                // ... polyfill or pollyfill.io to keep it clean.
             }
         }
     }
@@ -175,16 +175,15 @@
 
     function _addBaseClasses(pageObj, currentIndex) {
 
-        let classes = `inner page-${parseInt(currentIndex) + 1} `
+        let classes = `promoted inner page-${parseInt(currentIndex) + 1} `
 
-        classes += isEven(currentIndex) ? 'even' : 'odd'
+        classes += isEven(currentIndex) ? 'even red' : 'odd blue'
 
         addClasses(pageObj, classes)
 
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
         return wrappedHtml
-            // return pageObj
     }
 
     function _wrapHtml(pageObj, currentIndex) {
@@ -329,6 +328,11 @@
 
         _printElements('leftPages', _book.sidePagesLeft)
 
+
+        let raster = [...node.children]
+
+        console.log(raster)
+
         return
     }
 
@@ -376,7 +380,7 @@
 
         }
 
-        node.appendChild(docfrag)
+        node.appendChild(docfrag) // nodeList?
 
         return
     }
@@ -439,7 +443,7 @@
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 2;' : 'z-index: 1;'
+                        cssString += isEven(currentIndex) ? 'z-index: 2; display: none;' : 'z-index: 1;'
 
                         pageObj.style.cssText = cssString
 
@@ -449,7 +453,7 @@
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 2;'
+                        cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 2; display: none;'
 
                         pageObj.style.cssText = cssString
 
@@ -583,6 +587,9 @@
 
     function handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
+
+        console.log(event)
+
     }
 
     function handleMouseMove(event) {
@@ -662,7 +669,6 @@
 
                 break
             case 'DIV':
-                console.log("A page was clicked!", event.target)
                 switch (_book.mode) {
                     case 'portrait':
 
@@ -847,6 +853,7 @@
     Number.prototype.between = function(min, max) {
         return this > min && this < max
     }
+
 
     /**********************************/
     /*********** Exposed API **********/

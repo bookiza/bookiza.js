@@ -96,20 +96,20 @@ body {
     }
 
     body .even > .gradient {
-        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
-        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
     body .odd > .gradient {
-        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
-        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
 
 
@@ -130,20 +130,20 @@ body {
         width: 50%;
     }
     body .even > .gradient {
-        background: -webkit-gradient(linear, left top, right top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
-        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: linear-gradient(left, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background: -webkit-gradient(linear, left top, right top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
     body .odd > .gradient {
-        background: -webkit-gradient(linear, right top, left top, color-stop(0.95, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
-        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
-        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 95%, rgba(0, 0, 0, 0.3) 100%);
+        background: -webkit-gradient(linear, right top, left top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
+        background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -ms-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
+        background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
 }
 
