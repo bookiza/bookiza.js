@@ -328,7 +328,7 @@
 
         _printElements('leftPages', _book.sidePagesLeft)
 
-        _liveBookHandler()
+        _liveNodeHandler(w, d)
 
         return
     }
@@ -481,300 +481,336 @@
     }
 
 
-    /**********************************/
-    /********* Events / Touch *********/
-    /**********************************/
+    function _liveNodeHandler(w, d) {
 
+        //  Window level listener.
 
-    //  Window level listener.
+        w.addEventListener('resize', _getDimensions)
 
-    w.addEventListener('resize', _getDimensions)
+        w.onload = _getDimensions
 
-    w.onload = _getDimensions
+        function _getDimensions() {
+            let book = {}
 
-    function _getDimensions() {
-        let book = {}
+            book.bounds = d.getElementById('plotter').getBoundingClientRect() // http://caniuse.com/#feat=getboundingclientrect
 
-        book.bounds = d.getElementById('plotter').getBoundingClientRect() // http://caniuse.com/#feat=getboundingclientrect
+            d.getElementById('pwidth').textContent = book.bounds.width
+            d.getElementById('pheight').textContent = book.bounds.height
+            d.getElementById('ptop').textContent = book.bounds.top
+            d.getElementById('pleft').textContent = book.bounds.left
+            d.getElementById('pright').textContent = book.bounds.right
+            d.getElementById('pbottom').textContent = book.bounds.bottom
 
-        d.getElementById('pwidth').textContent = book.bounds.width
-        d.getElementById('pheight').textContent = book.bounds.height
-        d.getElementById('ptop').textContent = book.bounds.top
-        d.getElementById('pleft').textContent = book.bounds.left
-        d.getElementById('pright').textContent = book.bounds.right
-        d.getElementById('pbottom').textContent = book.bounds.bottom
+            // origin = d.getElementById('origin').getBoundingClientRect()
 
-        // origin = d.getElementById('origin').getBoundingClientRect()
+            let origin = {}
 
-        let origin = {}
+            origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
 
-        origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
+            // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
 
-        // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
-
-        d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
-        d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
-    }
-
-    //  Book level event listeners.
-
-    let delegateElement = d.getElementById('plotter')
-
-    let handler = (event) => {
-
-        event.stopPropagation()
-
-        event.preventDefault()
-
-        switch (event.type) {
-            case 'mousemove':
-                handleMouseMove(event)
-                break
-            case 'wheel':
-                handleWheelEvent(event)
-                break
-            case 'mouseover':
-                handleMouseOver(event)
-                break
-            case 'click':
-                handleMouseClicks(event)
-                break
-            case 'dblclick':
-                handleMouseDoubleClicks(event)
-                break
-            case 'mousedown':
-                handleMouseDown(event)
-                break
-            case 'mouseup':
-                handleMouseUp(event)
-                break
-            case 'mouseout':
-                handleMouseOut(event)
-                break
-            case 'touchstart':
-                handleTouchStart(event)
-                break
-            case 'touchmove':
-                handleTouchMove(event)
-                break
-            case 'touchend':
-                handleTouchEnd(event)
-                break
-            default:
-                console.log(event)
-                break
-        }
-    }
-
-
-
-    let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick']
-
-    let touchEvents = ['touchstart', 'touchend', 'touchmove']
-
-    let keyEvents = ['wheel', 'keypress']
-
-    const events = [].concat(mouseEvents).concat(keyEvents)
-
-    if (isTouch()) events.concat(touchEvents)
-
-    events.forEach(event => {
-        delegateElement.addEventListener(event, handler)
-    })
-
-    function handleWheelEvent(event) {
-        // TODO: Determine forward / backward swipe.
-
-        // console.log(event)
-
-    }
-
-    function handleMouseMove(event) {
-        let eventDoc
-        let doc
-        let body
-        let pageX
-        let pageY
-
-        event = event || w.event
-
-        if (event.pageX === null && event.clientX !== null) {
-            eventDoc = (event.target && event.target.ownerDocument) || d
-
-            doc = eventDoc.documentElement
-
-            body = eventDoc.body
-
-            event.pageX = event.clientX +
-                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                (doc && doc.clientLeft || body && body.clientLeft || 0)
-            event.pageY = event.clientY +
-                (doc && doc.scrollTop || body && body.scrollTop || 0) -
-                (doc && doc.clientTop || body && body.clientTop || 0)
-        }
-
-        d.getElementById('xaxis').textContent = event.pageX
-        d.getElementById('yaxis').textContent = event.pageY
-    }
-
-
-    function handleMouseClicks(event) {
-
-        if (!event.target) return
-
-        let currentIndex = parseInt(_book.currentPage) - 1
-
-        switch (event.target.nodeName) {
-            case 'A':
-                switch (_book.mode) {
-                    case 'portrait':
-
-                        if (event.target.matches('a#next')) {
-                            let increment = 1 // Forward
-                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-                        }
-
-                        if (event.target.matches('a#previous')) {
-                            let decrement = 1 // Backward
-                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-                        }
-
-                        break
-                    case 'landscape':
-                        if (event.target.matches('a#next')) {
-                            let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
-                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-                        }
-
-                        if (event.target.matches('a#previous')) {
-                            let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
-                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-                        }
-
-                        break
-                }
-
-
-                // _printElements('rightPages', _book.sidePagesRight)
-
-                _setView(_book.currentPage)
-
-                _setRange(_book.currentPage)
-
-
-                _printBook()
-
-                break
-            case 'DIV':
-                switch (_book.mode) {
-                    case 'portrait':
-
-                        break
-                    case 'landscape':
-                        if (event.target.matches('div.even')) {
-                            console.log('forward')
-                            event.target.className += ' flip forward'
-                        }
-                        if (event.target.matches('div.odd')) {
-                            console.log('backward')
-                            event.target.className += ' flip backward'
-                        }
-                        break
-                }
-                break
-            default:
-                console.log('WUT', event.target)
-                return
+            d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
+            d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
         }
 
 
-    }
+
+        //  Window level listener.
+
+        w.addEventListener('resize', _getDimensions)
+
+        w.onload = _getDimensions
 
 
-    function handleMouseOver(event) {
-        let currentIndex = parseInt(_book.currentPage) - 1
+        let nodes = [...node.children]
 
-        if (!event.srcElement.getAttribute('page')) return
 
-        // TODO Trigger a peel?
 
-        switch (_book.mode) {
-            case 'portrait':
-                let previousPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
-                let nextPages = _rightCircularIndex(currentIndex, 3)
 
-                break
-            case 'landscape':
-                // console.log(event.srcElement.getAttribute('page'))
+        /**********************************/
+        /********* Events / Touch *********/
+        /**********************************/
 
-                // let leftAppendage = _leftCircularIndex
+
+
+        function _getDimensions() {
+            let book = {}
+
+            book.bounds = d.getElementById('plotter').getBoundingClientRect() // http://caniuse.com/#feat=getboundingclientrect
+
+            d.getElementById('pwidth').textContent = book.bounds.width
+            d.getElementById('pheight').textContent = book.bounds.height
+            d.getElementById('ptop').textContent = book.bounds.top
+            d.getElementById('pleft').textContent = book.bounds.left
+            d.getElementById('pright').textContent = book.bounds.right
+            d.getElementById('pbottom').textContent = book.bounds.bottom
+
+            // origin = d.getElementById('origin').getBoundingClientRect()
+
+            let origin = {}
+
+            origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
+
+            // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
+
+            d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
+            d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
         }
 
+        //  Book level event listeners.
 
-    }
+        let delegateElement = d.getElementById('plotter')
 
+        let handler = (event) => {
 
-    function handleMouseDoubleClicks(event) {
-        // console.log('Do you wanna make a snowman?')
-    }
+            event.stopPropagation()
 
-    function handleMouseDown(event) {
+            event.preventDefault()
 
-    }
-
-    function handleMouseUp(event) {
-        // console.log('Up!')
-    }
-
-    function handleMouseOut(event) {
-        // console.log('Out!')
-    }
-
-    function handleTouchStart(event) {
-        // console.log('Touch started')
-    }
-
-    function handleTouchMove(event) {
-        // console.log('Touch moving')
-    }
-
-    function handleTouchEnd(event) {
-        // console.log('Touch moving')
-    }
-
-
-    /* Listen for CSS3 TransitionEnds */
-
-    function whichTransitionEvent() {
-        let t
-        const el = d.createElement('fakeelement')
-        const transitions = {
-            'transition': 'transitionend',
-            'OTransition': 'oTransitionEnd',
-            'MozTransition': 'transitionend',
-            'WebkitTransition': 'webkitTransitionEnd'
-        }
-
-        for (t in transitions) {
-            if (el.style[t] !== undefined) {
-                return transitions[t]
+            switch (event.type) {
+                case 'mousemove':
+                    handleMouseMove(event)
+                    break
+                case 'wheel':
+                    handleWheelEvent(event)
+                    break
+                case 'mouseover':
+                    handleMouseOver(event)
+                    break
+                case 'click':
+                    handleMouseClicks(event)
+                    break
+                case 'dblclick':
+                    handleMouseDoubleClicks(event)
+                    break
+                case 'mousedown':
+                    handleMouseDown(event)
+                    break
+                case 'mouseup':
+                    handleMouseUp(event)
+                    break
+                case 'mouseout':
+                    handleMouseOut(event)
+                    break
+                case 'touchstart':
+                    handleTouchStart(event)
+                    break
+                case 'touchmove':
+                    handleTouchMove(event)
+                    break
+                case 'touchend':
+                    handleTouchEnd(event)
+                    break
+                default:
+                    console.log(event)
+                    break
             }
         }
+
+
+
+        let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick']
+
+        let touchEvents = ['touchstart', 'touchend', 'touchmove']
+
+        let keyEvents = ['wheel', 'keypress']
+
+        const events = [].concat(mouseEvents).concat(keyEvents)
+
+        if (isTouch()) events.concat(touchEvents)
+
+        events.forEach(event => {
+            delegateElement.addEventListener(event, handler)
+        })
+
+        function handleWheelEvent(event) {
+            // TODO: Determine forward / backward swipe.
+
+            // console.log(event)
+
+        }
+
+        function handleMouseMove(event) {
+            let eventDoc
+            let doc
+            let body
+            let pageX
+            let pageY
+
+            event = event || w.event
+
+            if (event.pageX === null && event.clientX !== null) {
+                eventDoc = (event.target && event.target.ownerDocument) || d
+
+                doc = eventDoc.documentElement
+
+                body = eventDoc.body
+
+                event.pageX = event.clientX +
+                    (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                    (doc && doc.clientLeft || body && body.clientLeft || 0)
+                event.pageY = event.clientY +
+                    (doc && doc.scrollTop || body && body.scrollTop || 0) -
+                    (doc && doc.clientTop || body && body.clientTop || 0)
+            }
+
+            d.getElementById('xaxis').textContent = event.pageX
+            d.getElementById('yaxis').textContent = event.pageY
+        }
+
+
+        function handleMouseClicks(event) {
+
+            if (!event.target) return
+
+            let currentIndex = parseInt(_book.currentPage) - 1
+
+            switch (event.target.nodeName) {
+                case 'A':
+                    switch (_book.mode) {
+                        case 'portrait':
+
+                            if (event.target.matches('a#next')) {
+                                let increment = 1 // Forward
+                                _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                            }
+
+                            if (event.target.matches('a#previous')) {
+                                let decrement = 1 // Backward
+                                _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                            }
+
+                            break
+                        case 'landscape':
+                            if (event.target.matches('a#next')) {
+                                let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
+                                _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                            }
+
+                            if (event.target.matches('a#previous')) {
+                                let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
+                                _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                            }
+
+                            break
+                    }
+
+
+                    // _printElements('rightPages', _book.sidePagesRight)
+
+                    _setView(_book.currentPage)
+
+                    _setRange(_book.currentPage)
+
+
+                    _printBook()
+
+                    break
+                case 'DIV':
+                    switch (_book.mode) {
+                        case 'portrait':
+
+                            break
+                        case 'landscape':
+                            if (event.target.matches('div.even')) {
+                                console.log('forward')
+                                event.target.className += ' flip forward'
+                            }
+                            if (event.target.matches('div.odd')) {
+                                console.log('backward')
+                                event.target.className += ' flip backward'
+                            }
+                            break
+                    }
+                    break
+                default:
+                    console.log('WUT', event.target)
+                    return
+            }
+
+
+        }
+
+
+        function handleMouseOver(event) {
+            let currentIndex = parseInt(_book.currentPage) - 1
+
+            if (!event.srcElement.getAttribute('page')) return
+
+            // TODO Trigger a peel?
+
+            switch (_book.mode) {
+                case 'portrait':
+                    let previousPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
+                    let nextPages = _rightCircularIndex(currentIndex, 3)
+
+                    break
+                case 'landscape':
+                    // console.log(event.srcElement.getAttribute('page'))
+
+                    // let leftAppendage = _leftCircularIndex
+            }
+
+
+        }
+
+
+        function handleMouseDoubleClicks(event) {
+            // console.log('Do you wanna make a snowman?')
+        }
+
+        function handleMouseDown(event) {
+
+        }
+
+        function handleMouseUp(event) {
+            // console.log('Up!')
+        }
+
+        function handleMouseOut(event) {
+            // console.log('Out!')
+        }
+
+        function handleTouchStart(event) {
+            // console.log('Touch started')
+        }
+
+        function handleTouchMove(event) {
+            // console.log('Touch moving')
+        }
+
+        function handleTouchEnd(event) {
+            // console.log('Touch moving')
+        }
+
+
+        /* Listen for CSS3 TransitionEnds */
+
+        function whichTransitionEvent() {
+            let t
+            const el = d.createElement('fakeelement')
+            const transitions = {
+                'transition': 'transitionend',
+                'OTransition': 'oTransitionEnd',
+                'MozTransition': 'transitionend',
+                'WebkitTransition': 'webkitTransitionEnd'
+            }
+
+            for (t in transitions) {
+                if (el.style[t] !== undefined) {
+                    return transitions[t]
+                }
+            }
+        }
+
+        const transitionEvent = whichTransitionEvent()
+
+        transitionEvent && d.addEventListener(transitionEvent, (event) => {
+            console.log('yay, transition ended')
+            console.log(event.target)
+        })
+
     }
-
-    const transitionEvent = whichTransitionEvent()
-
-    transitionEvent && d.addEventListener(transitionEvent, (event) => {
-        console.log('yay, transition ended')
-        console.log(event.target)
-    })
-
-    function _liveBookHandler() {
-        let raster = [...node.children]
-
-        console.log(raster)
-    }
-
 
 
     /**********************************/
