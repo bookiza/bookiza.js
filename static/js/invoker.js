@@ -27,11 +27,6 @@
     // superbook.flippy('previous')
 
 
-    // let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
-
-    // console.log('dimensions', dims)
-
-
     /**********************************/
     /******** Implemented  API ********/
     /**********************************/
@@ -73,6 +68,12 @@
     // pageObj.innerHTML = 'something something'
 
     // superbook.flippy('addPage', pageObj, 3)
+
+
+    let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
+
+    console.log('dimensions', dims)
+
 
     // THE BOOK
     // console.log(superbook)

@@ -20,9 +20,11 @@
 
         // PROPERTIES
 
-        // dimensions() {
-        //     return _book.bounds = d.getElementById('viewer').getBoundingClientRect()
-        // }
+        dimensions() {
+            _book.bounds = _book.node.getBoundingClientRect()
+
+            return { 'height': _book.bounds.height, 'width': _book.bounds.width }
+        }
 
         view() {
             return _book.currentView
@@ -324,11 +326,11 @@
 
         _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
-        // _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.sidePagesLeft)
 
-        _liveBookHandler(w, d)
+        _initializeGeometry(d, w)
 
         return
     }
@@ -481,14 +483,10 @@
     }
 
 
-    function _liveBookHandler(w, d) {
-        let raster = [...node.children]
+    function _initializeGeometry(d, w) {
+        console.log('HERE and back!')
 
-        console.log(raster[2])
-
-        raster[2].textContent
-
-        //  Window level listener.
+        return
 
     }
 
@@ -496,37 +494,28 @@
     /********* Events / Touch *********/
     /**********************************/
 
-
+    //  Window level listener.
 
     w.addEventListener('resize', _getDimensions)
 
     w.onload = _getDimensions
 
     function _getDimensions() {
-        let book = {}
 
-        book.bounds = d.getElementById('plotter').getBoundingClientRect() // http://caniuse.com/#feat=getboundingclientrect
+        _book.bounds = _book.node.getBoundingClientRect()
 
-        d.getElementById('pwidth').textContent = book.bounds.width
-        d.getElementById('pheight').textContent = book.bounds.height
-        d.getElementById('ptop').textContent = book.bounds.top
-        d.getElementById('pleft').textContent = book.bounds.left
-        d.getElementById('pright').textContent = book.bounds.right
-        d.getElementById('pbottom').textContent = book.bounds.bottom
+        d.getElementById('pwidth').textContent = _book.bounds.width
+        d.getElementById('pheight').textContent = _book.bounds.height
+        d.getElementById('ptop').textContent = _book.bounds.top
+        d.getElementById('pleft').textContent = _book.bounds.left
+        d.getElementById('pright').textContent = _book.bounds.right
+        d.getElementById('pbottom').textContent = _book.bounds.bottom
 
-        // origin = d.getElementById('origin').getBoundingClientRect()
+        _book.origin = d.getElementsByTagName('body')[0].getBoundingClientRect()
 
-        let origin = {}
-
-        origin.bounds = d.getElementsByTagName('body')[0].getBoundingClientRect()
-
-        // origin.bounds = d.getElementById('plotter').getBoundingClientRect()
-
-        d.getElementById('originX').textContent = parseInt(origin.bounds.width) / 2
-        d.getElementById('originY').textContent = parseInt(origin.bounds.height) / 2
+        d.getElementById('originX').textContent = parseInt(_book.origin.width) / 2
+        d.getElementById('originY').textContent = parseInt(_book.origin.height) / 2
     }
-
-
 
 
 
@@ -734,6 +723,8 @@
 
     function handleMouseDown(event) {
 
+        d.querySelectorAll('[data-foo]')
+
     }
 
     function handleMouseUp(event) {
@@ -781,6 +772,7 @@
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
         console.log('yay, transition ended')
         console.log(event.target)
+        console.log({ 'height': _book.bounds.height, 'width': _book.bounds.width })
     })
 
 
