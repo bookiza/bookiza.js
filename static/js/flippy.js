@@ -21,9 +21,7 @@
         // PROPERTIES
 
         dimensions() {
-            _book.bounds = _book.node.getBoundingClientRect()
-
-            return { 'height': _book.bounds.height, 'width': _book.bounds.width }
+            return `{ height: ${_book.bounds.height}, width: ${_book.bounds.width} }`
         }
 
         view() {
@@ -124,6 +122,8 @@
 
         _removeChildren(node)
 
+        _book.bounds = node.getBoundingClientRect()
+
         _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
 
         _setView(_book.currentPage)
@@ -131,6 +131,8 @@
         _setRange(_book.currentPage)
 
         _printBook()
+
+
 
         return
     }

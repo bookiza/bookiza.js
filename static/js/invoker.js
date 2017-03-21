@@ -1,82 +1,79 @@
 // document.addEventListener('DOMContentLoaded', function(event) {
-    /**********************************/
-    /** **** Initialize  Flippy ********/
-    /**********************************/
-    let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 16 }
+/**********************************/
+/** **** Initialize  Flippy ********/
+/**********************************/
+let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 16 }
 
-    let node = document.getElementById('book')
+let node = document.getElementById('book')
 
-    const superbook = Flippy.init(node, settings)
+const superbook = Flippy.init(node, settings)
 
-    /**********************************/
-    /** ****** Work in progress ********/
-    /**********************************/
+/**********************************/
+/** ****** Work in progress ********/
+/**********************************/
 
-    // superbook.flipping = false
+// superbook.flipping = false
 
-    // superbook.flipped = true // Custom event?
+// superbook.flipped = true // Custom event?
 
-    // superbook.zooming = false // boolean state
+// superbook.zooming = false // boolean state
 
-    // superbook.zoomed = true // boolean state
+// superbook.zoomed = true // boolean state
 
-    // superbook.area = () => '[height, width]'
+// superbook.flippy('next')
 
-    // superbook.flippy('next')
+// superbook.flippy('previous')
 
-    // superbook.flippy('previous')
+/**********************************/
+/******** Implemented  API ********/
+/**********************************/
 
+// PROPERTIES:
 
-    /**********************************/
-    /******** Implemented  API ********/
-    /**********************************/
+// let booklength = superbook.flippy('length')
 
-    // PROPERTIES:
+// console.log('Book length', booklength)
 
-    let booklength = superbook.flippy('length')
+// let currentPage = superbook.flippy('page')
 
-    console.log('Book length', booklength)
+// console.log('Current page', currentPage)
 
-    // let currentPage = superbook.flippy('page')
+// let view = superbook.flippy('view')
 
-    // console.log('Current page', currentPage)
+// console.log('Current view', view)
 
-    // let view = superbook.flippy('view')
+// let mode = superbook.flippy('mode')
 
-    // console.log('Current view', view)
-
-    // let mode = superbook.flippy('mode')
-
-    // console.log('Mode', mode)
+// console.log('Mode', mode)
 
 
 
-    // METHODS:
+// METHODS:
 
-    // superbook.flippy('page', 5)
+// superbook.flippy('page', 5)
 
-    // console.log(superbook.flippy('page')) // Logs the current page of the book
+// console.log(superbook.flippy('page')) // Logs the current page of the book
 
-    // console.log(superbook.flippy('view')) // Logs the current view of the book
+// console.log(superbook.flippy('view')) // Logs the current view of the book
 
-    // console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
+// console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
 
-    // superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
+// superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
 
-    // let pageObj = document.createElement('div')
+// let pageObj = document.createElement('div')
 
-    // pageObj.innerHTML = 'something something'
+// pageObj.innerHTML = 'something something'
 
-    // superbook.flippy('addPage', pageObj, 3)
-
-
-    let dims = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
-
-    console.log('dimensions', dims)
+// superbook.flippy('addPage', pageObj, 3)
 
 
-    // THE BOOK
-    // console.log(superbook)
+let dimensions = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
+
+console.log('dimensions', dimensions)
+
+
+// THE BOOK
+// console.log(superbook)
 // }, true)
 
 /************ Z' END **************/
