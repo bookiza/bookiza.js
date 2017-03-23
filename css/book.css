@@ -78,7 +78,6 @@ body {
     pointer-events: none;
 }
 
-
 @media (orientation: portrait) {
     body .viewer {
         width: calc(100vh * 1540/(1000 * 2));
@@ -94,7 +93,6 @@ body {
         backface-visibility: visible;
         width: 100%;
     }
-
     body .even > .gradient {
         background: -webkit-gradient(linear, right top, left top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
         background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
@@ -111,8 +109,6 @@ body {
         background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
         background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
-
-
 }
 
 @media (orientation: landscape) {
@@ -306,7 +302,6 @@ svg {
 }
 
 
-
 /*.odd .even,
 .even .odd {
     transform-origin: 0% 0% 0px;
@@ -321,7 +316,6 @@ svg {
 /*@import './animation.css';*/
 
 @import './plotter.css';
-
 .red {
     background: tomato;
 }

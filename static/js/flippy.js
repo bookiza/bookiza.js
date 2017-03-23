@@ -21,7 +21,7 @@
         // PROPERTIES
 
         dimensions() {
-            return `{ height: ${_book.bounds.height}, width: ${_book.bounds.width} }`
+            return JSON.parse(`{ "width" : "${_book.bounds.width}", "height" : "${_book.bounds.height}" }`)
         }
 
         view() {
@@ -120,7 +120,7 @@
             return _addBaseClasses(page, currentIndex)
         })
 
-        _setGeometry()
+        _setUpGeometry()
 
         _removeChildren(node)
 
@@ -147,12 +147,14 @@
 
     //  Window level listener.
 
-    w.addEventListener('resize', _setGeometry)
+    w.addEventListener('resize', _setUpGeometry)
 
-    function _setGeometry() {
+    function _setUpGeometry() {
         _book.bounds = node.getBoundingClientRect() // Setup a geometrical premise.
 
-        _book.origin = d.getElementsByTagName('body')[0].getBoundingClientRect()
+        _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
+
+        console.log(_book.origin)
 
         d.getElementById('pwidth').textContent = _book.bounds.width
         d.getElementById('pheight').textContent = _book.bounds.height
@@ -160,10 +162,8 @@
         d.getElementById('pleft').textContent = _book.bounds.left
         d.getElementById('pright').textContent = _book.bounds.right
         d.getElementById('pbottom').textContent = _book.bounds.bottom
-
-
-        d.getElementById('originX').textContent = parseInt(_book.origin.width) / 2
-        d.getElementById('originY').textContent = parseInt(_book.origin.height) / 2
+        d.getElementById('originX').textContent = _book.origin.x
+        d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -517,6 +517,20 @@
 
     }
 
+    /********************************/
+    /************ Cone math *********/
+    /********************************/
+
+    let π = Math.PI
+
+
+    // function λ (angle) {
+
+    // }
+
+
+
+
     /**********************************/
     /********* Events / Touch *********/
     /**********************************/
@@ -533,37 +547,37 @@
 
         switch (event.type) {
             case 'mousemove':
-                handleMouseMove(event)
+                _handleMouseMove(event)
                 break
             case 'wheel':
-                handleWheelEvent(event)
+                _handleWheelEvent(event)
                 break
             case 'mouseover':
-                handleMouseOver(event)
+                _handleMouseOver(event)
                 break
             case 'click':
-                handleMouseClicks(event)
+                _handleMouseClicks(event)
                 break
             case 'dblclick':
-                handleMouseDoubleClicks(event)
+                _handleMouseDoubleClicks(event)
                 break
             case 'mousedown':
-                handleMouseDown(event)
+                _handleMouseDown(event)
                 break
             case 'mouseup':
-                handleMouseUp(event)
+                _handleMouseUp(event)
                 break
             case 'mouseout':
-                handleMouseOut(event)
+                _handleMouseOut(event)
                 break
             case 'touchstart':
-                handleTouchStart(event)
+                _handleTouchStart(event)
                 break
             case 'touchmove':
-                handleTouchMove(event)
+                _handleTouchMove(event)
                 break
             case 'touchend':
-                handleTouchEnd(event)
+                _handleTouchEnd(event)
                 break
             default:
                 console.log(event)
@@ -587,14 +601,14 @@
         delegateElement.addEventListener(event, handler)
     })
 
-    function handleWheelEvent(event) {
+    function _handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
 
         // console.log(event)
 
     }
 
-    function handleMouseMove(event) {
+    function _handleMouseMove(event) {
         let eventDoc
         let doc
         let body
@@ -623,7 +637,7 @@
     }
 
 
-    function handleMouseClicks(event) {
+    function _handleMouseClicks(event) {
 
         if (!event.target) return
 
@@ -695,16 +709,22 @@
     }
 
 
-    function handleMouseOver(event) {
+    function _handleMouseOver(event) {
         let currentIndex = parseInt(_book.currentPage) - 1
 
-        if (!event.srcElement.getAttribute('page')) return
+        console.log(event)
+
+        // if (!event.srcElement.getAttribute('page')) return
+
+        let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
+
+        // event.target.className += ' curl'
 
         // TODO Trigger a peel?
 
         switch (_book.mode) {
             case 'portrait':
-                let previousPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
+                let prevPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
                 let nextPages = _rightCircularIndex(currentIndex, 3)
 
                 break
@@ -718,33 +738,31 @@
     }
 
 
-    function handleMouseDoubleClicks(event) {
+    function _handleMouseDoubleClicks(event) {
         // console.log('Do you wanna make a snowman?')
     }
 
-    function handleMouseDown(event) {
-
-        d.querySelectorAll('[data-foo]')
+    function _handleMouseDown(event) {
 
     }
 
-    function handleMouseUp(event) {
+    function _handleMouseUp(event) {
         // console.log('Up!')
     }
 
-    function handleMouseOut(event) {
+    function _handleMouseOut(event) {
         // console.log('Out!')
     }
 
-    function handleTouchStart(event) {
+    function _handleTouchStart(event) {
         // console.log('Touch started')
     }
 
-    function handleTouchMove(event) {
+    function _handleTouchMove(event) {
         // console.log('Touch moving')
     }
 
-    function handleTouchEnd(event) {
+    function _handleTouchEnd(event) {
         // console.log('Touch moving')
     }
 
@@ -808,17 +826,6 @@
     // function direction(mode) {
     //     // return (mode === 'portrait') ? 'forward' : 'backward'
     // }
-
-
-    /********************************/
-    /********* Cone geometry ********/
-    /********************************/
-
-    let π = Math.PI
-
-
-
-
 
 
     /**********************************/
