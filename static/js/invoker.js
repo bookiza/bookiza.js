@@ -28,7 +28,7 @@ const superbook = Flippy.init(node, settings)
 /******** Implemented  API ********/
 /**********************************/
 
-// PROPERTIES:
+// // PROPERTIES:
 
 // let booklength = superbook.flippy('length')
 
@@ -46,9 +46,12 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Mode', mode)
 
+let dimensions = superbook.flippy('dimensions') // Returns object: { height: bookHeightInPixels, width: bookWidthInPixels }
+
+console.log('dimensions', dimensions)
 
 
-// METHODS:
+// // METHODS:
 
 // superbook.flippy('page', 5)
 
@@ -66,14 +69,10 @@ const superbook = Flippy.init(node, settings)
 
 // superbook.flippy('addPage', pageObj, 3)
 
-
-let dimensions = superbook.flippy('dimensions') // { height: bookHeight, width: bookWidth }
-
-console.log('dimensions', dimensions)
-
-
-// THE BOOK
+// // THE BOOK
 // console.log(superbook)
+
+
 // }, true)
 
 /************ Z' END **************/

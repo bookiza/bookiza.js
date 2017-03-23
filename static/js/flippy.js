@@ -62,13 +62,13 @@
             if (index.between(0, _book.pages.length)) _addPage(theArgs[0], index)
         }
 
-        next() {
-            _next(increment(_book.mode))
-        }
+        // next() {
+        //     _next(increment(_book.mode))
+        // }
 
-        previous() {
-            _previous(increment(_book.mode))
-        }
+        // previous() {
+        //     _previous(increment(_book.mode))
+        // }
 
         // EVENTS
 
@@ -99,7 +99,7 @@
                 const res = w.matchMedia(query)
                 return res
             } else {
-                // ... polyfill or pollyfill.io to keep it clean.
+                // ... add polyfill here or use pollyfill.io.
             }
         }
     }
@@ -120,9 +120,9 @@
             return _addBaseClasses(page, currentIndex)
         })
 
-        _removeChildren(node)
+        _setGeometry()
 
-        _book.bounds = node.getBoundingClientRect()
+        _removeChildren(node)
 
         _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
 
@@ -131,8 +131,6 @@
         _setRange(_book.currentPage)
 
         _printBook()
-
-
 
         return
     }
@@ -147,13 +145,32 @@
         _printBook()
     })
 
+    //  Window level listener.
+
+    w.addEventListener('resize', _setGeometry)
+
+    function _setGeometry() {
+        _book.bounds = node.getBoundingClientRect() // Setup a geometrical premise.
+
+        _book.origin = d.getElementsByTagName('body')[0].getBoundingClientRect()
+
+        d.getElementById('pwidth').textContent = _book.bounds.width
+        d.getElementById('pheight').textContent = _book.bounds.height
+        d.getElementById('ptop').textContent = _book.bounds.top
+        d.getElementById('pleft').textContent = _book.bounds.left
+        d.getElementById('pright').textContent = _book.bounds.right
+        d.getElementById('pbottom').textContent = _book.bounds.bottom
+
+
+        d.getElementById('originX').textContent = parseInt(_book.origin.width) / 2
+        d.getElementById('originY').textContent = parseInt(_book.origin.height) / 2
+    }
+
     function _removeChildren(node) {
         node.innerHTML = ''
     }
 
     function _removePage(index) {
-        // WARNING: Remove eventListeners please. Avoid memory leakages.
-
         _book.pages.splice(index, 1)
 
         _setView(_book.currentPage)
@@ -177,6 +194,7 @@
         _printBook()
     }
 
+
     function _addBaseClasses(pageObj, currentIndex) {
 
         let classes = `promoted inner page-${parseInt(currentIndex) + 1} `
@@ -184,6 +202,8 @@
         classes += isEven(currentIndex) ? 'even red' : 'odd blue'
 
         addClasses(pageObj, classes)
+
+        // return pageObj
 
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
@@ -199,7 +219,7 @@
 
         addClasses(newWrapper, classes)
 
-        newWrapper.setAttribute('page', parseInt(currentIndex) + 1)
+        newWrapper.setAttribute('data-page', parseInt(currentIndex) + 1)
 
         newWrapper.innerHTML = `<div class="outer gradient"><h1> ${parseInt(currentIndex) + 1}  </h1></div>`
 
@@ -328,19 +348,17 @@
 
         _printElements('view', _book.viewablePages)
 
-        _printElements('rightPages', _book.sidePagesRight)
+        // _printElements('rightPages', _book.sidePagesRight)
 
-        _printElements('leftPages', _book.sidePagesLeft)
+        // _printElements('leftPages', _book.sidePagesLeft)
 
-        _initializeGeometry(d, w)
+        _liveBook()
 
         return
     }
 
     function _printElements(type, elements) {
         const docfrag = d.createDocumentFragment()
-
-        const node = _book.node
 
         switch (type) {
             case 'buttons':
@@ -381,10 +399,11 @@
 
         }
 
-        node.appendChild(docfrag) // nodeList?
+        _book.node.appendChild(docfrag) // nodeList?
 
         return
     }
+
 
     function _applyStyles(pageObj, currentIndex, type) {
         let cssString = ''
@@ -466,27 +485,33 @@
     }
 
 
-    /***********************************
-     *********** DOM/Book flips **********
-     ***********************************/
+    /************************************
+     *********** DOM/Live book **********
+     ************************************/
 
 
-    function _next(increment) {
-        // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+    // function _next(increment) {
+    //     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
 
-        // console.log('newCurrentPage', newCurrentPage)
-    }
-
-
-    function _previous(increment) {
-        // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
-
-        // console.log('newCurrentPage', newCurrentPage)
-    }
+    //     // console.log('newCurrentPage', newCurrentPage)
+    // }
 
 
-    function _initializeGeometry(d, w) {
-        console.log('HERE and back!')
+    // function _previous(increment) {
+    //     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+    //     // console.log('newCurrentPage', newCurrentPage)
+    // }
+
+
+    function _liveBook() {
+
+        let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
+
+        let livePages = _book.node.querySelectorAll(`[data-page]`)
+
+
+        console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
 
         return
 
@@ -495,32 +520,6 @@
     /**********************************/
     /********* Events / Touch *********/
     /**********************************/
-
-    //  Window level listener.
-
-    w.addEventListener('resize', _getDimensions)
-
-    w.onload = _getDimensions
-
-    function _getDimensions() {
-
-        _book.bounds = _book.node.getBoundingClientRect()
-
-        d.getElementById('pwidth').textContent = _book.bounds.width
-        d.getElementById('pheight').textContent = _book.bounds.height
-        d.getElementById('ptop').textContent = _book.bounds.top
-        d.getElementById('pleft').textContent = _book.bounds.left
-        d.getElementById('pright').textContent = _book.bounds.right
-        d.getElementById('pbottom').textContent = _book.bounds.bottom
-
-        _book.origin = d.getElementsByTagName('body')[0].getBoundingClientRect()
-
-        d.getElementById('originX').textContent = parseInt(_book.origin.width) / 2
-        d.getElementById('originY').textContent = parseInt(_book.origin.height) / 2
-    }
-
-
-
 
     //  Book level event listeners.
 
@@ -802,13 +801,13 @@
         return (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
     }
 
-    function increment(mode) {
-        return (mode === 'portrait') ? 1 : 2
-    }
+    // function increment(mode) {
+    //     return (mode === 'portrait') ? 1 : 2
+    // }
 
-    function direction(mode) {
-        // return (mode === 'portrait') ? 'forward' : 'backward'
-    }
+    // function direction(mode) {
+    //     // return (mode === 'portrait') ? 'forward' : 'backward'
+    // }
 
 
     /********************************/
