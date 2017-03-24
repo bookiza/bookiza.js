@@ -348,9 +348,9 @@
 
         _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
-        // _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.sidePagesLeft)
 
         _liveBook()
 
@@ -418,8 +418,6 @@
                         // cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0; '
 
                         pageObj.style.cssText = cssString
-
-                        pageObj.id = 'promoted'
 
                         break
                     case 'rightPages':
@@ -712,7 +710,7 @@
     function _handleMouseOver(event) {
         let currentIndex = parseInt(_book.currentPage) - 1
 
-        console.log(event)
+        // console.log(event)
 
         // if (!event.srcElement.getAttribute('page')) return
 
@@ -756,6 +754,9 @@
 
     function _handleTouchStart(event) {
         // console.log('Touch started')
+
+        console.log(e.touches.length)
+
     }
 
     function _handleTouchMove(event) {
