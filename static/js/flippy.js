@@ -122,7 +122,7 @@
 
         _setUpGeometry()
 
-        _removeChildren(node)
+        _removeChildren(_book.node)
 
         _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
 
@@ -154,16 +154,14 @@
 
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        console.log(_book.origin)
-
-        d.getElementById('pwidth').textContent = _book.bounds.width
-        d.getElementById('pheight').textContent = _book.bounds.height
-        d.getElementById('ptop').textContent = _book.bounds.top
-        d.getElementById('pleft').textContent = _book.bounds.left
-        d.getElementById('pright').textContent = _book.bounds.right
-        d.getElementById('pbottom').textContent = _book.bounds.bottom
-        d.getElementById('originX').textContent = _book.origin.x
-        d.getElementById('originY').textContent = _book.origin.y
+        // d.getElementById('pwidth').textContent = _book.bounds.width
+        // d.getElementById('pheight').textContent = _book.bounds.height
+        // d.getElementById('ptop').textContent = _book.bounds.top
+        // d.getElementById('pleft').textContent = _book.bounds.left
+        // d.getElementById('pright').textContent = _book.bounds.right
+        // d.getElementById('pbottom').textContent = _book.bounds.bottom
+        // d.getElementById('originX').textContent = _book.origin.x
+        // d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -199,11 +197,9 @@
 
         let classes = `promoted inner page-${parseInt(currentIndex) + 1} `
 
-        classes += isEven(currentIndex) ? 'even red' : 'odd blue'
+        classes += isEven(currentIndex) ? 'odd red' : 'even blue'
 
         addClasses(pageObj, classes)
-
-        // return pageObj
 
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
@@ -348,9 +344,9 @@
 
         _printElements('view', _book.viewablePages)
 
-        _printElements('rightPages', _book.sidePagesRight)
+        // _printElements('rightPages', _book.sidePagesRight)
 
-        _printElements('leftPages', _book.sidePagesLeft)
+        // _printElements('leftPages', _book.sidePagesLeft)
 
         _liveBook()
 
@@ -417,7 +413,7 @@
 
                         // cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0; '
 
-                        pageObj.style.cssText = cssString
+                        // pageObj.style.cssText = cssString
 
                         break
                     case 'rightPages':
@@ -457,17 +453,17 @@
 
                         break
                     case 'rightPages':
-                        cssString = 'float: right; position: absolute; top: 0; right: 0; pointer-events:none;'
+                        cssString = 'float: right; position: absolute; top: 0; right: 0; pointer-events:none; visibility: hidden; display: none;'
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 2; display: none;' : 'z-index: 1;'
+                        cssString += isEven(currentIndex) ? 'z-index: 2;' : 'z-index: 1;'
 
                         pageObj.style.cssText = cssString
 
                         break
                     case 'leftPages':
-                        cssString = 'float: left; position: absolute; top: 0; left: 0; pointer-events:none;'
+                        cssString = 'float: left; position: absolute; top: 0; left: 0; pointer-events:none; visibility: hidden; display: none;'
 
                         pageObj.style.cssText = cssString
 
@@ -506,10 +502,11 @@
 
         let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
 
-        let livePages = _book.node.querySelectorAll(`[data-page]`)
+        // let livePages = _book.node.querySelectorAll(`[data-page]`)
 
+        let livePages = _book.node.getElementsByClassName('wrapper')
 
-        console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
+        // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
 
         return
 
@@ -544,20 +541,14 @@
         event.preventDefault()
 
         switch (event.type) {
-            case 'mousemove':
-                _handleMouseMove(event)
-                break
-            case 'wheel':
-                _handleWheelEvent(event)
-                break
             case 'mouseover':
                 _handleMouseOver(event)
                 break
-            case 'click':
-                _handleMouseClicks(event)
+            case 'mouseout':
+                _handleMouseOut(event)
                 break
-            case 'dblclick':
-                _handleMouseDoubleClicks(event)
+            case 'mousemove':
+                _handleMouseMove(event)
                 break
             case 'mousedown':
                 _handleMouseDown(event)
@@ -565,8 +556,14 @@
             case 'mouseup':
                 _handleMouseUp(event)
                 break
-            case 'mouseout':
-                _handleMouseOut(event)
+            case 'wheel':
+                _handleWheelEvent(event)
+                break
+            case 'click':
+                _handleMouseClicks(event)
+                break
+            case 'dblclick':
+                _handleMouseDoubleClicks(event)
                 break
             case 'touchstart':
                 _handleTouchStart(event)
@@ -599,10 +596,83 @@
         delegateElement.addEventListener(event, handler)
     })
 
-    function _handleWheelEvent(event) {
-        // TODO: Determine forward / backward swipe.
 
-        // console.log(event)
+    function _handleMouseOver(event) {
+
+        if (!event.target) return
+
+        let currentIndex = parseInt(_book.currentPage) - 1
+
+        switch (event.target.nodeName) {
+            case 'A':
+                switch (_book.mode) {
+                    case 'portrait':
+
+                        if (event.target.matches('a#next')) {
+
+                        }
+
+                        if (event.target.matches('a#previous')) {
+
+                        }
+
+                        break
+                    case 'landscape':
+                        if (event.target.matches('a#next')) {
+
+                        }
+
+                        if (event.target.matches('a#previous')) {
+
+                        }
+
+                        break
+                }
+
+                break
+            case 'DIV':
+                switch (_book.mode) {
+                    case 'portrait':
+
+                        if (event.target.matches('div.odd')) {
+
+                        }
+
+                        if (event.target.matches('div.even')) {
+
+                        }
+
+                        break
+                    case 'landscape':
+                        if (event.target.matches('div.odd')) {
+
+                        }
+
+                        if (event.target.matches('div.even')) {
+
+                        }
+
+                        break
+                }
+                break
+            default:
+                console.log('WUT', event.target)
+                return
+        }
+
+
+    }
+
+    function _handleMouseOut(event) {
+        if (!event.target) return
+
+        let currentIndex = parseInt(_book.currentPage) - 1
+
+
+        // let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
+
+        // console.log(_book.node.querySelectorAll('[data-page]'))
+
 
     }
 
@@ -641,6 +711,8 @@
 
         let currentIndex = parseInt(_book.currentPage) - 1
 
+        console.log(event)
+
         switch (event.target.nodeName) {
             case 'A':
                 switch (_book.mode) {
@@ -674,6 +746,8 @@
 
                 // _printElements('rightPages', _book.sidePagesRight)
 
+                _removeChildren(_book.node)
+
                 _setView(_book.currentPage)
 
                 _setRange(_book.currentPage)
@@ -687,49 +761,20 @@
 
                         break
                     case 'landscape':
-                        if (event.target.matches('div.even')) {
-                            console.log('forward')
-                            event.target.className += ' flip forward'
-                        }
-                        if (event.target.matches('div.odd')) {
-                            console.log('backward')
-                            event.target.className += ' flip backward'
-                        }
-                        break
+                        // if (event.target.matches('div.even')) {
+                        //     console.log('forward')
+                        //     event.target.className += ' flip forward'
+                        // }
+                        // if (event.target.matches('div.odd')) {
+                        //     console.log('backward')
+                        //     event.target.className += ' flip backward'
+                        // }
+                        // break
                 }
                 break
             default:
                 console.log('WUT', event.target)
                 return
-        }
-
-
-    }
-
-
-    function _handleMouseOver(event) {
-        let currentIndex = parseInt(_book.currentPage) - 1
-
-        // console.log(event)
-
-        // if (!event.srcElement.getAttribute('page')) return
-
-        let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
-
-        // event.target.className += ' curl'
-
-        // TODO Trigger a peel?
-
-        switch (_book.mode) {
-            case 'portrait':
-                let prevPages = [_book.pages[`${ _leftCircularIndex(currentIndex, 3) }`]]
-                let nextPages = _rightCircularIndex(currentIndex, 3)
-
-                break
-            case 'landscape':
-                // console.log(event.srcElement.getAttribute('page'))
-
-                // let leftAppendage = _leftCircularIndex
         }
 
 
@@ -748,9 +793,13 @@
         // console.log('Up!')
     }
 
-    function _handleMouseOut(event) {
-        // console.log('Out!')
+    function _handleWheelEvent(event) {
+        // TODO: Determine forward / backward swipe.
+
+        // console.log(event)
+
     }
+
 
     function _handleTouchStart(event) {
         // console.log('Touch started')
@@ -866,6 +915,18 @@
         return this > min && this < max
     }
 
+
+    Element.prototype.remove = function() {
+        this.parentElement.removeChild(this);
+    }
+
+    NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+        for(let i = this.length - 1; i >= 0; i--) {
+            if(this[i] && this[i].parentElement) {
+                this[i].parentElement.removeChild(this[i]);
+            }
+        }
+    }
 
     /**********************************/
     /*********** Exposed API **********/

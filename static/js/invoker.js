@@ -30,44 +30,44 @@ const superbook = Flippy.init(node, settings)
 
 // // PROPERTIES:
 
-// let booklength = superbook.flippy('length')
+let booklength = superbook.flippy('length')
 
-// console.log('Book length', booklength)
+console.log('Book length:', booklength)
 
-// let currentPage = superbook.flippy('page')
+let currentPage = superbook.flippy('page')
 
-// console.log('Current page', currentPage)
+console.log('Current page:', currentPage)
 
-// let view = superbook.flippy('view')
+let view = superbook.flippy('view')
 
-// console.log('Current view', view)
+console.log('Current view:', view)
 
-// let mode = superbook.flippy('mode')
+let mode = superbook.flippy('mode')
 
-// console.log('Mode', mode)
+console.log('Mode:', mode)
 
 let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
 
-console.log('dimensions', dimensions)
+console.log('Dimensions:', dimensions)
 
 
 // // METHODS:
 
-// superbook.flippy('page', 5)
+superbook.flippy('page', 5)
 
-// console.log(superbook.flippy('page')) // Logs the current page of the book
+console.log(superbook.flippy('page')) // Logs the current page of the book
 
-// console.log(superbook.flippy('view')) // Logs the current view of the book
+console.log(superbook.flippy('view')) // Logs the current view of the book
 
-// console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
+console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
 
-// superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
+superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
 
-// let pageObj = document.createElement('div')
+let pageObj = document.createElement('div')
 
-// pageObj.innerHTML = 'something something'
+pageObj.innerHTML = 'something something'
 
-// superbook.flippy('addPage', pageObj, 3)
+superbook.flippy('addPage', pageObj, 3)
 
 // // THE BOOK
 // console.log(superbook)
