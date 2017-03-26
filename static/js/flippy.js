@@ -411,10 +411,6 @@
 
                         pageObj.style.cssText = cssString
 
-                        // cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0; '
-
-                        // pageObj.style.cssText = cssString
-
                         break
                     case 'rightPages':
 
@@ -447,7 +443,9 @@
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0; '
+                        cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
+
+                        // cssString += isEven(currentIndex) ? `transform: translateX(0px)` : `transform: translateX(${parseInt(_book.origin.x) - parseInt(_book.bounds.left)}px)`
 
                         pageObj.style.cssText = cssString
 
