@@ -135,6 +135,7 @@
         return
     }
 
+    //  Window level listeners.
     _viewer.onChange('(orientation: landscape)', match => {
         _book.mode = match ? 'landscape' : 'portrait'
 
@@ -145,7 +146,6 @@
         _printBook()
     })
 
-    //  Window level listener.
 
     w.addEventListener('resize', _setUpGeometry)
 
@@ -154,14 +154,14 @@
 
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        // d.getElementById('pwidth').textContent = _book.bounds.width
-        // d.getElementById('pheight').textContent = _book.bounds.height
-        // d.getElementById('ptop').textContent = _book.bounds.top
-        // d.getElementById('pleft').textContent = _book.bounds.left
-        // d.getElementById('pright').textContent = _book.bounds.right
-        // d.getElementById('pbottom').textContent = _book.bounds.bottom
-        // d.getElementById('originX').textContent = _book.origin.x
-        // d.getElementById('originY').textContent = _book.origin.y
+        d.getElementById('pwidth').textContent = _book.bounds.width
+        d.getElementById('pheight').textContent = _book.bounds.height
+        d.getElementById('ptop').textContent = _book.bounds.top
+        d.getElementById('pleft').textContent = _book.bounds.left
+        d.getElementById('pright').textContent = _book.bounds.right
+        d.getElementById('pbottom').textContent = _book.bounds.bottom
+        d.getElementById('originX').textContent = _book.origin.x
+        d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -211,7 +211,7 @@
 
         let classes = 'wrapper'
 
-        classes += isEven(currentIndex) ? ' odd' : ' even'
+        classes += isEven(currentIndex) ? ' odd red' : ' even blue'
 
         addClasses(newWrapper, classes)
 
@@ -500,11 +500,18 @@
 
     function _liveBook() {
 
+        direction = ['forward', 'backward']
+
+        quadrants = ['qi', 'qii', 'qiii', 'qiv']
+
+
         let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
 
         // let livePages = _book.node.querySelectorAll(`[data-page]`)
 
         let livePages = _book.node.getElementsByClassName('wrapper')
+
+        // livePages[0].style.visibility = 'hidden'
 
         // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
 
@@ -519,11 +526,21 @@
     let π = Math.PI
 
 
-    // function λ (angle) {
+    // Cone Angle λ
 
-    // }
+    function λ(angle) {
+
+    }
 
 
+    // Converts an angle from radians to degrees
+    function _rad(degrees) {
+        return degrees / 180 * π;
+    }
+
+    function _deg(radians) {
+        return radians / π * 180;
+    }
 
 
     /**********************************/
@@ -556,9 +573,6 @@
             case 'mouseup':
                 _handleMouseUp(event)
                 break
-            case 'wheel':
-                _handleWheelEvent(event)
-                break
             case 'click':
                 _handleMouseClicks(event)
                 break
@@ -574,6 +588,12 @@
             case 'touchend':
                 _handleTouchEnd(event)
                 break
+            case 'wheel':
+                _handleWheelEvent(event)
+                break
+            case 'keypress':
+                _handleKeyPressEvent(event)
+                break
             default:
                 console.log(event)
                 break
@@ -582,13 +602,11 @@
 
 
 
-    let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick']
+    let mouseEvents = ['mousemove', 'mouseover', 'mousedown', 'mouseup', 'mouseout', 'click', 'dblclick', 'wheel']
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    let keyEvents = ['wheel', 'keypress']
-
-    const events = [].concat(mouseEvents).concat(keyEvents)
+    const events = [].concat(mouseEvents)
 
     if (isTouch()) events.concat(touchEvents)
 
@@ -800,7 +818,6 @@
 
     }
 
-
     function _handleTouchStart(event) {
         // console.log('Touch started')
 
@@ -921,8 +938,8 @@
     }
 
     NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
-        for(let i = this.length - 1; i >= 0; i--) {
-            if(this[i] && this[i].parentElement) {
+        for (let i = this.length - 1; i >= 0; i--) {
+            if (this[i] && this[i].parentElement) {
                 this[i].parentElement.removeChild(this[i]);
             }
         }
