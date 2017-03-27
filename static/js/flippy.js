@@ -16,6 +16,7 @@
 
         constructor() {
             this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
+            this.zoomed = false // Default
         }
 
         // PROPERTIES
@@ -107,7 +108,7 @@
 
     let _book = new Book()
 
-    function _init(node, settings = { duration: 500, animation: true, curl: true, peel: true, zoom: true }) {
+    function _init(node, settings = { duration: 500, animation: true, flip: true, peel: true, zoom: true }) {
         _book.node = node
 
         _book.settings = settings
@@ -138,6 +139,10 @@
     //  Window level listeners.
     _viewer.onChange('(orientation: landscape)', match => {
         _book.mode = match ? 'landscape' : 'portrait'
+
+        // _removeChildren(_book.node)
+
+        console.log(_book.currentPage, _book.mode)
 
         _setView(_book.currentPage)
 
@@ -395,7 +400,7 @@
 
         }
 
-        _book.node.appendChild(docfrag) // nodeList?
+        _book.node.appendChild(docfrag) //
 
         return
     }
@@ -477,6 +482,19 @@
     }
 
 
+    function _removeElements(className) {
+
+        let elements = d.getElementsByClassName(className)
+
+        elements.remove()
+
+        // removeEventListeneners if any.
+
+        return
+    }
+
+
+
     /************************************
      *********** DOM/Live book **********
      ************************************/
@@ -501,6 +519,11 @@
         direction = ['forward', 'backward']
 
         quadrants = ['qi', 'qii', 'qiii', 'qiv']
+
+        // events.forEach(event => {
+        //     delegateElement.addEventListener(event, handler)
+        // })
+
 
 
         let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
@@ -589,9 +612,6 @@
             case 'wheel':
                 _handleWheelEvent(event)
                 break
-            case 'keypress':
-                _handleKeyPressEvent(event)
-                break
             default:
                 console.log(event)
                 break
@@ -623,51 +643,28 @@
             case 'A':
                 switch (_book.mode) {
                     case 'portrait':
-
                         if (event.target.matches('a#next')) {
 
                         }
-
-                        if (event.target.matches('a#previous')) {
-
-                        }
-
                         break
                     case 'landscape':
                         if (event.target.matches('a#next')) {
 
                         }
-
-                        if (event.target.matches('a#previous')) {
-
-                        }
-
                         break
                 }
-
                 break
             case 'DIV':
                 switch (_book.mode) {
                     case 'portrait':
-
                         if (event.target.matches('div.odd')) {
 
                         }
-
-                        if (event.target.matches('div.even')) {
-
-                        }
-
                         break
                     case 'landscape':
                         if (event.target.matches('div.odd')) {
 
                         }
-
-                        if (event.target.matches('div.even')) {
-
-                        }
-
                         break
                 }
                 break
@@ -718,6 +715,16 @@
 
         d.getElementById('xaxis').textContent = event.pageX
         d.getElementById('yaxis').textContent = event.pageY
+
+        let side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
+        let half = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
+
+        _book.currentPointerPosition = `{ 'x': ${event.pageX}, 'y': ${event.pageY} }`
+
+        // console.log(_book.pointerPosition)
+
+        // console.log('quadrant:', side, half)
+
     }
 
 
@@ -726,8 +733,6 @@
         if (!event.target) return
 
         let currentIndex = parseInt(_book.currentPage) - 1
-
-        console.log(event)
 
         switch (event.target.nodeName) {
             case 'A':
@@ -764,6 +769,8 @@
 
                 _removeChildren(_book.node)
 
+                console.log(_book.currentPage, _book.mode)
+
                 _setView(_book.currentPage)
 
                 _setRange(_book.currentPage)
@@ -798,7 +805,34 @@
 
 
     function _handleMouseDoubleClicks(event) {
-        // console.log('Do you wanna make a snowman?')
+
+        if (!event.target) return
+
+        console.log(_book.currentPointerPosition)
+
+        switch (event.target.nodeName) {
+            case 'A':
+
+                break
+            case 'DIV':
+                if (_book.zoomed) {
+                    _printElements('buttons', _book.buttons)
+                    _book.zoomed = false
+                    _book.node.style = 'transform: perspective(0px) scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
+
+
+                } else {
+                    _removeElements('arrow-controls')
+                    _book.zoomed = true
+                    _book.node.style = 'transform: perspective(0px) scale3d(.1, .1, .1) translate3d(0, 0, 0); transition: all 1s;'
+
+                }
+                break
+            default:
+                console.log('WUT', event.target)
+                return
+        }
+
     }
 
     function _handleMouseDown(event) {
@@ -812,12 +846,19 @@
     function _handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
 
-        // console.log(event)
+        console.log(event)
 
     }
 
     function _handleTouchStart(event) {
-        // console.log('Touch started')
+
+
+        if (event.touches.length == 2) {
+            _book.zoom = true
+            _book.flip = false
+            _pinchZoom(event, _book.zoom)
+        }
+
 
         console.log(e.touches.length)
 
@@ -855,9 +896,25 @@
 
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
         console.log('yay, transition ended')
-        console.log(event.target)
-        console.log({ 'height': _book.bounds.height, 'width': _book.bounds.width })
+        console.log(event)
+
     })
+
+    /**********************************/
+    /************ Behavior ************/
+    /**********************************/
+
+
+    // function _pinchZoom(event, zoom) {
+    //     const fingerDistance =
+    //         Math.sqrt(
+    //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
+    //             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
+
+    //     console.log('distance', fingerDistance)
+
+    // }
+
 
 
     /**********************************/

@@ -21,6 +21,7 @@ body {
     align-items: center;
     justify-content: center;
     /*transition-duration: 200ms;*/
+    background: gray;
 }
 
 .viewer {
@@ -36,10 +37,8 @@ body {
     pointer-events: auto;
     width: 100%;
     height: 100%;
-    transform: translateZ(0px);
-    /* Implement pinch2zoom? */
-    transform-style: preserve-3d;
-    /* Gets faux 3D space for pages */
+    /*transform: translate3d(0, 0, 0);*/
+    transform-style: preserve-3d;     /* Gets faux 3D space for pages */
 }
 
 .wrapper {
@@ -143,20 +142,6 @@ body {
     }
 }
 
-/*.left {
-    float: left;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.right {
-    float: right;
-    position: absolute;
-    top: 0;
-    right: 0
-}
-*/
 .promoted {
     will-change: transform;
     transform: translateZ(0);
