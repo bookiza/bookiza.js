@@ -456,7 +456,7 @@
 
                         break
                     case 'rightPages':
-                        cssString = 'float: right; position: absolute; top: 0; right: 0; pointer-events:none; visibility: hidden; display: none;'
+                        cssString = 'float: right; position: absolute; top: 0; right: 0; pointer-events:none;'
 
                         pageObj.style.cssText = cssString
 
@@ -466,11 +466,11 @@
 
                         break
                     case 'leftPages':
-                        cssString = 'float: left; position: absolute; top: 0; left: 0; pointer-events:none; visibility: hidden; display: none;'
+                        cssString = 'float: left; position: absolute; top: 0; left: 0; pointer-events:none;'
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 2; display: none;'
+                        cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 2;'
 
                         pageObj.style.cssText = cssString
 
@@ -483,14 +483,7 @@
 
 
     function _removeElements(className) {
-
-        let elements = d.getElementsByClassName(className)
-
-        elements.remove()
-
-        // removeEventListeneners if any.
-
-        return
+        _book.node.getElementsByClassName(className).remove()
     }
 
 
@@ -518,21 +511,13 @@
 
         direction = ['forward', 'backward']
 
-        quadrants = ['qi', 'qii', 'qiii', 'qiv']
-
-        // events.forEach(event => {
-        //     delegateElement.addEventListener(event, handler)
-        // })
-
-
+        quadrants = ['QI', 'QII', 'QIII', 'QIV']
 
         let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
 
         // let livePages = _book.node.querySelectorAll(`[data-page]`)
 
         let livePages = _book.node.getElementsByClassName('wrapper')
-
-        // livePages[0].style.visibility = 'hidden'
 
         // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
 
@@ -643,28 +628,16 @@
             case 'A':
                 switch (_book.mode) {
                     case 'portrait':
-                        if (event.target.matches('a#next')) {
-
-                        }
                         break
                     case 'landscape':
-                        if (event.target.matches('a#next')) {
-
-                        }
                         break
                 }
                 break
             case 'DIV':
                 switch (_book.mode) {
                     case 'portrait':
-                        if (event.target.matches('div.odd')) {
-
-                        }
                         break
                     case 'landscape':
-                        if (event.target.matches('div.odd')) {
-
-                        }
                         break
                 }
                 break
@@ -719,11 +692,11 @@
         let side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
         let half = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
 
-        _book.currentPointerPosition = `{ 'x': ${event.pageX}, 'y': ${event.pageY} }`
+        _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`)
 
-        // console.log(_book.pointerPosition)
+        console.log(_book.currentPointerPosition)
 
-        // console.log('quadrant:', side, half)
+        console.log('quadrant:', side, half)
 
     }
 
@@ -784,15 +757,15 @@
 
                         break
                     case 'landscape':
-                        // if (event.target.matches('div.even')) {
-                        //     console.log('forward')
-                        //     event.target.className += ' flip forward'
-                        // }
-                        // if (event.target.matches('div.odd')) {
-                        //     console.log('backward')
-                        //     event.target.className += ' flip backward'
-                        // }
-                        // break
+                        if (event.target.matches('div.even')) {
+                            console.log('forward')
+                            event.target.className += ' flip forward'
+                        }
+                        if (event.target.matches('div.odd')) {
+                            console.log('backward')
+                            event.target.className += ' flip backward'
+                        }
+                        break
                 }
                 break
             default:
@@ -820,23 +793,22 @@
                     _book.zoomed = false
                     _book.node.style = 'transform: perspective(0px) scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
 
-
                 } else {
                     _removeElements('arrow-controls')
                     _book.zoomed = true
-                    _book.node.style = 'transform: perspective(0px) scale3d(.1, .1, .1) translate3d(0, 0, 0); transition: all 1s;'
-
+                    _book.node.style = `transform: perspective(0px) scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s;` // transform-origin: ${_book.currentPointerPosition.x}px ${_book.currentPointerPosition.y}px;
                 }
+
                 break
             default:
-                console.log('WUT', event.target)
+                // console.log('WUT', event.target)
                 return
         }
 
     }
 
     function _handleMouseDown(event) {
-
+        // console.log('Down!')
     }
 
     function _handleMouseUp(event) {
@@ -846,7 +818,7 @@
     function _handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
 
-        console.log(event)
+        // console.log(event)
 
     }
 
