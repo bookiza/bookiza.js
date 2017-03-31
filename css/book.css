@@ -20,7 +20,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition-duration: 200ms;
+    /*transition-duration: 200ms;*/
     backface-visibility: hidden;
 }
 
@@ -39,6 +39,7 @@ body {
     height: 100%;
     transform: translate3d(0, 0, 0);
     transform-style: preserve-3d;     /* Gets faux 3D space for pages */
+    backface-visibility: hidden;
 }
 
 .wrapper {
