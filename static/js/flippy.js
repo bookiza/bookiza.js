@@ -16,7 +16,6 @@
 
         constructor() {
             this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
-            this.zoomed = false // Default
         }
 
         // PROPERTIES
@@ -108,7 +107,7 @@
 
     let _book = new Book()
 
-    function _init(node, settings = { duration: 500, animation: true, flip: true, peel: true, zoom: true }) {
+    function _init(node, settings = { duration: 500, animation: true, flip: true, peel: true, zoom: false }) {
         _book.node = node
 
         _book.settings = settings
@@ -159,14 +158,14 @@
 
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        d.getElementById('pwidth').textContent = _book.bounds.width
-        d.getElementById('pheight').textContent = _book.bounds.height
-        d.getElementById('ptop').textContent = _book.bounds.top
-        d.getElementById('pleft').textContent = _book.bounds.left
-        d.getElementById('pright').textContent = _book.bounds.right
-        d.getElementById('pbottom').textContent = _book.bounds.bottom
-        d.getElementById('originX').textContent = _book.origin.x
-        d.getElementById('originY').textContent = _book.origin.y
+        // d.getElementById('pwidth').textContent = _book.bounds.width
+        // d.getElementById('pheight').textContent = _book.bounds.height
+        // d.getElementById('ptop').textContent = _book.bounds.top
+        // d.getElementById('pleft').textContent = _book.bounds.left
+        // d.getElementById('pright').textContent = _book.bounds.right
+        // d.getElementById('pbottom').textContent = _book.bounds.bottom
+        // d.getElementById('originX').textContent = _book.origin.x
+        // d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -353,7 +352,7 @@
 
         // _printElements('leftPages', _book.sidePagesLeft)
 
-        _liveBook()
+        // _liveBook()
 
         return
     }
@@ -531,9 +530,9 @@
 
     let π = Math.PI
 
+    let Δ, θ = 'delta'
 
     // Cone Angle λ
-
     function λ(angle) {
 
     }
@@ -613,10 +612,24 @@
 
     if (isTouch()) events.concat(touchEvents)
 
-    events.forEach(event => {
-        delegateElement.addEventListener(event, handler)
-    })
+    // events.forEach(event => {
+    //     delegateElement.addEventListener(event, handler)
+    // })
 
+    w.addEventListener('mouseover', _addEvents)
+    w.addEventListener('mouseout', _removeEvents)
+
+    function _addEvents() {
+        events.forEach(event => {
+            delegateElement.addEventListener(event, handler)
+        })
+    }
+
+    function _removeEvents() {
+        events.forEach(event => {
+            delegateElement.removeEventListener(event, handler)
+        })
+    }
 
     function _handleMouseOver(event) {
 
@@ -649,17 +662,15 @@
 
     }
 
+
     function _handleMouseOut(event) {
         if (!event.target) return
 
-        let currentIndex = parseInt(_book.currentPage) - 1
-
+        // let currentIndex = parseInt(_book.currentPage) - 1
 
         // let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
 
         // console.log(_book.node.querySelectorAll('[data-page]'))
-
-
     }
 
     function _handleMouseMove(event) {
@@ -694,14 +705,20 @@
 
         _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`)
 
-        console.log(_book.currentPointerPosition)
+        // console.log(_book.currentPointerPosition)
 
-        console.log('quadrant:', side, half)
+        // console.log('quadrant:', side, half)
+
+        if (_book.settings.zoom) {
+            _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
+        }
 
     }
 
 
     function _handleMouseClicks(event) {
+
+        event.preventDefault()
 
         if (!event.target) return
 
@@ -709,6 +726,8 @@
 
         switch (event.target.nodeName) {
             case 'A':
+                // Cache multiple clicks for flipping animation?
+
                 switch (_book.mode) {
                     case 'portrait':
 
@@ -738,17 +757,17 @@
                 }
 
 
-                // _printElements('rightPages', _book.sidePagesRight)
+                _printElements('rightPages', _book.sidePagesRight)
 
-                _removeChildren(_book.node)
+                // _removeChildren(_book.node)
 
-                console.log(_book.currentPage, _book.mode)
+                // // console.log(_book.currentPage, _book.mode)
 
-                _setView(_book.currentPage)
+                // _setView(_book.currentPage)
 
-                _setRange(_book.currentPage)
+                // _setRange(_book.currentPage)
 
-                _printBook()
+                // _printBook()
 
                 break
             case 'DIV':
@@ -757,14 +776,6 @@
 
                         break
                     case 'landscape':
-                        if (event.target.matches('div.even')) {
-                            console.log('forward')
-                            event.target.className += ' flip forward'
-                        }
-                        if (event.target.matches('div.odd')) {
-                            console.log('backward')
-                            event.target.className += ' flip backward'
-                        }
                         break
                 }
                 break
@@ -781,27 +792,27 @@
 
         if (!event.target) return
 
-        console.log(_book.currentPointerPosition)
+        // console.log(_book.currentPointerPosition)
 
         switch (event.target.nodeName) {
             case 'A':
-
                 break
             case 'DIV':
-                if (_book.zoomed) {
+                if (_book.settings.zoom) {
                     _printElements('buttons', _book.buttons)
-                    _book.zoomed = false
-                    _book.node.style = 'transform: perspective(0px) scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
+                    _book.settings.zoom = false
+                    _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
 
                 } else {
                     _removeElements('arrow-controls')
-                    _book.zoomed = true
-                    _book.node.style = `transform: perspective(0px) scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s;` // transform-origin: ${_book.currentPointerPosition.x}px ${_book.currentPointerPosition.y}px;
+
+                    _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s; will-change: transform;`
+                    _book.settings.zoom = true
                 }
 
                 break
             default:
-                // console.log('WUT', event.target)
+                console.log('WUT', event.target)
                 return
         }
 
@@ -827,7 +838,6 @@
 
         if (event.touches.length == 2) {
             _book.zoom = true
-            _book.flip = false
             _pinchZoom(event, _book.zoom)
         }
 
@@ -869,6 +879,7 @@
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
         console.log('yay, transition ended')
         console.log(event)
+
 
     })
 
@@ -971,6 +982,11 @@
             }
         }
     }
+
+    w.requestAnimationFrame = (function() {
+        return w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function(callback) { w.setTimeout(callback, 1E3 / 60) }
+    })()
+
 
     /**********************************/
     /*********** Exposed API **********/
