@@ -28,7 +28,8 @@ body {
     pointer-events: none;
     cursor: default;
     -webkit-perspective: 200px;
-    perspective: 200px; /* Apply perspective with same vanishing point to children */
+    perspective: 200px;
+    /* Apply perspective with same vanishing point to children */
     perspective-origin: 50% 50%;
     backface-visibility: hidden;
 }
@@ -38,7 +39,8 @@ body {
     width: 100%;
     height: 100%;
     transform: translate3d(0, 0, 0);
-    transform-style: preserve-3d;     /* Gets faux 3D space for pages */
+    transform-style: preserve-3d;
+    /* Gets faux 3D space for pages */
     backface-visibility: hidden;
 }
 
@@ -290,7 +292,6 @@ svg {
 /* To be removed eventually */
 
 @import './plotter.css';
-
 .red {
     background: tomato;
 }

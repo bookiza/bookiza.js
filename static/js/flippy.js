@@ -100,7 +100,7 @@
                 const res = w.matchMedia(query)
                 return res
             } else {
-                // ... add polyfill here or use pollyfill.io.
+                // ... add polyfill here/  or use pollyfill.io.
             }
         }
     }
@@ -140,9 +140,7 @@
     _viewer.onChange('(orientation: landscape)', match => {
         _book.mode = match ? 'landscape' : 'portrait'
 
-        // _removeChildren(_book.node)
-
-        console.log(_book.currentPage, _book.mode)
+        _removeChildren(_book.node)
 
         _setView(_book.currentPage)
 
@@ -159,14 +157,14 @@
 
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        d.getElementById('pwidth').textContent = _book.bounds.width
-        d.getElementById('pheight').textContent = _book.bounds.height
-        d.getElementById('ptop').textContent = _book.bounds.top
-        d.getElementById('pleft').textContent = _book.bounds.left
-        d.getElementById('pright').textContent = _book.bounds.right
-        d.getElementById('pbottom').textContent = _book.bounds.bottom
-        d.getElementById('originX').textContent = _book.origin.x
-        d.getElementById('originY').textContent = _book.origin.y
+        // d.getElementById('pwidth').textContent = _book.bounds.width
+        // d.getElementById('pheight').textContent = _book.bounds.height
+        // d.getElementById('ptop').textContent = _book.bounds.top
+        // d.getElementById('pleft').textContent = _book.bounds.left
+        // d.getElementById('pright').textContent = _book.bounds.right
+        // d.getElementById('pbottom').textContent = _book.bounds.bottom
+        // d.getElementById('originX').textContent = _book.origin.x
+        // d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -202,7 +200,7 @@
 
         let classes = `promoted inner page-${parseInt(currentIndex) + 1} `
 
-        classes += isEven(currentIndex) ? 'odd red' : 'even blue'
+        classes += isEven(currentIndex) ? 'odd' : 'even'
 
         addClasses(pageObj, classes)
 
@@ -216,7 +214,7 @@
 
         let classes = 'wrapper'
 
-        classes += isEven(currentIndex) ? ' odd red' : ' even blue'
+        classes += isEven(currentIndex) ? ' odd' : ' even'
 
         addClasses(newWrapper, classes)
 
@@ -347,9 +345,9 @@
     function _printBook() {
         _printElements('buttons', _book.buttons)
 
-        _printElements('view', _book.viewablePages)
+        // _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
         // _printElements('leftPages', _book.sidePagesLeft)
 
@@ -450,27 +448,27 @@
 
                         cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
 
-                        // cssString += isEven(currentIndex) ? `transform: translateX(0px)` : `transform: translateX(${parseInt(_book.origin.x) - parseInt(_book.bounds.left)}px)`
-
                         pageObj.style.cssText = cssString
 
                         break
                     case 'rightPages':
-                        cssString = 'float: right; position: absolute; top: 0; right: 0; pointer-events:none;'
+                        cssString = 'position: absolute; top: 0; pointer-events:none;'
+
+                        console.log(pageObj) //TODO: transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% 0;
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 2;' : 'z-index: 1;'
+                        cssString += isEven(currentIndex) ? 'z-index: 2; float: left; left: 0;' : 'z-index: 1; float: right; right: 0;'
 
                         pageObj.style.cssText = cssString
 
                         break
                     case 'leftPages':
-                        cssString = 'float: left; position: absolute; top: 0; left: 0; pointer-events:none;'
+                        cssString = 'position: absolute; top: 0; pointer-events:none;'
 
                         pageObj.style.cssText = cssString
 
-                        cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 2;'
+                        cssString += isEven(currentIndex) ? 'z-index: 1; float: left; left: 0;' : 'z-index: 2; float: right; right: 0;'
 
                         pageObj.style.cssText = cssString
 
@@ -613,20 +611,16 @@
 
     if (isTouch()) events.concat(touchEvents)
 
-    // events.forEach(event => {
-    //     delegateElement.addEventListener(event, handler)
-    // })
+    w.addEventListener('mouseover', _applyBookEvents)
+    w.addEventListener('mouseout', _removeBookEvents)
 
-    w.addEventListener('mouseover', _addEvents)
-    w.addEventListener('mouseout', _removeEvents)
-
-    function _addEvents() {
+    function _applyBookEvents() {
         events.forEach(event => {
             delegateElement.addEventListener(event, handler)
         })
     }
 
-    function _removeEvents() {
+    function _removeBookEvents() {
         events.forEach(event => {
             delegateElement.removeEventListener(event, handler)
         })
@@ -701,10 +695,14 @@
         d.getElementById('xaxis').textContent = event.pageX
         d.getElementById('yaxis').textContent = event.pageY
 
-        let side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
+        _book.side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
+
         let half = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
 
-        _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`)
+        _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`);
+
+
+        // (_book.side === 'right')? _printElements('rightPages', _book.sidePagesRight) : _printElements('leftPages', _book.sidePagesLeft);
 
         // console.log(_book.currentPointerPosition)
 

@@ -2,7 +2,7 @@
 /**********************************/
 /** **** Initialize  Flippy ********/
 /**********************************/
-let settings = { duration: 100, animation: true, flip: true, peel: true, zoom: true, start_page: 16 }
+let settings = { duration: 100, animation: true, flip: true, peel: true, zoom: true, start_page: 2 }
 
 let node = document.getElementById('book')
 
