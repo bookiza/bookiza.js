@@ -1,12 +1,9 @@
 #plotter {
     pointer-events: auto;
     cursor: default;
-   -webkit-perspective: 200px; /* Applies uniformly to its children */
-    perspective: 200px; 
-    perspective-origin: 50% 50%;
     background-position: 0 0;
     background-size: 50% 50%;
-    background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px); 
+    background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);
 }
 
 #coordinates {

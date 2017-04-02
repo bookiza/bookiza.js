@@ -1,4 +1,3 @@
-
 if (window.PointerEvent) {
   console.log('hello')
 } else {

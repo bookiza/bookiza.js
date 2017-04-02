@@ -16,7 +16,7 @@ body {
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    overflow: hidden;
+    /*overflow: hidden;*/
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,8 +27,8 @@ body {
 .viewer {
     pointer-events: none;
     cursor: default;
-    -webkit-perspective: 200px;
-    perspective: 200px;
+    -webkit-perspective: 20000px;
+    perspective: 20000px;
     /* Apply perspective with same vanishing point to children */
     perspective-origin: 50% 50%;
     backface-visibility: hidden;
@@ -46,9 +46,11 @@ body {
 
 .wrapper {
     height: 100%;
+    position: absolute;
+    top: 0;
 }
 
-.outer {
+/*.outer {
     position: absolute;
     top: 0;
     left: 0;
@@ -57,7 +59,7 @@ body {
     z-index: 1;
     pointer-events: none;
 }
-
+*/
 .inner {
     position: absolute;
     top: 0;
@@ -94,7 +96,7 @@ body {
         backface-visibility: visible;
         width: 100%;
     }
-    body .even > .gradient {
+/*    body .even > .gradient {
         background: -webkit-gradient(linear, right top, left top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.2)));
         background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
         background-image: -moz-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
@@ -110,7 +112,7 @@ body {
         background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
         background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.3) 100%);
     }
-}
+*/}
 
 @media (orientation: landscape) {
     body .viewer {
@@ -126,7 +128,7 @@ body {
         backface-visibility: hidden;
         width: 50%;
     }
-    body .even > .gradient {
+/*    body .even > .gradient {
         background: -webkit-gradient(linear, left top, right top, color-stop(0.97, rgba(0, 0, 0, 0)), color-stop(1, rgba(0, 0, 0, 0.1)));
         background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.25) 100%);
         background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.25) 100%);
@@ -142,7 +144,7 @@ body {
         background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.2) 100%);
         background-image: linear-gradient(right, rgba(0, 0, 0, 0) 97%, rgba(0, 0, 0, 0.2) 100%);
     }
-}
+*/}
 
 .promoted {
     will-change: transform;
@@ -292,6 +294,7 @@ svg {
 /* To be removed eventually */
 
 @import './plotter.css';
+
 .red {
     background: tomato;
 }

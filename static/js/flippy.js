@@ -113,7 +113,7 @@
 
         _book.settings = settings
 
-        let nodes = [...node.children]
+        let nodes = [..._book.node.children]
 
         _book.buttons = nodes.splice(0, 2)
 
@@ -121,7 +121,7 @@
             return _addBaseClasses(page, currentIndex)
         })
 
-        _setUpGeometry()
+        _setUpGeometry(_book.node)
 
         _removeChildren(_book.node)
 
@@ -152,9 +152,8 @@
 
     w.addEventListener('resize', _setUpGeometry)
 
-    function _setUpGeometry() {
-        _book.bounds = node.getBoundingClientRect() // Setup a geometrical premise.
-
+    function _setUpGeometry(node) {
+        _book.bounds = node.getBoundingClientRect() // The premise.
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
         // d.getElementById('pwidth').textContent = _book.bounds.width
@@ -207,6 +206,9 @@
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
         return wrappedHtml
+
+        // return pageObj
+
     }
 
     function _wrapHtml(pageObj, currentIndex) {
@@ -220,12 +222,14 @@
 
         newWrapper.setAttribute('data-page', parseInt(currentIndex) + 1)
 
-        newWrapper.innerHTML = `<div class="outer gradient"><h1> ${parseInt(currentIndex) + 1}  </h1></div>`
+        // Try :before :after pseudo elements instead.
+        // newWrapper.innerHTML = `<div class="outer gradient"><h1> View[${parseInt(currentIndex) + 1}]  </h1></div>`
 
         newWrapper.appendChild(pageObj)
 
         return newWrapper
     }
+
 
     function _flipPage(pageNo) {
 
@@ -345,13 +349,13 @@
     function _printBook() {
         _printElements('buttons', _book.buttons)
 
-        // _printElements('view', _book.viewablePages)
+        _printElements('view', _book.viewablePages)
 
-        _printElements('rightPages', _book.sidePagesRight)
+        // _printElements('rightPages', _book.sidePagesRight)
 
         // _printElements('leftPages', _book.sidePagesLeft)
 
-        // _liveBook()
+        _liveBook()
 
         return
     }
@@ -398,7 +402,7 @@
 
         }
 
-        _book.node.appendChild(docfrag) //
+        _book.node.appendChild(docfrag)
 
         return
     }
@@ -406,20 +410,31 @@
 
     function _applyStyles(pageObj, currentIndex, type) {
         let cssString = ''
+
         switch (_book.mode) {
             case 'portrait':
                 switch (type) {
                     case 'view':
-                        cssString = 'position: absolute; top: 0; z-index: 2; float: left; left: 0;'
+                        // inner
+                        cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0;'
+
+                        pageObj.childNodes[0].style = cssString
+
+                        // wrapper
+                        cssString = 'z-index: 2; float: left; left: 0;'
 
                         pageObj.style.cssText = cssString
 
                         break
                     case 'rightPages':
+                        // inner
+                        cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0;'
 
-                        cssString = 'position: absolute; top: 0; float: left; left: 0; pointer-events:none;'
+                        pageObj.childNodes[0].style = cssString
 
-                        pageObj.style.cssText = cssString
+
+                        // wrapper
+                        cssString = 'float: left; left: 0; pointer-events:none;'
 
                         cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
 
@@ -427,9 +442,13 @@
 
                         break
                     case 'leftPages':
-                        cssString = 'position: absolute; top: 0; float: left; left: 0; pointer-events:none;'
+                        // inner
+                        cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0;'
 
-                        pageObj.style.cssText = cssString
+                        pageObj.childNodes[0].style = cssString
+
+                        // wrapper
+                        cssString = 'float: left; left: 0; pointer-events:none;'
 
                         cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
 
@@ -442,21 +461,28 @@
             case 'landscape':
                 switch (type) {
                     case 'view':
-                        cssString = 'position: absolute; top: 0; z-index: 3;'
+                        cssString = isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center;'
 
-                        pageObj.style.cssText = cssString
+                        pageObj.childNodes[0].style = cssString
+
+                        // wrapper
+                        cssString = 'z-index: 3;'
 
                         cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
 
-                        pageObj.style.cssText = cssString
+                        pageObj.style = cssString
 
                         break
                     case 'rightPages':
-                        cssString = 'position: absolute; top: 0; pointer-events:none;'
+                        // inner
+                        cssString = ''
 
-                        console.log(pageObj) //TODO: transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% 0;
+                        cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% center;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center;'
 
-                        pageObj.style.cssText = cssString
+                        pageObj.childNodes[0].style = cssString
+
+                        // wrapper
+                        cssString = 'pointer-events:none;'
 
                         cssString += isEven(currentIndex) ? 'z-index: 2; float: left; left: 0;' : 'z-index: 1; float: right; right: 0;'
 
@@ -464,7 +490,16 @@
 
                         break
                     case 'leftPages':
-                        cssString = 'position: absolute; top: 0; pointer-events:none;'
+                        // inner
+                        cssString = ''
+
+                        cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center;' : 'transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: 0 center;'
+
+                        pageObj.childNodes[0].style = cssString
+
+
+                        // wrapper
+                        cssString = 'pointer-events:none;'
 
                         pageObj.style.cssText = cssString
 
@@ -476,9 +511,9 @@
 
                 }
         }
+
         return pageObj
     }
-
 
     function _removeElements(className) {
         _book.node.getElementsByClassName(className).remove()
@@ -518,6 +553,8 @@
         let livePages = _book.node.getElementsByClassName('wrapper')
 
         // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
+
+        console.log('Book re-initialized')
 
         return
 
@@ -607,7 +644,9 @@
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    const events = [].concat(mouseEvents)
+    let keyEvents = ['keypress', 'keyup', 'keydown']
+
+    const events = [].concat(mouseEvents).concat(keyEvents)
 
     if (isTouch()) events.concat(touchEvents)
 
@@ -701,12 +740,6 @@
 
         _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`);
 
-
-        // (_book.side === 'right')? _printElements('rightPages', _book.sidePagesRight) : _printElements('leftPages', _book.sidePagesLeft);
-
-        // console.log(_book.currentPointerPosition)
-
-        // console.log('quadrant:', side, half)
 
         if (_book.zoomed) {
             _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
