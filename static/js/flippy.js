@@ -17,6 +17,9 @@
         constructor() {
             this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
             this.zoomed = false
+            this.flipped = true
+            this.quadrants = ['I', 'II', 'III', 'IV']
+            this.direction = ['forward', 'backward']
         }
 
         // PROPERTIES
@@ -121,7 +124,7 @@
             return _addBaseClasses(page, currentIndex)
         })
 
-        _setUpGeometry(_book.node)
+        _setUpGeometry()
 
         _removeChildren(_book.node)
 
@@ -152,8 +155,8 @@
 
     w.addEventListener('resize', _setUpGeometry)
 
-    function _setUpGeometry(node) {
-        _book.bounds = node.getBoundingClientRect() // The premise.
+    function _setUpGeometry() {
+        _book.bounds = _book.node.getBoundingClientRect() // The premise.
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
         // d.getElementById('pwidth').textContent = _book.bounds.width
@@ -351,9 +354,9 @@
 
         _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
-        // _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.sidePagesLeft)
 
         _liveBook()
 
@@ -475,7 +478,7 @@
                         break
                     case 'rightPages':
                         // inner
-                        cssString = ''
+                        cssString = 'pointer-events:none;'
 
                         cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% center;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center;'
 
@@ -491,7 +494,7 @@
                         break
                     case 'leftPages':
                         // inner
-                        cssString = ''
+                        cssString = 'pointer-events:none;'
 
                         cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center;' : 'transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: 0 center;'
 
@@ -538,27 +541,6 @@
 
     //     // console.log('newCurrentPage', newCurrentPage)
     // }
-
-
-    function _liveBook() {
-
-        direction = ['forward', 'backward']
-
-        quadrants = ['QI', 'QII', 'QIII', 'QIV']
-
-        let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
-
-        // let livePages = _book.node.querySelectorAll(`[data-page]`)
-
-        let livePages = _book.node.getElementsByClassName('wrapper')
-
-        // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
-
-        console.log('Book re-initialized')
-
-        return
-
-    }
 
     /********************************/
     /************ Cone math *********/
@@ -620,6 +602,18 @@
             case 'dblclick':
                 _handleMouseDoubleClicks(event)
                 break
+            case 'wheel':
+                _handleWheelEvent(event)
+                break
+            case 'keydown':
+                _handleKeyDownEvent(event)
+                break
+            case 'keypress':
+                _handleKeyPressEvent(event)
+                break
+            case 'keyup':
+                _handleKeyUpEvent(event)
+                break
             case 'touchstart':
                 _handleTouchStart(event)
                 break
@@ -628,9 +622,6 @@
                 break
             case 'touchend':
                 _handleTouchEnd(event)
-                break
-            case 'wheel':
-                _handleWheelEvent(event)
                 break
             default:
                 console.log(event)
@@ -644,29 +635,61 @@
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    let keyEvents = ['keypress', 'keyup', 'keydown']
+    // let keyEvents = ['keypress', 'keyup', 'keydown']
 
-    const events = [].concat(mouseEvents).concat(keyEvents)
+    // const events = [].concat(mouseEvents)
 
-    if (isTouch()) events.concat(touchEvents)
+    function _liveBook() {
 
-    w.addEventListener('mouseover', _applyBookEvents)
-    w.addEventListener('mouseout', _removeBookEvents)
+        w.addEventListener('mouseover', _applyBookEvents)
+        w.addEventListener('mouseout', _removeBookEvents)
 
-    function _applyBookEvents() {
-        events.forEach(event => {
+
+        function _applyBookEvents() {
+            mouseEvents.forEach(event => {
+                delegateElement.addEventListener(event, handler)
+            })
+
+            // keyEvents.forEach(event => {
+            //     w.addEventListener(event, handler)
+            // })
+        }
+
+        function _removeBookEvents() {
+            mouseEvents.forEach(event => {
+                delegateElement.removeEventListener(event, handler)
+            })
+
+            // keyEvents.forEach(event => {
+            //     w.removeEventListener(event, handler) // TODO: Remove keyboard events not working with anonymous functions.
+            // })
+        }
+
+        if (isTouch()) touchEvents.forEach(event => {
             delegateElement.addEventListener(event, handler)
         })
+
+        // let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
+
+        // let livePages = _book.node.querySelectorAll(`[data-page]`)
+
+        // let livePages = _book.node.getElementsByClassName('wrapper')
+
+        // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
+
+        // console.log('Book re-initialized')
+
+        return
+
     }
 
-    function _removeBookEvents() {
-        events.forEach(event => {
-            delegateElement.removeEventListener(event, handler)
-        })
-    }
+
+    /**********************************/
+    /************ Behavior ************/
+    /**********************************/
+
 
     function _handleMouseOver(event) {
-
         if (!event.target) return
 
         let currentIndex = parseInt(_book.currentPage) - 1
@@ -689,7 +712,7 @@
                 }
                 break
             default:
-                console.log('WUT', event.target)
+                // console.log('WUT', event.target)
                 return
         }
 
@@ -699,15 +722,12 @@
 
     function _handleMouseOut(event) {
         if (!event.target) return
-
-        // let currentIndex = parseInt(_book.currentPage) - 1
-
-        // let livePage = _book.node.querySelectorAll(`[data-page='${parseInt(_book.currentPage)}']`)
-
-        // console.log(_book.node.querySelectorAll('[data-page]'))
+            // TODO: This is where we calculate range pages according to QI-QIV.
     }
 
     function _handleMouseMove(event) {
+        if (!event.target) return
+
         let eventDoc
         let doc
         let body
@@ -736,15 +756,17 @@
 
         _book.side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
 
-        let half = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
+        _book.region = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
 
         _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`);
-
 
         if (_book.zoomed) {
             _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
         }
 
+        if (_book.flipping) {
+            // do something with the pages.
+        }
     }
 
 
@@ -772,7 +794,6 @@
                             let decrement = 1 // Backward
                             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
                         }
-
                         break
                     case 'landscape':
                         if (event.target.matches('a#next')) {
@@ -784,7 +805,6 @@
                             let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
                             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
                         }
-
                         break
                 }
 
@@ -841,26 +861,42 @@
 
                 break
             default:
-                console.log('WUT', event.target)
+                // console.log('WUT', event.target)
                 return
         }
 
     }
 
     function _handleMouseDown(event) {
-        // console.log('Down!')
+        _book.flipped = false
+
+
+
     }
 
     function _handleMouseUp(event) {
-        // console.log('Up!')
+
+        // _book.flipped = true
     }
 
     function _handleWheelEvent(event) {
         // TODO: Determine forward / backward swipe.
 
         // console.log(event)
-
     }
+
+    // function _handleKeyPressEvent(event) {
+    //     console.log('pressed', event.keyCode)
+    // }
+
+    // function _handleKeyDownEvent(event) {
+    //     console.log('down', event.keyCode)
+    // }
+
+    // function _handleKeyUpEvent(event) {
+    //     console.log('up', event.keyCode)
+    // }
+
 
     function _handleTouchStart(event) {
 
@@ -911,6 +947,7 @@
 
 
     })
+
 
     /**********************************/
     /************ Behavior ************/

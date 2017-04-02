@@ -2,7 +2,7 @@
 /**********************************/
 /** **** Initialize  Flippy ********/
 /**********************************/
-let settings = { duration: 100, animation: true, flip: true, peel: true, zoom: true, start_page: 15 }
+let settings = { duration: 500, animation: true, flip: true, peel: true, zoom: true, start_page: 15 }
 
 let node = document.getElementById('book')
 
@@ -23,6 +23,17 @@ const superbook = Flippy.init(node, settings)
 // superbook.flippy('next')
 
 // superbook.flippy('previous')
+
+
+// end
+// first
+// last
+// start
+// flipping
+// flipped
+// zooming
+// zoomed
+
 
 /**********************************/
 /******** Implemented  API ********/

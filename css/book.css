@@ -27,9 +27,9 @@ body {
 .viewer {
     pointer-events: none;
     cursor: default;
-    -webkit-perspective: 20000px;
+/*    -webkit-perspective: 20000px;
     perspective: 20000px;
-    /* Apply perspective with same vanishing point to children */
+*/    /* Apply perspective with same vanishing point to children */
     perspective-origin: 50% 50%;
     backface-visibility: hidden;
 }
@@ -48,6 +48,7 @@ body {
     height: 100%;
     position: absolute;
     top: 0;
+    backface-visibility: hidden;
 }
 
 /*.outer {
@@ -67,6 +68,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 0;
+    backface-visibility: hidden;
 }
 
 .inner iframe {
@@ -121,11 +123,11 @@ body {
         max-height: calc(50vw * 1443/1114);
     }
     body .wrapper {
-        backface-visibility: hidden;
+        backface-visibility: visible;
         width: 50%;
     }
     body .inner iframe {
-        backface-visibility: hidden;
+        backface-visibility: visible;
         width: 50%;
     }
 /*    body .even > .gradient {
