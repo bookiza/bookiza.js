@@ -217,7 +217,7 @@
     function _wrapHtml(pageObj, currentIndex) {
         const newWrapper = d.createElement('div')
 
-        let classes = 'wrapper'
+        let classes = `wrapper ${parseInt(currentIndex) + 1}`
 
         classes += isEven(currentIndex) ? ' odd' : ' even'
 
@@ -635,9 +635,7 @@
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    // let keyEvents = ['keypress', 'keyup', 'keydown']
-
-    // const events = [].concat(mouseEvents)
+    // let keyEvents = ['keypress', 'keyup', 'keydown'] TODO: These need not be linked to mouseover event.
 
     function _liveBook() {
 
@@ -762,9 +760,9 @@
             _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
         }
 
-        if (_book.flipping) {
-            // do something with the pages.
-        }
+        // if (_book.flipping) {
+        //     // do something with the pages.
+        // }
     }
 
 
@@ -806,16 +804,16 @@
                         break
                 }
 
+                console.log(_book.currentPage)
 
 
+                // _removeChildren(_book.node)
 
-                _removeChildren(_book.node)
+                // _setView(_book.currentPage)
 
-                _setView(_book.currentPage)
+                // _setRange(_book.currentPage)
 
-                _setRange(_book.currentPage)
-
-                _printBook()
+                // _printBook()
 
                 break
             case 'DIV':
@@ -868,13 +866,48 @@
     function _handleMouseDown(event) {
         _book.flipped = false
 
-        _printElements('rightPages', _book.sidePagesRight)
+        switch (event.target.nodeName) {
+            case 'A':
+                break
+            case 'DIV':
+                switch (_book.side) {
+                    case 'left':
+                        _printElements('leftPages', _book.sidePagesLeft)
+                        break
+                    case 'right':
+                        _printElements('rightPages', _book.sidePagesRight)
+                        break
+                    case 'default':
+                        break
+                }
+                break
+        }
+
+
 
     }
 
     function _handleMouseUp(event) {
 
-        console.log(_book.currentPage)
+        let currentIndex = parseInt(_book.currentPage) - 1
+        let pageIndex = []
+
+        switch (_book.mode) {
+            case 'portrait':
+                pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+
+                break
+            case 'landscape':
+                pageIndexes = isEven(currentIndex)? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+
+                break
+            case 'default':
+                break
+        }
+
+        pageIndexes.forEach(index => {
+            _removeElements(index)
+        })
     }
 
     function _handleWheelEvent(event) {
@@ -917,10 +950,20 @@
         // console.log('Touch moving')
     }
 
+    // function _pinchZoom(event, zoom) {
+    //     const fingerDistance =
+    //         Math.sqrt(
+    //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
+    //             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
+
+    //     console.log('distance', fingerDistance)
+
+    // }
+
 
     /* Listen for CSS3 TransitionEnds */
 
-    function whichTransitionEvent() {
+    function _whichTransitionEvent() {
         let t
         const el = d.createElement('fakeelement')
         const transitions = {
@@ -937,30 +980,12 @@
         }
     }
 
-    const transitionEvent = whichTransitionEvent()
+    const transitionEvent = _whichTransitionEvent()
 
     transitionEvent && d.addEventListener(transitionEvent, (event) => {
         console.log('yay, transition ended')
         console.log(event)
-
-
     })
-
-
-    /**********************************/
-    /************ Behavior ************/
-    /**********************************/
-
-
-    // function _pinchZoom(event, zoom) {
-    //     const fingerDistance =
-    //         Math.sqrt(
-    //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
-    //             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
-
-    //     console.log('distance', fingerDistance)
-
-    // }
 
 
 
