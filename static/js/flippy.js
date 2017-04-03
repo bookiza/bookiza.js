@@ -206,11 +206,11 @@
 
         addClasses(pageObj, classes)
 
+        removeClasses(pageObj, 'page')
+
         let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
         return wrappedHtml
-
-        // return pageObj
 
     }
 
@@ -352,11 +352,13 @@
     function _printBook() {
         _printElements('buttons', _book.buttons)
 
-        _printElements('view', _book.viewablePages)
+        // _printElements('view', _book.viewablePages)
 
-        _printElements('rightPages', _book.sidePagesRight)
+        // _printElements('rightPages', _book.sidePagesRight)
 
-        _printElements('leftPages', _book.sidePagesLeft)
+        // _printElements('leftPages', _book.sidePagesLeft)
+
+        console.log('Initialization complete')
 
         _liveBook()
 
@@ -434,7 +436,6 @@
                         cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0;'
 
                         pageObj.childNodes[0].style = cssString
-
 
                         // wrapper
                         cssString = 'float: left; left: 0; pointer-events:none;'
@@ -525,7 +526,7 @@
 
 
     /************************************
-     *********** DOM/Live book **********
+     *********** DOM/Manipulate *********
      ************************************/
 
 
@@ -554,7 +555,6 @@
     function λ(angle) {
 
     }
-
 
     // Converts an angle from radians to degrees
     function _rad(degrees) {
@@ -676,8 +676,6 @@
         // let livePages = _book.node.getElementsByClassName('wrapper')
 
         // console.log(livePage, ` and [data-page='${parseInt(_book.currentPage)}']`, livePages)
-
-        // console.log('Book re-initialized')
 
         return
 
@@ -809,7 +807,7 @@
                 }
 
 
-                // _printElements('rightPages', _book.sidePagesRight)
+
 
                 _removeChildren(_book.node)
 
@@ -870,13 +868,13 @@
     function _handleMouseDown(event) {
         _book.flipped = false
 
-
+        _printElements('rightPages', _book.sidePagesRight)
 
     }
 
     function _handleMouseUp(event) {
 
-        // _book.flipped = true
+        console.log(_book.currentPage)
     }
 
     function _handleWheelEvent(event) {
