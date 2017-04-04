@@ -159,14 +159,14 @@
         _book.bounds = _book.node.getBoundingClientRect() // The premise.
         _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        // d.getElementById('pwidth').textContent = _book.bounds.width
-        // d.getElementById('pheight').textContent = _book.bounds.height
-        // d.getElementById('ptop').textContent = _book.bounds.top
-        // d.getElementById('pleft').textContent = _book.bounds.left
-        // d.getElementById('pright').textContent = _book.bounds.right
-        // d.getElementById('pbottom').textContent = _book.bounds.bottom
-        // d.getElementById('originX').textContent = _book.origin.x
-        // d.getElementById('originY').textContent = _book.origin.y
+        d.getElementById('pwidth').textContent = _book.bounds.width
+        d.getElementById('pheight').textContent = _book.bounds.height
+        d.getElementById('ptop').textContent = _book.bounds.top
+        d.getElementById('pleft').textContent = _book.bounds.left
+        d.getElementById('pright').textContent = _book.bounds.right
+        d.getElementById('pbottom').textContent = _book.bounds.bottom
+        d.getElementById('originX').textContent = _book.origin.x
+        d.getElementById('originY').textContent = _book.origin.y
     }
 
     function _removeChildren(node) {
@@ -352,7 +352,7 @@
     function _printBook() {
         _printElements('buttons', _book.buttons)
 
-        // _printElements('view', _book.viewablePages)
+        _printElements('view', _book.viewablePages)
 
         // _printElements('rightPages', _book.sidePagesRight)
 
@@ -549,19 +549,19 @@
 
     let π = Math.PI
 
-    let Δ, θ = 'delta'
+    let Δ, θ, ω, Ω = 0
 
     // Cone Angle λ
     function λ(angle) {
 
     }
 
-    // Converts an angle from radians to degrees
-    function _rad(degrees) {
+    // Convert rads to degs
+    function _radians(degrees) {
         return degrees / 180 * π;
     }
 
-    function _deg(radians) {
+    function _degrees(radians) {
         return radians / π * 180;
     }
 
@@ -635,33 +635,28 @@
 
     let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-    // let keyEvents = ['keypress', 'keyup', 'keydown'] TODO: These need not be linked to mouseover event.
+    let keyEvents = ['keypress', 'keyup', 'keydown'] // TODO: These need not be linked to mouseover event.
 
     function _liveBook() {
 
         w.addEventListener('mouseover', _applyBookEvents)
         w.addEventListener('mouseout', _removeBookEvents)
 
-
         function _applyBookEvents() {
             mouseEvents.forEach(event => {
                 delegateElement.addEventListener(event, handler)
             })
-
-            // keyEvents.forEach(event => {
-            //     w.addEventListener(event, handler)
-            // })
         }
 
         function _removeBookEvents() {
             mouseEvents.forEach(event => {
                 delegateElement.removeEventListener(event, handler)
             })
-
-            // keyEvents.forEach(event => {
-            //     w.removeEventListener(event, handler) // TODO: Remove keyboard events not working with anonymous functions.
-            // })
         }
+
+        // keyEvents.forEach(event => {
+        //     w.addEventListener(event, handler)
+        // })
 
         if (isTouch()) touchEvents.forEach(event => {
             delegateElement.addEventListener(event, handler)
@@ -760,9 +755,11 @@
             _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
         }
 
-        // if (_book.flipping) {
-        //     // do something with the pages.
-        // }
+        if (!_book.flipped && event.target.nodeName !== 'A') {
+            console.log('yay!', _book.currentPointerPosition.x)
+
+            console.log('width', _book.bounds.width)
+        }
     }
 
 
@@ -857,13 +854,13 @@
 
                 break
             default:
-                // console.log('WUT', event.target)
                 return
         }
-
     }
 
     function _handleMouseDown(event) {
+        if (!event.target) return
+
         _book.flipped = false
 
         switch (event.target.nodeName) {
@@ -881,13 +878,15 @@
                         break
                 }
                 break
+            default:
+                return
         }
-
-
-
     }
 
     function _handleMouseUp(event) {
+        if (!event.target) return
+
+        _book.flipped = true
 
         let currentIndex = parseInt(_book.currentPage) - 1
         let pageIndex = []
@@ -898,7 +897,7 @@
 
                 break
             case 'landscape':
-                pageIndexes = isEven(currentIndex)? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+                pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
                 break
             case 'default':
@@ -916,17 +915,17 @@
         // console.log(event)
     }
 
-    // function _handleKeyPressEvent(event) {
-    //     console.log('pressed', event.keyCode)
-    // }
+    function _handleKeyPressEvent(event) {
+        console.log('pressed', event.keyCode)
+    }
 
-    // function _handleKeyDownEvent(event) {
-    //     console.log('down', event.keyCode)
-    // }
+    function _handleKeyDownEvent(event) {
+        console.log('down', event.keyCode)
+    }
 
-    // function _handleKeyUpEvent(event) {
-    //     console.log('up', event.keyCode)
-    // }
+    function _handleKeyUpEvent(event) {
+        console.log('up', event.keyCode)
+    }
 
 
     function _handleTouchStart(event) {
@@ -1096,7 +1095,6 @@
                     else
                         _book['flipPage'](theArgs)
                     break
-
                 default:
                     return _book[methodName](theArgs)
                     break
