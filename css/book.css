@@ -123,11 +123,11 @@ body {
         max-height: calc(50vw * 1443/1114);
     }
     body .wrapper {
-        backface-visibility: visible;
+        backface-visibility: hidden;
         width: 50%;
     }
     body .inner iframe {
-        backface-visibility: visible;
+        backface-visibility: hidden;
         width: 50%;
     }
 /*    body .even > .gradient {
