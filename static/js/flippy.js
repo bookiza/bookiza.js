@@ -354,9 +354,9 @@
 
         // _printElements('view', _book.viewablePages)
 
-        // _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.sidePagesRight)
 
-        // _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.sidePagesLeft)
 
         console.log('Initialization complete')
 
@@ -433,12 +433,12 @@
                         break
                     case 'rightPages':
                         // inner
-                        cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0;'
+                        cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
 
                         pageObj.childNodes[0].style = cssString
 
                         // wrapper
-                        cssString = 'float: left; left: 0; pointer-events:none;'
+                        cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
 
                         cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
 
@@ -447,12 +447,12 @@
                         break
                     case 'leftPages':
                         // inner
-                        cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0;'
+                        cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
 
                         pageObj.childNodes[0].style = cssString
 
                         // wrapper
-                        cssString = 'float: left; left: 0; pointer-events:none;'
+                        cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
 
                         cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
 
@@ -680,8 +680,6 @@
         if (!event.target) return
 
         let currentIndex = parseInt(_book.currentPage) - 1
-
-
     }
 
 
