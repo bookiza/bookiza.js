@@ -556,15 +556,6 @@
 
     }
 
-    // Convert rads to degs
-    function _radians(degrees) {
-        return degrees / 180 * π;
-    }
-
-    function _degrees(radians) {
-        return radians / π * 180;
-    }
-
 
     /**********************************/
     /********* Events / Touch *********/
@@ -681,37 +672,30 @@
 
         let currentIndex = parseInt(_book.currentPage) - 1
 
-        // _printElements('rightPages', _book.sidePagesRight)
-
-        // _printElements('leftPages', _book.sidePagesLeft)
-
-        switch (_book.side) {
-            case 'left':
-                break
-            case 'right':
-                break
-            default:
-                break
-        }
-
-
+        // switch (_book.side) {
+        //     case 'left':
+        //         _printElements('leftPages', _book.sidePagesLeft)
+        //         break
+        //     case 'right':
+        //         _printElements('rightPages', _book.sidePagesRight)
+        //         break
+        //     default:
+        //         break
+        // }
 
     }
-
 
     function _handleMouseOut(event) {
         if (!event.target) return
             // TODO: This is where we calculate range pages according to QI-QIV.
+
+
     }
 
     function _handleMouseMove(event) {
         if (!event.target) return
 
-        let eventDoc
-        let doc
-        let body
-        let pageX
-        let pageY
+        let eventDoc, doc, body, pageX, pageY
 
         event = event || w.event
 
@@ -745,20 +729,23 @@
 
         if (!_book.flipped && event.target.nodeName !== 'A') {
 
-            // console.log('width', parseInt(_book.bounds.width) / 2)
+            console.log('width', parseInt(_book.bounds.width) / 2)
 
-            // console.log('x-axis!', _book.currentPointerPosition.x)
+            console.log('x-axis!', _book.currentPointerPosition.x)
 
-            // console.log((_book.currentPointerPosition.x / (parseInt(_book.bounds.width) / 2))) // Math.cos(θ) = adj / hyp
+            let θ = Math.acos(parseInt(_book.currentPointerPosition.x) * 2 / parseInt(_book.bounds.width)) // θ in radians
+
+            console.log('degrees:', _degrees(θ) , 'radians:', θ)
+
+            console.log(_book.currentPage)
         }
     }
 
 
     function _handleMouseClicks(event) {
+        if (!event.target) return
 
         event.preventDefault()
-
-        if (!event.target) return
 
         let currentIndex = parseInt(_book.currentPage) - 1
 
@@ -766,33 +753,33 @@
             case 'A':
                 // Cache multiple clicks for flipping animation?
 
-                switch (_book.mode) {
-                    case 'portrait':
+                // switch (_book.mode) {
+                //     case 'portrait':
 
-                        if (event.target.matches('a#next')) {
-                            let increment = 1 // Forward
-                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-                        }
+                //         if (event.target.matches('a#next')) {
+                //             let increment = 1 // Forward
+                //             _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                //         }
 
-                        if (event.target.matches('a#previous')) {
-                            let decrement = 1 // Backward
-                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-                        }
-                        break
-                    case 'landscape':
-                        if (event.target.matches('a#next')) {
-                            let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
-                            _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-                        }
+                //         if (event.target.matches('a#previous')) {
+                //             let decrement = 1 // Backward
+                //             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                //         }
+                //         break
+                //     case 'landscape':
+                //         if (event.target.matches('a#next')) {
+                //             let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
+                //             _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
+                //         }
 
-                        if (event.target.matches('a#previous')) {
-                            let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
-                            _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-                        }
-                        break
-                }
+                //         if (event.target.matches('a#previous')) {
+                //             let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
+                //             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
+                //         }
+                //         break
+                // }
 
-                console.log(_book.currentPage)
+                // console.log(_book.currentPage)
 
 
                 // _removeChildren(_book.node)
@@ -849,19 +836,21 @@
         }
     }
 
+    let memory = undefined
+
     function _handleMouseDown(event) {
         if (!event.target) return
 
-        _book.flipped = false
-
-        let currentIndex = parseInt(_book.currentPage) - 1
-        let displayableIndex, removableIndex = []
-
         switch (event.target.nodeName) {
             case 'A':
-                // Something else?
                 break
             case 'DIV':
+                _book.flipped = false
+
+                let currentIndex = parseInt(_book.currentPage) - 1
+                let displayableIndex, removableIndex = []
+                memory = _book.side
+
                 switch (_book.side) {
                     case 'left':
                         switch (_book.mode) {
@@ -898,6 +887,7 @@
                     default:
                         break
                 }
+
                 displayableIndex.forEach(index => {
                     _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
                     _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
@@ -916,16 +906,16 @@
     function _handleMouseUp(event) {
         if (!event.target) return
 
-        _book.flipped = true
-
-        let currentIndex = parseInt(_book.currentPage) - 1
-        let pageIndex = []
-
         switch (event.target.nodeName) {
             case 'A':
                 break
             case 'DIV':
-                switch (_book.side) {
+                _book.flipped = true
+
+                let currentIndex = parseInt(_book.currentPage) - 1
+                let pageIndex = []
+
+                switch (memory) {
                     case 'left':
                         _printElements('rightPages', _book.sidePagesRight)
                         switch (_book.mode) {
@@ -967,8 +957,6 @@
             default:
                 return
         }
-
-
     }
 
     function _handleWheelEvent(event) {
@@ -978,15 +966,15 @@
     }
 
     function _handleKeyPressEvent(event) {
-        console.log('pressed', event.keyCode)
+        // console.log('pressed', event.keyCode)
     }
 
     function _handleKeyDownEvent(event) {
-        console.log('down', event.keyCode)
+        // console.log('down', event.keyCode)
     }
 
     function _handleKeyUpEvent(event) {
-        console.log('up', event.keyCode)
+        // console.log('up', event.keyCode)
     }
 
 
@@ -1063,7 +1051,7 @@
     }
 
     function isTouch() {
-        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0)) // TODO: Do we need this? Consider pointerEvents.
+        return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0)) // TODO: Consider pointerEvents.
     }
 
     function _leftCircularIndex(currentIndex, indice) {
@@ -1073,6 +1061,16 @@
     function _rightCircularIndex(currentIndex, indice) {
         return (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
     }
+
+    function _radians(degrees) {
+        return degrees / 180 * π;
+    }
+
+    function _degrees(radians) {
+        return radians / π * 180;
+    }
+
+
 
     // function increment(mode) {
     //     return (mode === 'portrait') ? 1 : 2
