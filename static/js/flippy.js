@@ -680,6 +680,22 @@
         if (!event.target) return
 
         let currentIndex = parseInt(_book.currentPage) - 1
+
+        // _printElements('rightPages', _book.sidePagesRight)
+
+        // _printElements('leftPages', _book.sidePagesLeft)
+
+        switch (_book.side) {
+            case 'left':
+                break
+            case 'right':
+                break
+            default:
+                break
+        }
+
+
+
     }
 
 
@@ -839,56 +855,62 @@
         _book.flipped = false
 
         let currentIndex = parseInt(_book.currentPage) - 1
-        let pageIndex = []
+        let displayableIndex, removableIndex = []
 
         switch (event.target.nodeName) {
             case 'A':
+                // Something else?
                 break
             case 'DIV':
                 switch (_book.side) {
                     case 'left':
-
                         switch (_book.mode) {
                             case 'portrait':
-                                pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                displayableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
+                                removableIndex = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
                                 break
                             case 'landscape':
-                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                displayableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
+                                removableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                                 break
-                            case 'default':
+                            default:
                                 break
                         }
                         break
                     case 'right':
                         switch (_book.mode) {
                             case 'portrait':
-                                pageIndexes = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+                                displayableIndex = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 
+                                removableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                                 break
                             case 'landscape':
-                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                displayableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
+                                removableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                                 break
-                            case 'default':
+                            default:
                                 break
                         }
                         break
-                    case 'default':
+                    default:
                         break
                 }
+                displayableIndex.forEach(index => {
+                    _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
+                    _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
+                })
+
+                removableIndex.forEach(index => {
+                    _removeElements(index)
+                })
+
                 break
             default:
                 return
         }
-
-        pageIndexes.forEach(index => {
-            _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
-            _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
-        })
-
-
     }
 
     function _handleMouseUp(event) {
@@ -905,21 +927,20 @@
             case 'DIV':
                 switch (_book.side) {
                     case 'left':
-
+                        _printElements('rightPages', _book.sidePagesRight)
                         switch (_book.mode) {
                             case 'portrait':
                                 pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-
                                 break
                             case 'landscape':
                                 pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-
                                 break
-                            case 'default':
+                            default:
                                 break
                         }
                         break
                     case 'right':
+                        _printElements('leftPages', _book.sidePagesLeft)
                         switch (_book.mode) {
                             case 'portrait':
                                 pageIndexes = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
@@ -929,22 +950,24 @@
                                 pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
                                 break
-                            case 'default':
+                            default:
                                 break
                         }
                         break
                     case 'default':
                         break
                 }
+
+                pageIndexes.forEach(index => {
+                    _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
+                    _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
+                })
+
                 break
             default:
                 return
         }
 
-        pageIndexes.forEach(index => {
-            _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
-            _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
-        })
 
     }
 
