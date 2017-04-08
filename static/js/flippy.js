@@ -688,8 +688,6 @@
     function _handleMouseOut(event) {
         if (!event.target) return
             // TODO: This is where we calculate range pages according to QI-QIV.
-
-
     }
 
     function _handleMouseMove(event) {
@@ -729,15 +727,25 @@
 
         if (!_book.flipped && event.target.nodeName !== 'A') {
 
-            console.log('width', parseInt(_book.bounds.width) / 2)
-
-            console.log('x-axis!', _book.currentPointerPosition.x)
-
             let θ = Math.acos(parseInt(_book.currentPointerPosition.x) * 2 / parseInt(_book.bounds.width)) // θ in radians
 
-            console.log('degrees:', _degrees(θ) , 'radians:', θ)
+            console.log('degrees:', _degrees(θ), 'radians:', θ)
 
-            console.log(_book.currentPage)
+            let currentIndex = parseInt(_book.currentPage) - 1
+
+            let flippableIndex, removableIndex = []
+
+            switch (_book.side) {
+                case 'left':
+                    flippableIndex = isEven(currentIndex) ?  [ `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}` ] : [ `${_leftCircularIndex(currentIndex, 2)}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}` ]
+                break
+                case 'right':
+                    flippableIndex = isEven(currentIndex) ?  [  `${_rightCircularIndex(currentIndex, 1)}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}` ] : [ `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 2}`]
+                break
+                default:
+                break
+                console.log(flippableIndex)
+            }
         }
     }
 
@@ -792,51 +800,15 @@
 
                 break
             case 'DIV':
-                switch (_book.mode) {
-                    case 'portrait':
-
-                        break
-                    case 'landscape':
-                        break
-                }
                 break
             default:
-                console.log('WUT', event.target)
                 return
         }
 
 
     }
 
-
-    function _handleMouseDoubleClicks(event) {
-
-        if (!event.target || !_book.settings.zoom) return
-
-        // console.log(_book.currentPointerPosition)
-
-        switch (event.target.nodeName) {
-            case 'A':
-                break
-            case 'DIV':
-                if (_book.zoomed) {
-                    _printElements('buttons', _book.buttons)
-                    _book.zoomed = false
-                    _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
-
-                } else {
-                    _removeElements('arrow-controls')
-                    _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s; will-change: transform;`
-                    _book.zoomed = true
-                }
-
-                break
-            default:
-                return
-        }
-    }
-
-    let memory = undefined
+    let memory = ''
 
     function _handleMouseDown(event) {
         if (!event.target) return
@@ -848,7 +820,9 @@
                 _book.flipped = false
 
                 let currentIndex = parseInt(_book.currentPage) - 1
+
                 let displayableIndex, removableIndex = []
+
                 memory = _book.side
 
                 switch (_book.side) {
@@ -858,11 +832,13 @@
                                 displayableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
                                 removableIndex = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+
                                 break
                             case 'landscape':
+                                console.log('here')
                                 displayableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
-                                removableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                removableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
                                 break
                             default:
                                 break
@@ -876,7 +852,7 @@
                                 removableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                                 break
                             case 'landscape':
-                                displayableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                displayableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
                                 removableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                                 break
@@ -889,6 +865,7 @@
                 }
 
                 displayableIndex.forEach(index => {
+                    console.log(index)
                     _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
                     _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
                 })
@@ -918,6 +895,7 @@
                 switch (memory) {
                     case 'left':
                         _printElements('rightPages', _book.sidePagesRight)
+
                         switch (_book.mode) {
                             case 'portrait':
                                 pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
@@ -937,7 +915,7 @@
 
                                 break
                             case 'landscape':
-                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
                                 break
                             default:
@@ -952,6 +930,31 @@
                     _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
                     _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
                 })
+
+                break
+            default:
+                return
+        }
+    }
+
+
+    function _handleMouseDoubleClicks(event) {
+        if (!event.target || !_book.settings.zoom) return
+
+        switch (event.target.nodeName) {
+            case 'A':
+                break
+            case 'DIV':
+                if (_book.zoomed) {
+                    _printElements('buttons', _book.buttons)
+                    _book.zoomed = false
+                    _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
+
+                } else {
+                    _removeElements('arrow-controls')
+                    _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s; will-change: transform;`
+                    _book.zoomed = true
+                }
 
                 break
             default:

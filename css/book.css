@@ -51,6 +51,11 @@ body {
     backface-visibility: hidden;
 }
 
+.page {
+    visibility: hidden;
+}
+
+
 /*.outer {
     position: absolute;
     top: 0;
