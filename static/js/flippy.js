@@ -543,20 +543,6 @@
     //     // console.log('newCurrentPage', newCurrentPage)
     // }
 
-    /********************************/
-    /************ Cone math *********/
-    /********************************/
-
-    let π = Math.PI
-
-    let Δ, θ, ω, Ω = 0
-
-    // Cone Angle λ
-    function λ(angle) {
-
-    }
-
-
     /**********************************/
     /********* Events / Touch *********/
     /**********************************/
@@ -628,13 +614,15 @@
 
     let keyEvents = ['keypress', 'keyup', 'keydown'] // TODO: These need not be linked to mouseover event.
 
+
+
     function _liveBook() {
 
         keyEvents.forEach(event => {
             w.addEventListener(event, handler)
         })
 
-        w.addEventListener('mouseover', _applyBookEvents)
+        w.addEventListener('mouseover', _applyBookEvents) //TODO: Optimization needed here.
         w.addEventListener('mouseout', _removeBookEvents)
 
         function _applyBookEvents() {
@@ -661,6 +649,18 @@
 
     }
 
+    /********************************/
+    /************ Cone math *********/
+    /********************************/
+
+    let π = Math.PI
+
+    let Δ, θ, ω, Ω = 0
+
+    // Cone Angle λ
+    function λ(angle) {
+
+    }
 
     /**********************************/
     /************ Behavior ************/
@@ -688,6 +688,11 @@
     function _handleMouseOut(event) {
         if (!event.target) return
             // TODO: This is where we calculate range pages according to QI-QIV.
+
+        if (mouseDownOnPageDiv) {
+            _attachSidePages(memory)
+        }
+
     }
 
     function _handleMouseMove(event) {
@@ -729,7 +734,7 @@
 
             let θ = Math.acos(parseInt(_book.currentPointerPosition.x) * 2 / parseInt(_book.bounds.width)) // θ in radians
 
-            console.log('degrees:', _degrees(θ), 'radians:', θ)
+            // console.log('degrees:', _degrees(θ), 'radians:', θ)
 
             let currentIndex = parseInt(_book.currentPage) - 1
 
@@ -737,14 +742,14 @@
 
             switch (_book.side) {
                 case 'left':
-                    flippableIndex = isEven(currentIndex) ?  [ `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}` ] : [ `${_leftCircularIndex(currentIndex, 2)}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}` ]
-                break
+                    flippableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`] : [`${_leftCircularIndex(currentIndex, 2)}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`]
+                    break
                 case 'right':
-                    flippableIndex = isEven(currentIndex) ?  [  `${_rightCircularIndex(currentIndex, 1)}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}` ] : [ `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 2}`]
-                break
+                    flippableIndex = isEven(currentIndex) ? [`${_rightCircularIndex(currentIndex, 1)}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 1)) + 2}`]
+                    break
                 default:
-                break
-                console.log(flippableIndex)
+                    break
+                    console.log(flippableIndex)
             }
         }
     }
@@ -804,20 +809,22 @@
             default:
                 return
         }
-
-
     }
 
-    let memory = ''
+    let [mouseDownOnPageDiv, memory] = [false]
 
     function _handleMouseDown(event) {
         if (!event.target) return
 
         switch (event.target.nodeName) {
             case 'A':
+                mouseDownOnPageDiv = false
+                console.log('Execute partial flipping')
                 break
             case 'DIV':
                 _book.flipped = false
+
+                mouseDownOnPageDiv = true
 
                 let currentIndex = parseInt(_book.currentPage) - 1
 
@@ -881,62 +888,21 @@
     }
 
     function _handleMouseUp(event) {
-        if (!event.target) return
+        if (!event.target || !mouseDownOnPageDiv) return
 
         switch (event.target.nodeName) {
             case 'A':
+                console.log('Complete the page flip now.')
                 break
             case 'DIV':
                 _book.flipped = true
-
-                let currentIndex = parseInt(_book.currentPage) - 1
-                let pageIndex = []
-
-                switch (memory) {
-                    case 'left':
-                        _printElements('rightPages', _book.sidePagesRight)
-
-                        switch (_book.mode) {
-                            case 'portrait':
-                                pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-                                break
-                            case 'landscape':
-                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-                                break
-                            default:
-                                break
-                        }
-                        break
-                    case 'right':
-                        _printElements('leftPages', _book.sidePagesLeft)
-                        switch (_book.mode) {
-                            case 'portrait':
-                                pageIndexes = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
-                                break
-                            case 'landscape':
-                                pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
-                                break
-                            default:
-                                break
-                        }
-                        break
-                    case 'default':
-                        break
-                }
-
-                pageIndexes.forEach(index => {
-                    _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
-                    _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
-                })
-
+                mouseDownOnPageDiv = false
+                _attachSidePages(memory)
                 break
             default:
                 return
         }
     }
-
 
     function _handleMouseDoubleClicks(event) {
         if (!event.target || !_book.settings.zoom) return
@@ -982,16 +948,11 @@
 
 
     function _handleTouchStart(event) {
-
-
         if (event.touches.length == 2) {
             _book.zoom = true
             _pinchZoom(event, _book.zoom)
         }
-
-
         console.log(e.touches.length)
-
     }
 
     function _handleTouchMove(event) {
@@ -1002,18 +963,9 @@
         // console.log('Touch moving')
     }
 
-    // function _pinchZoom(event, zoom) {
-    //     const fingerDistance =
-    //         Math.sqrt(
-    //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
-    //             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
-
-    //     console.log('distance', fingerDistance)
-
-    // }
-
-
-    /* Listen for CSS3 TransitionEnds */
+    /**********************************/
+    /********* Transition ends *******/
+    /**********************************/
 
     function _whichTransitionEvent() {
         let t
@@ -1038,6 +990,64 @@
         console.log('yay, transition ended')
         console.log(event)
     })
+
+    /**********************************/
+    /********* Behavior methods *******/
+    /**********************************/
+
+    // function _pinchZoom(event, zoom) {
+    //     const fingerDistance =
+    //         Math.sqrt(
+    //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
+    //             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
+
+    //     console.log('distance', fingerDistance)
+
+    // }
+
+    function _attachSidePages(memory) {
+        let currentIndex = parseInt(_book.currentPage) - 1
+        let pageIndex = []
+
+        switch (memory) {
+            case 'left':
+                _printElements('rightPages', _book.sidePagesRight)
+
+                switch (_book.mode) {
+                    case 'portrait':
+                        pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                        break
+                    case 'landscape':
+                        pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                        break
+                    default:
+                        break
+                }
+                break
+            case 'right':
+                _printElements('leftPages', _book.sidePagesLeft)
+                switch (_book.mode) {
+                    case 'portrait':
+                        pageIndexes = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+
+                        break
+                    case 'landscape':
+                        pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+
+                        break
+                    default:
+                        break
+                }
+                break
+            case 'default':
+                break
+        }
+
+        pageIndexes.forEach(index => {
+            _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
+            _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
+        })
+    }
 
 
 
