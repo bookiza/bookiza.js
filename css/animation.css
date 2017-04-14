@@ -35,7 +35,7 @@
     transform-origin: 100% 50% 0;
 }
 
-@ffffkeyframes backward {
+@keyframes backward {
     from {
         transform: rotateY(0deg);
     }

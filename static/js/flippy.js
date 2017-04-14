@@ -16,16 +16,19 @@
 
         constructor() {
             this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
+            this.plotter = {}
+
             this.zoomed = false
             this.flipped = true
-                // this.quadrants = ['I', 'II', 'III', 'IV']
-                // this.direction = ['forward', 'backward']
+
+            // this.state = ['flipping', 'calm', 'zoomed', 'peeling', 'peeled']
+            // this.quadrants = ['I', 'II', 'III', 'IV']
+            // this.direction = ['forward', 'backward']
         }
 
         // PROPERTIES
-
         dimensions() {
-            return JSON.parse(`{ "width" : "${_book.bounds.width}", "height" : "${_book.bounds.height}" }`)
+            return JSON.parse(`{ "width" : "${_book.plotter.bounds.width}", "height" : "${_book.plotter.bounds.height}" }`)
         }
 
         view() {
@@ -111,7 +114,7 @@
 
     let _book = new Book()
 
-    function _init(node, settings = { duration: 500, animation: true, flip: true, peel: true, zoom: true }) {
+    function _init(node, settings = { speed: 500, animate: true, peel: true, zoom: true }) {
         _book.node = node
 
         _book.settings = settings
@@ -156,17 +159,17 @@
     w.addEventListener('resize', _setUpGeometry)
 
     function _setUpGeometry() {
-        _book.bounds = _book.node.getBoundingClientRect() // The premise.
-        _book.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
+        _book.plotter.bounds = _book.node.getBoundingClientRect() // The premise.
+        _book.plotter.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        d.getElementById('pwidth').textContent = _book.bounds.width
-        d.getElementById('pheight').textContent = _book.bounds.height
-        d.getElementById('ptop').textContent = _book.bounds.top
-        d.getElementById('pleft').textContent = _book.bounds.left
-        d.getElementById('pright').textContent = _book.bounds.right
-        d.getElementById('pbottom').textContent = _book.bounds.bottom
-        d.getElementById('originX').textContent = _book.origin.x
-        d.getElementById('originY').textContent = _book.origin.y
+        // d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+        // d.getElementById('pheight').textContent = _book.plotter.bounds.height
+        // d.getElementById('ptop').textContent = _book.plotter.bounds.top
+        // d.getElementById('pleft').textContent = _book.plotter.bounds.left
+        // d.getElementById('pright').textContent = _book.plotter.bounds.right
+        // d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+        // d.getElementById('originX').textContent = _book.plotter.origin.x
+        // d.getElementById('originY').textContent = _book.plotter.origin.y
     }
 
     function _removeChildren(node) {
@@ -637,10 +640,6 @@
             })
         }
 
-        // keyEvents.forEach(event => {
-        //     w.addEventListener(event, handler)
-        // })
-
         if (isTouch()) touchEvents.forEach(event => {
             delegateElement.addEventListener(event, handler)
         })
@@ -655,9 +654,9 @@
 
     let π = Math.PI
 
-    let Δ, θ, ω, Ω = 0
+    let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
 
-    // Cone Angle λ
+    // Cone Angle λ (= )
     function λ(angle) {
 
     }
@@ -707,22 +706,27 @@
         d.getElementById('xaxis').textContent = event.pageX
         d.getElementById('yaxis').textContent = event.pageY
 
-        _book.side = ((event.pageX - _book.origin.x) > 0) ? 'right' : 'left'
+        _book.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
 
-        _book.region = ((event.pageY - _book.origin.y) > 0) ? 'lower' : 'upper'
+        _book.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
 
-        _book.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.origin.x}", "y": "${event.pageY - _book.origin.y}" }`);
+        _book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`);
+
+        _book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
+
+        _book.plotter.λ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2
+
 
         if (_book.zoomed) {
-            _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.currentPointerPosition.x * -1) / 5}px, ${(_book.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
+            _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
         }
 
         if (!_book.flipped && event.target.nodeName !== 'A') {
 
-            let θ = Math.acos(parseInt(_book.currentPointerPosition.x) * 2 / parseInt(_book.bounds.width)) // θ in radians
+            console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
 
             // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
-            // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px;`
+            //     _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 100ms ease-in;`
 
         }
 
@@ -876,9 +880,7 @@
                             break
 
                     }
-
                     _book.node.getElementsByClassName(index)[0].style.zIndex = ζ
-
                 })
 
                 removableIndex.forEach(index => {
@@ -1113,6 +1115,15 @@
         return radians / π * 180;
     }
 
+    function _getVendor() {
+        const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
+
+        prefixes.forEach(prefix => {
+            if (`${prefix}Transform` in d.body.style)
+                vendor = `-${prefix.toLowerCase()}-`
+        })
+        return vendor;
+    }
 
 
     // function increment(mode) {
