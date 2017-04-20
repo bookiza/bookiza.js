@@ -22,8 +22,7 @@
             this.flipped = true
 
             // this.state = ['flipping', 'calm', 'zoomed', 'peeling', 'peeled']
-            // this.quadrants = ['I', 'II', 'III', 'IV']
-            // this.direction = ['forward', 'backward']
+            
         }
 
         // PROPERTIES
@@ -162,14 +161,14 @@
         _book.plotter.bounds = _book.node.getBoundingClientRect() // The premise.
         _book.plotter.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
 
-        // d.getElementById('pwidth').textContent = _book.plotter.bounds.width
-        // d.getElementById('pheight').textContent = _book.plotter.bounds.height
-        // d.getElementById('ptop').textContent = _book.plotter.bounds.top
-        // d.getElementById('pleft').textContent = _book.plotter.bounds.left
-        // d.getElementById('pright').textContent = _book.plotter.bounds.right
-        // d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-        // d.getElementById('originX').textContent = _book.plotter.origin.x
-        // d.getElementById('originY').textContent = _book.plotter.origin.y
+        d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+        d.getElementById('pheight').textContent = _book.plotter.bounds.height
+        d.getElementById('ptop').textContent = _book.plotter.bounds.top
+        d.getElementById('pleft').textContent = _book.plotter.bounds.left
+        d.getElementById('pright').textContent = _book.plotter.bounds.right
+        d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+        d.getElementById('originX').textContent = _book.plotter.origin.x
+        d.getElementById('originY').textContent = _book.plotter.origin.y
     }
 
     function _removeChildren(node) {
@@ -654,6 +653,10 @@
 
     let π = Math.PI
 
+    let quadrants = ['I', 'II', 'III', 'IV']
+    let direction = ['forward', 'backward']
+
+
     let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
 
     // Cone Angle λ (= )
@@ -714,8 +717,11 @@
 
         _book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 
-        _book.plotter.λ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2
+        _book.plotter.λ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x distance from origin.
 
+        _book.plotter.quadrant = _setQuadrant(_book.side, _book.region)
+
+        console.log('quadrant', _book.plotter.quadrant)
 
         if (_book.zoomed) {
             _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
@@ -724,6 +730,7 @@
         if (!_book.flipped && event.target.nodeName !== 'A') {
 
             console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+            console.log(`lambda ${_book.plotter.λ}`)
 
             // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
             //     _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 100ms ease-in;`
@@ -1081,6 +1088,22 @@
 
     }
 
+    function _setQuadrant(side, region) {
+        if (side === 'right') {
+            if (region === 'upper') {
+                return 'QI' 
+            } else {
+                return 'QIV'
+            }
+
+        } else {
+            if (region === 'upper') {
+                return 'QII'
+            } else {
+                return 'QIII'
+            }
+        }            
+    }
 
 
     /**********************************/
