@@ -7,12 +7,11 @@
 
 (((n, w, d) => {
   /***********************************
-     ************* Public API **********
-     ***********************************/
+  ************* Public API **********
+  ***********************************/
 
   class Book {
-    // CONSTRUCTOR
-
+    // book object class
     constructor () {
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = {}
@@ -77,8 +76,8 @@
   }
 
   /***********************************
-     ********** Private Methods ********
-     ***********************************/
+  ********** Private Methods *********
+  ***********************************/
 
   let _viewer = {
     getMatch (query, usePolyfill) {
@@ -114,7 +113,7 @@
 
     let nodes = [..._book.node.children]
 
-    let backup = [...nodes]
+    // let backup = [...nodes]
 
     _book.buttons = nodes.splice(0, 2)
 
@@ -245,10 +244,10 @@
       case 'landscape':
         if (isEven(parseInt(currentPage))) {
           /***
-                        @range = _book.pages.slice(P , Q) where:
-                            P & Q are integers
-                            P & Q may or may not lie in the range 0 < VALUES < 2N (_book.length)
-                    ***/
+            @range = _book.pages.slice(P , Q) where:
+                P & Q are integers
+                P & Q may or may not lie in the range 0 < VALUES < 2N (_book.length)
+          ***/
 
           let q = (parseInt(currentPage) + 1) > parseInt(_book.pages.length) ? 1 : (parseInt(currentPage) + 1) % parseInt(_book.pages.length)
 
@@ -269,10 +268,10 @@
     let currentIndex = parseInt(currentPage) - 1
 
     /***
-            @range = _book.pages.slice(P , Q) where:
-                P, Q, R, S are integers
-                P, Q, R, S may or may not lie in the range 0 < VALUES < 2N (_book.length)
-        ***/
+      @range = _book.pages.slice(P , Q) where:
+        P, Q, R, S are integers
+        P, Q, R, S may or may not lie in the range 0 < VALUES < 2N (_book.length)
+    ***/
 
     switch (_book.mode) {
       case 'portrait':
@@ -326,8 +325,8 @@
   }
 
   /***********************************
-     *********** DOM Printing **********
-     ***********************************/
+  *********** Print2DOM  *************
+  ***********************************/
 
   function _printBook () {
     _printElements('buttons', _book.buttons)
@@ -337,8 +336,6 @@
     _printElements('rightPages', _book.sidePagesRight)
 
     _printElements('leftPages', _book.sidePagesLeft)
-
-    console.log('Initialization complete')
 
     _liveBook()
   }
@@ -1153,16 +1150,13 @@
       switch (methodName) {
         case 'length':
           return _book['getLength']()
-          break
         case 'mode':
           return _book['getMode']()
-          break
         case 'page':
           if (theArgs.length === 0) { return _book['page']() } else { _book['flipPage'](theArgs) }
           break
         default:
           return _book[methodName](theArgs)
-          break
       }
     }
   }

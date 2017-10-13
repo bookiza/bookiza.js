@@ -2,9 +2,9 @@
 /**********************************/
 /** **** Initialize  Flippy ********/
 /**********************************/
-let settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
+const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
 
-let node = document.getElementById('book')
+const node = document.getElementById('book')
 
 const superbook = Flippy.init(node, settings)
 
@@ -24,7 +24,6 @@ const superbook = Flippy.init(node, settings)
 
 // superbook.flippy('previous')
 
-
 // end
 // first
 // last
@@ -34,16 +33,15 @@ const superbook = Flippy.init(node, settings)
 // zooming
 // zoomed
 
-
 /**********************************/
-/******** Implemented  API ********/
+/** ****** Implemented  API ********/
 /**********************************/
 
 // // // PROPERTIES:
 
-// let booklength = superbook.flippy('length')
+let booklength = superbook.flippy('length')
 
-// console.log('Book length:', booklength)
+console.log('Book length:', booklength)
 
 // let currentPage = superbook.flippy('page')
 
@@ -60,7 +58,6 @@ const superbook = Flippy.init(node, settings)
 // let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
 
 // console.log('Dimensions:', dimensions)
-
 
 // // // METHODS:
 
@@ -83,7 +80,6 @@ const superbook = Flippy.init(node, settings)
 // // THE BOOK
 // console.log(superbook)
 
-
 // }, true)
 
-/************ Z' END **************/
+/** ********** Z' END **************/

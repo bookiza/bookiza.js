@@ -1,0 +1,12 @@
+{
+    "env": {
+        "es6": true,
+        "node": true,
+        "browser": true
+    },
+    "extends": "standard",
+    "plugins": ["html", "markdown"],
+    "rules": {
+        "semi": [0, 'never']
+    }
+}
