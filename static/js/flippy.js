@@ -99,7 +99,7 @@
         const res = w.matchMedia(query)
         return res
       } else {
-        // ... add polyfill here/  or use pollyfill.io.
+        // ... add polyfill here/  or use polyfill.io.
       }
     }
   }
@@ -112,8 +112,6 @@
     _book.settings = settings
 
     let nodes = [..._book.node.children]
-
-    // let backup = [...nodes]
 
     _book.buttons = nodes.splice(0, 2)
 
