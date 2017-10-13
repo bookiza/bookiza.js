@@ -605,17 +605,19 @@
   /** ********** Cone math *********/
   /********************************/
 
-  let π = Math.PI
+  const π = Math.PI
 
-  let quadrants = ['I', 'II', 'III', 'IV']
-  let direction = ['forward', 'backward']
+  console.log(π)
 
-  let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
+  // const quadrants = ['I', 'II', 'III', 'IV']
+  // const direction = ['forward', 'backward']
+
+  // let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
 
   // Cone Angle λ (= )
-  function λ (angle) {
+  // function λ (angle) {
 
-  }
+  // }
 
   /****************************************/
   /** ********** Event handlers ************/
@@ -623,6 +625,8 @@
 
   function _handleMouseOver (event) {
     if (!event.target) return
+
+    console.log('Mouse\'s on top')
   }
 
   function _handleMouseOut (event) {
@@ -631,14 +635,14 @@
 
     if (mouseDownOnPageDiv) {
       _attachSidePages(memory)
-      flippablePages = []
+      // flippablePages = []
     }
   }
 
   function _handleMouseMove (event) {
     if (!event.target) return
 
-    let eventDoc, doc, body, pageX, pageY
+    let eventDoc, doc, body
 
     event = event || w.event
 
@@ -672,15 +676,15 @@
 
     _book.plotter.quadrant = _setQuadrant(_book.side, _book.region)
 
-    console.log('quadrant', _book.plotter.quadrant)
+    // console.log('quadrant', _book.plotter.quadrant)
 
     if (_book.zoomed) {
       _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
     }
 
     if (!_book.flipped && event.target.nodeName !== 'A') {
-      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-      console.log(`lambda ${_book.plotter.λ}`)
+      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      // console.log(`lambda ${_book.plotter.λ}`)
 
       // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
       //     _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 100ms ease-in;`
@@ -743,7 +747,7 @@
 
   let [mouseDownOnPageDiv, memory] = [false]
 
-  let flippablePages = []
+  // let flippablePages = []
 
   function _handleMouseDown (event) {
     if (!event.target) return
@@ -760,7 +764,7 @@
 
         let currentIndex = parseInt(_book.currentPage) - 1
 
-        let displayableIndex, removableIndex = []
+        let [displayableIndex, removableIndex] = []
 
         memory = _book.side
 
@@ -900,11 +904,11 @@
   }
 
   function _handleTouchStart (event) {
-    if (event.touches.length == 2) {
+    if (event.touches.length === 2) {
       _book.zoom = true
-      _pinchZoom(event, _book.zoom)
+      // _pinchZoom(event, _book.zoom)
     }
-    console.log(e.touches.length)
+    console.log(event.touches.length)
   }
 
   function _handleTouchMove (event) {
@@ -1047,7 +1051,7 @@
   }
 
   function isOdd (n) {
-    return Math.abs(n % 2) == 1
+    return Math.abs(n % 2) === 1
   }
 
   function isTouch () {
@@ -1062,22 +1066,22 @@
     return (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
   }
 
-  function _radians (degrees) {
-    return degrees / 180 * π
-  }
+  // function _radians (degrees) {
+  //   return degrees / 180 * π
+  // }
 
   function _degrees (radians) {
     return radians / π * 180
   }
 
-  function _getVendor () {
-    const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
+  // function _getVendor (vendor = null) {
+  //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
 
-    prefixes.forEach(prefix => {
-      if (`${prefix}Transform` in d.body.style) { vendor = `-${prefix.toLowerCase()}-` }
-    })
-    return vendor
-  }
+  //   prefixes.forEach(prefix => {
+  //     if (`${prefix}Transform` in d.body.style) { vendor = `-${prefix.toLowerCase()}-` }
+  //   })
+  //   return vendor
+  // }
 
   // function increment(mode) {
   //     return (mode === 'portrait') ? 1 : 2
