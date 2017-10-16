@@ -6,6 +6,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack-dev-server ./lib/script.js --content-base html/",
+    "cypress:open": "cypress open",
     "test": "mocha ./tests/start.tests.js -w",
     "test:once": " mocha ./tests/start.tests.js",
     "test:jest": "jest",
@@ -31,6 +32,7 @@
     "chai": "4.1.2",
     "cracks": "3.1.2",
     "css-loader": "0.28.7",
+    "cypress": "1.0.2",
     "cz-conventional-changelog": "2.0.0",
     "favicons-webpack-plugin": "0.0.7",
     "file-loader": "1.1.5",
@@ -57,7 +59,7 @@
       "pre-commit": "npm run test:once"
     }
   },
-  "jest":{
-    "testEnvironment":"node"
+  "jest": {
+    "testEnvironment": "node"
   }
 }

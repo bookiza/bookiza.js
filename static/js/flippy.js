@@ -626,7 +626,7 @@
   function _handleMouseOver (event) {
     if (!event.target) return
 
-    console.log('Mouse\'s on top')
+    console.log('Mouse on top')
   }
 
   function _handleMouseOut (event) {
@@ -747,7 +747,7 @@
 
   let [mouseDownOnPageDiv, memory] = [false]
 
-  // let flippablePages = []
+  let flippablePages = []
 
   function _handleMouseDown (event) {
     if (!event.target) return
