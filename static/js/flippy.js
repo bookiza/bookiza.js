@@ -335,7 +335,7 @@
 
     _printElements('leftPages', _book.sidePagesLeft)
 
-    _liveBook()
+    // _liveBook() // Events and state
   }
 
   function _printElements (type, elements) {
@@ -378,107 +378,73 @@
 
         break
     }
-
     _book.node.appendChild(docfrag)
   }
 
   function _applyStyles (pageObj, currentIndex, type) {
     let cssString = ''
-
     switch (_book.mode) {
       case 'portrait':
         switch (type) {
           case 'view':
             // inner
             cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0;'
-
             pageObj.childNodes[0].style = cssString
-
             // wrapper
             cssString = 'z-index: 2; float: left; left: 0;'
-
             pageObj.style.cssText = cssString
-
             break
           case 'rightPages':
             // inner
             cssString = 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
-
             pageObj.childNodes[0].style = cssString
-
             // wrapper
             cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
-
             cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
-
             pageObj.style.cssText = cssString
-
             break
           case 'leftPages':
             // inner
             cssString = 'transform: translate3d(0, 0, 0) rotateY(-90deg) skewY(0deg); transform-origin: 0 center 0; visibility: hidden;'
-
             pageObj.childNodes[0].style = cssString
-
             // wrapper
             cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
-
             cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
-
             pageObj.style.cssText = cssString
-
             break
         }
-
         break
       case 'landscape':
         switch (type) {
           case 'view':
             cssString = isEven(currentIndex) ? 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center;' : 'pointer-events:none; transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center;'
-
             pageObj.childNodes[0].style = cssString
-
             // wrapper
             cssString = 'z-index: 3; pointer-events:none;'
-
             cssString += isEven(currentIndex) ? 'float: left; left: 0;' : 'float: right; right: 0;'
-
             pageObj.style = cssString
-
             break
           case 'rightPages':
             // inner
             cssString = 'pointer-events:none;'
-
             cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(180deg) skewY(0deg); transform-origin: 100% center; visibility: hidden;' : 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 0 center; visibility: hidden;'
-
             pageObj.childNodes[0].style = cssString
-
             // wrapper
             cssString = 'pointer-events:none;'
-
             cssString += isEven(currentIndex) ? 'z-index: 2; float: left; left: 0; visibility: hidden;' : 'z-index: 1; float: right; right: 0; visibility: hidden;'
-
             pageObj.style.cssText = cssString
-
             break
           case 'leftPages':
             // inner
             cssString = 'pointer-events:none;'
-
             cssString += isEven(currentIndex) ? 'transform: translate3d(0, 0, 0) rotateY(0deg) skewY(0deg); transform-origin: 100% center; visibility: hidden;' : 'transform: translate3d(0, 0, 0) rotateY(-180deg) skewY(0deg); transform-origin: 0 center; visibility: hidden;'
-
             pageObj.childNodes[0].style = cssString
 
             // wrapper
             cssString = 'pointer-events:none;'
-
             pageObj.style.cssText = cssString
-
             cssString += isEven(currentIndex) ? 'z-index: 1; float: left; left: 0; visibility: hidden;' : 'z-index: 2; float: right; right: 0; visibility: hidden;'
-
             pageObj.style.cssText = cssString
-
             break
         }
     }
@@ -509,8 +475,6 @@
   /**********************************/
   /** ******* Events / Touch *********/
   /**********************************/
-
-  //  Book level event listeners.
 
   let delegateElement = d.getElementById('plotter')
 
@@ -572,7 +536,7 @@
 
   let touchEvents = ['touchstart', 'touchend', 'touchmove']
 
-  let keyEvents = ['keypress', 'keyup', 'keydown'] // TODO: These need not be linked to mouseover event.
+  let keyEvents = ['keypress', 'keyup', 'keydown']
 
   function _liveBook () {
     keyEvents.forEach(event => {
@@ -602,16 +566,15 @@
   }
 
   /********************************/
-  /** ********** Cone math *********/
+  /************ Cone math *********/
   /********************************/
 
   const π = Math.PI
 
-  console.log(π)
-
+  // Definitions:
   // const quadrants = ['I', 'II', 'III', 'IV']
   // const direction = ['forward', 'backward']
-
+  // μ = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
   // let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
 
   // Cone Angle λ (= )
@@ -635,7 +598,7 @@
 
     if (mouseDownOnPageDiv) {
       _attachSidePages(memory)
-      // flippablePages = []
+      flippablePages = []
     }
   }
 
@@ -672,22 +635,20 @@
 
     _book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 
-    _book.plotter.λ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x distance from origin.
+    _book.plotter.μ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x distance from origin.
 
-    _book.plotter.quadrant = _setQuadrant(_book.side, _book.region)
-
-    // console.log('quadrant', _book.plotter.quadrant)
+    _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
 
     if (_book.zoomed) {
       _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
     }
 
     if (!_book.flipped && event.target.nodeName !== 'A') {
-      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-      // console.log(`lambda ${_book.plotter.λ}`)
+      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      console.log(`mu ${_book.plotter.μ}`)
 
       // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
-      //     _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 100ms ease-in;`
+      // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
     }
   }
 
@@ -747,7 +708,7 @@
 
   let [mouseDownOnPageDiv, memory] = [false]
 
-  let flippablePages = []
+  var flippablePages = []
 
   function _handleMouseDown (event) {
     if (!event.target) return
@@ -875,7 +836,7 @@
           _book.zoomed = false
           _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
         } else {
-          _removeElements('arrow-controls')
+          _removeElements('classArrow-controls')
           _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s; will-change: transform;`
           _book.zoomed = true
         }
@@ -1026,22 +987,6 @@
     })
   }
 
-  function _setQuadrant (side, region) {
-    if (side === 'right') {
-      if (region === 'upper') {
-        return 'QI'
-      } else {
-        return 'QIV'
-      }
-    } else {
-      if (region === 'upper') {
-        return 'QII'
-      } else {
-        return 'QIII'
-      }
-    }
-  }
-
   /**********************************/
   /** ******* Helper methods *********/
   /**********************************/
@@ -1096,22 +1041,16 @@
   /**********************************/
 
   DOMTokenList.prototype.addmany = function (classes) {
-    var classes = classes.split(' '),
-      i = 0,
-      ii = classes.length
-
-    for (i; i < ii; i++) {
-      this.add(classes[i])
+    let classArr = classes.split(' ')
+    for (let i = 0; i < classArr.length; i++) {
+      this.add(classArr[i])
     }
   }
 
   DOMTokenList.prototype.removemany = function (classes) {
-    var classes = classes.split(' '),
-      i = 0,
-      ii = classes.length
-
-    for (i; i < ii; i++) {
-      this.remove(classes[i])
+    let classArr = classes.split(' ')
+    for (let i = 0; i < classArr.length; i++) {
+      this.remove(classArr[i])
     }
   }
 
