@@ -1,6 +1,6 @@
 // document.addEventListener('DOMContentLoaded', function(event) {
 /**********************************/
-/** **** Initialize  Flippy ********/
+/****** Initialize  Flippy ********/
 /**********************************/
 const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
 
@@ -9,7 +9,7 @@ const node = document.getElementById('book')
 const superbook = Flippy.init(node, settings)
 
 /**********************************/
-/** ****** Work in progress ********/
+/******** Work in progress ********/
 /**********************************/
 
 // superbook.flipping = false
@@ -34,7 +34,7 @@ const superbook = Flippy.init(node, settings)
 // zoomed
 
 /**********************************/
-/** ****** Implemented  API ********/
+/******** Implemented  API ********/
 /**********************************/
 
 // // // PROPERTIES:

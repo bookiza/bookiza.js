@@ -491,8 +491,8 @@
   }
 
   /************************************
-     *********** DOM/Manipulate *********
-     ************************************/
+  *********** DOM/Manipulate **********
+  *************************************/
 
   // function _next(increment) {
   //     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
