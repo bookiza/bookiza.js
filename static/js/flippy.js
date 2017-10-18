@@ -647,14 +647,13 @@
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
-      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-      
+      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
       console.log(`mu ${_book.plotter.μ}px`)
       console.log(`epsilon ${_book.plotter.ε}px`)
 
-      console.log(_book.node.getElementsByClassName(_book.flippable[0].childNodes[0]))
+      console.log(_book.node.getElementsByClassName(_book.flippable[0]))
 
-
+      // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
       // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
       // _book.node.getElementsByClassName(_book.flippable[0]).style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
     }
