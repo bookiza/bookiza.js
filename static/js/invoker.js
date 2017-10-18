@@ -40,25 +40,25 @@ const superbook = Flippy.init(node, settings)
 
 // // // PROPERTIES:
 
-let booklength = superbook.flippy('length')
+// let booklength = superbook.flippy('length')
 
-console.log('Book length:', booklength)
+// console.log('Book length:', booklength)
 
-let currentPage = superbook.flippy('page')
+// let currentPage = superbook.flippy('page')
 
-console.log('Current page:', currentPage)
+// console.log('Current page:', currentPage)
 
-let view = superbook.flippy('view')
+// let view = superbook.flippy('view')
 
-console.log('Current view:', view)
+// console.log('Current view:', view)
 
-let mode = superbook.flippy('mode')
+// let mode = superbook.flippy('mode')
 
-console.log('Mode:', mode)
+// console.log('Mode:', mode)
 
-let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
+// let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
 
-console.log('Dimensions:', dimensions)
+// console.log('Dimensions:', dimensions)
 
 // // // METHODS:
 

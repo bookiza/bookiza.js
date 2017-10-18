@@ -26,7 +26,7 @@
     dimensions () {
       return JSON.parse(`{ "width" : "${_book.plotter.bounds.width}", "height" : "${_book.plotter.bounds.height}" }`)
     }
-    
+
     view () {
       return _book.currentView
     }
@@ -99,7 +99,7 @@
         const res = w.matchMedia(query)
         return res
       } else {
-        // ... add polyfill here/  or use polyfill.io.
+        // ... add polyfill here or use polyfill.io for IE8 and below 
       }
     }
   }
@@ -590,7 +590,7 @@
   function _handleMouseOver (event) {
     if (!event.target) return
 
-    console.log('Mouse on top')
+    // console.log('Mouse on top')
   }
 
   function _handleMouseOut (event) {
@@ -605,25 +605,6 @@
 
   function _handleMouseMove (event) {
     if (!event.target) return
-
-    let eventDoc, doc, body
-
-    event = event || w.event
-
-    if (event.pageX === null && event.clientX !== null) {
-      eventDoc = (event.target && event.target.ownerDocument) || d
-
-      doc = eventDoc.documentElement
-
-      body = eventDoc.body
-
-      event.pageX = event.clientX +
-                (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-                (doc && doc.clientLeft || body && body.clientLeft || 0)
-      event.pageY = event.clientY +
-                (doc && doc.scrollTop || body && body.scrollTop || 0) -
-                (doc && doc.clientTop || body && body.clientTop || 0)
-    }
 
     d.getElementById('xaxis').textContent = event.pageX
     d.getElementById('yaxis').textContent = event.pageY
@@ -647,15 +628,13 @@
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
-      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-      console.log(`mu ${_book.plotter.μ}px`)
-      console.log(`epsilon ${_book.plotter.ε}px`)
+      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      // console.log(`mu ${_book.plotter.μ}px`)
+      // console.log(`epsilon ${_book.plotter.ε}px`)
 
-      console.log(_book.node.getElementsByClassName(_book.flippable[0]))
+      console.log(_book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style)
 
-      // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
-      // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
-      // _book.node.getElementsByClassName(_book.flippable[0]).style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
+      _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
     }
   }
 
@@ -847,6 +826,13 @@
     }
   }
 
+
+
+
+
+
+
+  /* Don't worry about events below */
   function _handleWheelEvent (event) {
     // TODO: Determine forward / backward swipe.
 
@@ -854,15 +840,15 @@
   }
 
   function _handleKeyPressEvent (event) {
-    console.log('pressed', event.keyCode)
+    // console.log('pressed', event.keyCode)
   }
 
   function _handleKeyDownEvent (event) {
-    console.log('down', event.keyCode)
+    // console.log('down', event.keyCode)
   }
 
   function _handleKeyUpEvent (event) {
-    console.log('up', event.keyCode)
+    // console.log('up', event.keyCode)
   }
 
   function _handleTouchStart (event) {
