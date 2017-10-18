@@ -26,7 +26,7 @@
     dimensions () {
       return JSON.parse(`{ "width" : "${_book.plotter.bounds.width}", "height" : "${_book.plotter.bounds.height}" }`)
     }
-
+    
     view () {
       return _book.currentView
     }
@@ -335,7 +335,7 @@
 
     _printElements('leftPages', _book.sidePagesLeft)
 
-    // _liveBook() // Events and state
+    _liveBook() // Set up events and state
   }
 
   function _printElements (type, elements) {
@@ -566,7 +566,7 @@
   }
 
   /********************************/
-  /************ Cone math *********/
+  /** ********** Cone math *********/
   /********************************/
 
   const π = Math.PI
@@ -574,8 +574,9 @@
   // Definitions:
   // const quadrants = ['I', 'II', 'III', 'IV']
   // const direction = ['forward', 'backward']
-  // μ = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
-  // let Δ, θ, ω, Ω, α, β, δ, ε, μ = 0
+  // μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint) 
+  // ε = Epsilon = `y-distance` in pixels from origin of the book.
+  // let Δ, θ, ω, Ω, α, β, δ = 0
 
   // Cone Angle λ (= )
   // function λ (angle) {
@@ -598,7 +599,7 @@
 
     if (mouseDownOnPageDiv) {
       _attachSidePages(memory)
-      flippablePages = []
+      _book.flippable = []
     }
   }
 
@@ -635,7 +636,9 @@
 
     _book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 
-    _book.plotter.μ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x distance from origin.
+    _book.plotter.μ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x-distance from origin.
+
+    _book.plotter.ε = (2 / parseInt(_book.plotter.bounds.height) - parseInt(_book.plotter.currentPointerPosition.y)) / 2 // y-distance from origin.
 
     _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
 
@@ -643,12 +646,17 @@
       _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
     }
 
-    if (!_book.flipped && event.target.nodeName !== 'A') {
-      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-      console.log(`mu ${_book.plotter.μ}`)
+    if (_book.isFlipping && event.target.nodeName !== 'A') {
+      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      
+      console.log(`mu ${_book.plotter.μ}px`)
+      console.log(`epsilon ${_book.plotter.ε}px`)
+
+      console.log(_book.node.getElementsByClassName(_book.flippable[0].childNodes[0]))
+
 
       // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = ''
-      // _book.node.getElementsByClassName(flippablePages[0])[0].childNodes[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
+      // _book.node.getElementsByClassName(_book.flippable[0]).style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
     }
   }
 
@@ -708,8 +716,6 @@
 
   let [mouseDownOnPageDiv, memory] = [false]
 
-  var flippablePages = []
-
   function _handleMouseDown (event) {
     if (!event.target) return
 
@@ -719,7 +725,7 @@
         console.log('Execute partial flipping')
         break
       case 'DIV':
-        _book.flipped = false
+        _book.isFlipping = true
 
         mouseDownOnPageDiv = true
 
@@ -734,9 +740,7 @@
             switch (_book.mode) {
               case 'portrait':
                 displayableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-
                 removableIndex = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
                 break
               case 'landscape':
                 _book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 4
@@ -746,7 +750,7 @@
 
                 removableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
-                flippablePages = [_book.currentView[0], `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+                _book.flippable = [_book.currentView[0], `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
                 break
               default:
@@ -763,12 +767,10 @@
               case 'landscape':
                 _book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 1
                 _book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 4
-
                 displayableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
                 removableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
-                flippablePages = [_book.currentView[1], `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+                _book.flippable = [_book.currentView[1], `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 
                 break
               default:
@@ -815,10 +817,10 @@
         console.log('Click event is complete. Pass the buck around.')
         break
       case 'DIV':
-        _book.flipped = true
+        _book.isFlipping = false
         mouseDownOnPageDiv = false
         _attachSidePages(memory)
-        flippablePages = []
+        _book.flippable = []
         break
       default:
     }
@@ -924,7 +926,7 @@
 
   function _attachSidePages (memory) {
     let currentIndex = parseInt(_book.currentPage) - 1
-    let pageIndex = []
+    let pageIndices = []
 
     switch (memory) {
       case 'left':
@@ -932,13 +934,13 @@
 
         switch (_book.mode) {
           case 'portrait':
-            pageIndexes = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+            pageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
             break
           case 'landscape':
             _book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 3
             _book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 3
 
-            pageIndexes = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+            pageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
             break
           default:
             break
@@ -948,14 +950,14 @@
         _printElements('leftPages', _book.sidePagesLeft)
         switch (_book.mode) {
           case 'portrait':
-            pageIndexes = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+            pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 
             break
           case 'landscape':
             _book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 3
             _book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 3
 
-            pageIndexes = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+            pageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
             break
           default:
@@ -966,7 +968,7 @@
         break
     }
 
-    pageIndexes.forEach(index => {
+    pageIndices.forEach(index => {
       _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
       _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
 
