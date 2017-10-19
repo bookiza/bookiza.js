@@ -13,13 +13,13 @@ const superbook = Flippy.init(node, settings)
 /** ****** Work in progress ********/
 /**********************************/
 
-// superbook.flipping = false
+// superbook('flipping', cb) // fire when turning the page 
 
-// superbook.flipped = true // Custom event?
+// superbook('flipped', cb) // fire when turn complete
 
-// superbook.zooming = false // boolean state
+// superbook('zooming', cb) // fire when zooming in/out
 
-// superbook.zoomed = true // boolean state
+// superbook('zoomed', cb)  // boolean state
 
 // superbook.flippy('next')
 

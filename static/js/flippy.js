@@ -503,7 +503,7 @@
         _handleMouseClicks(event)
         break
       case 'dblclick':
-        _handleMouseDoubleClicks(event)
+        _handleMouseDoubleClick(event)
         break
       case 'wheel':
         _handleWheelEvent(event)
@@ -624,17 +624,16 @@
     _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
 
     if (_book.zoomed) {
-      // _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 3s;`
-
+      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 500s;`
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
-      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
 
       _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style.webkitTransform = `rotateY(${_degrees(_book.plotter.θ)}deg)`
-      _book.node.getElementsByClassName(_book.flippable[1])[0].children[0].style.webkitTransform = `rotateY(${_degrees(_book.plotter.θ)}deg)`
+      _book.node.getElementsByClassName(_book.flippable[1])[0].children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
     }
   }
 
@@ -804,7 +803,7 @@
     }
   }
 
-  function _handleMouseDoubleClicks (event) {
+  function _handleMouseDoubleClick (event) {
     if (!event.target || !_book.settings.zoom) return
 
     switch (event.target.nodeName) {
@@ -814,10 +813,10 @@
         if (_book.zoomed) {
           _printElements('buttons', _book.buttons)
           _book.zoomed = false
-          _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1s;'
+          _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 100ms;'
         } else {
           _removeElements('classArrow-controls')
-          _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 1s; will-change: transform;`
+          _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 100ms; will-change: transform;`
           _book.zoomed = true
         }
 
