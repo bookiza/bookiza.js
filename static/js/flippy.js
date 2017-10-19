@@ -590,7 +590,7 @@
   function _handleMouseOver (event) {
     if (!event.target) return
 
-    // console.log('Mouse on top')
+    console.log(_book.side)
   }
 
   function _handleMouseOut (event) {
@@ -624,7 +624,8 @@
     _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
 
     if (_book.zoomed) {
-      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 3s;`
+      // _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 3s;`
+
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
@@ -632,9 +633,8 @@
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
 
-      // console.log(_book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style)
-
-      _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
+      _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style.webkitTransform = `rotateY(${_degrees(_book.plotter.θ)}deg)`
+      _book.node.getElementsByClassName(_book.flippable[1])[0].children[0].style.webkitTransform = `rotateY(${_degrees(_book.plotter.θ)}deg)`
     }
   }
 
@@ -739,12 +739,12 @@
             switch (_book.mode) {
               case 'portrait':
                 displayableIndex = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
                 removableIndex = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
                 break
               case 'landscape':
                 _book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 1
                 _book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 4
+
                 displayableIndex = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
                 removableIndex = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
@@ -891,8 +891,7 @@
   const transitionEvent = _whichTransitionEvent()
 
   transitionEvent && d.addEventListener(transitionEvent, (event) => {
-    console.log('yay, transition ended')
-    console.log(event)
+    console.log('Transition Ended: Trigger `flipped`, `zoomed` events here')
   })
 
   /**********************************/
