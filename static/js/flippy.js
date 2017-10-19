@@ -632,7 +632,7 @@
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
 
-      _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style.webkitTransform = `rotateY(${_degrees(_book.plotter.θ)}deg)`
+      _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
       _book.node.getElementsByClassName(_book.flippable[1])[0].children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
     }
   }
