@@ -624,7 +624,7 @@
     _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
 
     if (_book.zoomed) {
-      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); transition: all 100ms; backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent;`
+      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 3s;`
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
@@ -632,7 +632,7 @@
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
 
-      console.log(_book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style)
+      // console.log(_book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style)
 
       _book.node.getElementsByClassName(_book.flippable[0])[0].children[0].style = `transform: translate3d(0, 0, 0) rotateY(${_degrees(_book.plotter.θ)}deg) skewY(0deg); transform-origin: 0px center 0px; transition:all 1ms linear;`
     }
