@@ -14,11 +14,8 @@
     // book object class
     constructor () {
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
-      this.plotter = {}
+      this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
       this.state = {} // Unset -> isInitializing {true / false } -> isflipping { true / false } -> isZooming { true / false } -> isPeeling { true / false }
-
-      // this.zoomed = false
-      // this.flipped = true
     }
 
     // PROPERTIES
@@ -108,17 +105,17 @@
   function _init (node, settings = { speed: 500, animation: 'book', peel: true, zoom: true }) {
     _book.node = node
 
-    _book.settings = settings
+    _book.plotter.bounds = _setGeometricalPremise(_book.node) // The premise.
+
+    w.addEventListener('resize', _setGeometricalPremise(_book.node))
+
+    // _book.settings = settings
 
     let nodes = [..._book.node.children]
 
     _book.buttons = nodes.splice(0, 2)
 
-    _book.pages = nodes.map((page, currentIndex) => {
-      return _addBaseClasses(page, currentIndex)
-    })
-
-    _setUpGeometry()
+    _book.pages = nodes.map((page, currentIndex) => _addBaseClasses(page, currentIndex))
 
     _removeChildren(_book.node)
 
@@ -144,21 +141,7 @@
     _printBook()
   })
 
-  w.addEventListener('resize', _setUpGeometry)
-
-  function _setUpGeometry () {
-    _book.plotter.bounds = _book.node.getBoundingClientRect() // The premise.
-    _book.plotter.origin = JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`)
-
-    d.getElementById('pwidth').textContent = _book.plotter.bounds.width
-    d.getElementById('pheight').textContent = _book.plotter.bounds.height
-    d.getElementById('ptop').textContent = _book.plotter.bounds.top
-    d.getElementById('pleft').textContent = _book.plotter.bounds.left
-    d.getElementById('pright').textContent = _book.plotter.bounds.right
-    d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-    d.getElementById('originX').textContent = _book.plotter.origin.x
-    d.getElementById('originY').textContent = _book.plotter.origin.y
-  }
+  const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
   function _removeChildren (node) {
     node.innerHTML = ''
@@ -186,21 +169,21 @@
     _printBook()
   }
 
-  function _addBaseClasses (pageObj, currentIndex) {
-    let classes = `promoted inner page-${parseInt(currentIndex) + 1} `
+  const _addBaseClasses = (pageObj, currentIndex) => {
+    removeClasses(pageObj, 'page')
+
+    let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
 
     classes += isEven(currentIndex) ? 'odd' : 'even'
 
     addClasses(pageObj, classes)
-
-    removeClasses(pageObj, 'page')
 
     let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 
     return wrappedHtml
   }
 
-  function _wrapHtml (pageObj, currentIndex) {
+  const _wrapHtml = (pageObj, currentIndex) => {
     const newWrapper = d.createElement('div')
 
     let classes = `wrapper ${parseInt(currentIndex) + 1}`
@@ -986,6 +969,17 @@
   // const _radians = degrees => degrees / 180 * π
 
   const _degrees = radians => radians / π * 180
+
+  const _printGeometry = () => {
+    d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+    d.getElementById('pheight').textContent = _book.plotter.bounds.height
+    d.getElementById('ptop').textContent = _book.plotter.bounds.top
+    d.getElementById('pleft').textContent = _book.plotter.bounds.left
+    d.getElementById('pright').textContent = _book.plotter.bounds.right
+    d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+    d.getElementById('originX').textContent = _book.plotter.origin.x
+    d.getElementById('originY').textContent = _book.plotter.origin.y
+  }
 
   // function _getVendor (vendor = null) {
   //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']

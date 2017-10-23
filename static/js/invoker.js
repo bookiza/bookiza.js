@@ -1,4 +1,4 @@
-// document.addEventListener('DOMContentLoaded', function(event) {
+// document.addEventListener('DOMContentLoaded', (event) => {
 /**********************************/
 /** ***** Initialize  Flippy *******/
 /**********************************/
@@ -25,20 +25,11 @@ const superbook = Flippy.init(node, settings)
 
 // superbook.flippy('previous')
 
-// end
-// first
-// last
-// start
-// flipping
-// flipped
-// zooming
-// zoomed
-
 /**********************************/
 /** ****** Implemented  API ********/
 /**********************************/
 
-// // // PROPERTIES:
+// // PROPERTIES:
 
 // let booklength = superbook.flippy('length')
 
@@ -60,7 +51,7 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Dimensions:', dimensions)
 
-// // // METHODS:
+// // METHODS:
 
 // superbook.flippy('page', 5)
 
@@ -78,9 +69,8 @@ const superbook = Flippy.init(node, settings)
 
 // superbook.flippy('addPage', pageObj, 3)
 
-// // THE BOOK
+// THE BOOK
 // console.log(superbook)
-
 // }, true)
 
 /** ********** Z' END **************/
