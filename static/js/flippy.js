@@ -15,7 +15,7 @@
     constructor () {
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
-      this.state = {} // Unset -> isInitializing {true / false } -> isflipping { true / false } -> isZooming { true / false } -> isPeeling { true / false }
+      this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeling': false }
     }
 
     // PROPERTIES
@@ -104,12 +104,9 @@
 
   function _init (node, settings = { speed: 500, animation: 'book', peel: true, zoom: true }) {
     _book.node = node
-
     _book.plotter.bounds = _setGeometricalPremise(_book.node) // The premise.
 
     w.addEventListener('resize', _setGeometricalPremise(_book.node))
-
-    // _book.settings = settings
 
     let nodes = [..._book.node.children]
 
@@ -141,13 +138,11 @@
     _printBook()
   })
 
-  const _setGeometricalPremise = (node) => node.getBoundingClientRect()
+  const _setGeometricalPremise = node => node.getBoundingClientRect()
 
-  function _removeChildren (node) {
-    node.innerHTML = ''
-  }
+  const _removeChildren = node => { node.innerHTML = '' }
 
-  function _removePage (index) {
+  const _removePage = (index) => {
     _book.pages.splice(index, 1)
 
     _setView(_book.currentPage)
@@ -157,7 +152,7 @@
     _printBook()
   }
 
-  function _addPage (pageObj, index) {
+  const _addPage = (pageObj, index) => {
     let wrappedObj = _addBaseClasses(pageObj, index)
 
     _book.pages.splice(index, 0, wrappedObj)
@@ -169,40 +164,7 @@
     _printBook()
   }
 
-  const _addBaseClasses = (pageObj, currentIndex) => {
-    removeClasses(pageObj, 'page')
-
-    let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
-
-    classes += isEven(currentIndex) ? 'odd' : 'even'
-
-    addClasses(pageObj, classes)
-
-    let wrappedHtml = _wrapHtml(pageObj, currentIndex)
-
-    return wrappedHtml
-  }
-
-  const _wrapHtml = (pageObj, currentIndex) => {
-    const newWrapper = d.createElement('div')
-
-    let classes = `wrapper ${parseInt(currentIndex) + 1}`
-
-    classes += isEven(currentIndex) ? ' odd' : ' even'
-
-    addClasses(newWrapper, classes)
-
-    // newWrapper.setAttribute('data-page', parseInt(currentIndex) + 1)
-
-    // Try :before :after pseudo elements instead.
-    // newWrapper.innerHTML = `<div class="outer gradient"><h1> View[${parseInt(currentIndex) + 1}]  </h1></div>`
-
-    newWrapper.appendChild(pageObj)
-
-    return newWrapper
-  }
-
-  function _flipPage (pageNo) {
+  const _flipPage = (pageNo) => {
     _book.currentPage = pageNo
 
     _setView(_book.currentPage)
@@ -212,7 +174,7 @@
     _printBook()
   }
 
-  function _setView (currentPage = 1) {
+  const _setView = (currentPage = 1) => {
     let currentIndex = parseInt(currentPage) - 1
 
     switch (_book.mode) {
@@ -238,12 +200,11 @@
           _book.currentView = [`${p}`, `${currentPage}`]
           _book.viewablePages = [_book.pages[`${p - 1}`], _book.pages[`${currentIndex}`]]
         }
-
         break
     }
   }
 
-  function _setRange (currentPage = 1) {
+  const _setRange = (currentPage = 1) => {
     let currentIndex = parseInt(currentPage) - 1
 
     /***
@@ -298,7 +259,6 @@
           _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
           _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
         }
-
         break
     }
   }
@@ -307,7 +267,7 @@
   *********** Print2DOM  *************
   ***********************************/
 
-  function _printBook () {
+  const _printBook = () => {
     _printElements('buttons', _book.buttons)
 
     _printElements('view', _book.viewablePages)
@@ -315,6 +275,8 @@
     _printElements('rightPages', _book.sidePagesRight)
 
     _printElements('leftPages', _book.sidePagesLeft)
+
+    _printGeometricalPremise() // Remove in production.
 
     _liveBook() // Set up events and state
   }
@@ -970,7 +932,7 @@
 
   const _degrees = radians => radians / π * 180
 
-  const _printGeometry = () => {
+  const _printGeometricalPremise = () => {
     d.getElementById('pwidth').textContent = _book.plotter.bounds.width
     d.getElementById('pheight').textContent = _book.plotter.bounds.height
     d.getElementById('ptop').textContent = _book.plotter.bounds.top
@@ -979,6 +941,39 @@
     d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
     d.getElementById('originX').textContent = _book.plotter.origin.x
     d.getElementById('originY').textContent = _book.plotter.origin.y
+  }
+
+  const _addBaseClasses = (pageObj, currentIndex) => {
+    removeClasses(pageObj, 'page')
+
+    let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
+
+    classes += isEven(currentIndex) ? 'odd' : 'even'
+
+    addClasses(pageObj, classes)
+
+    let wrappedHtml = _wrapHtml(pageObj, currentIndex)
+
+    return wrappedHtml
+  }
+
+  const _wrapHtml = (pageObj, currentIndex) => {
+    const newWrapper = d.createElement('div')
+
+    let classes = `wrapper ${parseInt(currentIndex) + 1}`
+
+    classes += isEven(currentIndex) ? ' odd' : ' even'
+
+    addClasses(newWrapper, classes)
+
+    // newWrapper.setAttribute('data-page', parseInt(currentIndex) + 1)
+
+    // Try :before :after pseudo elements instead.
+    // newWrapper.innerHTML = `<div class="outer gradient"><h1> View[${parseInt(currentIndex) + 1}]  </h1></div>`
+
+    newWrapper.appendChild(pageObj)
+
+    return newWrapper
   }
 
   // function _getVendor (vendor = null) {
