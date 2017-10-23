@@ -15,11 +15,10 @@
     constructor () {
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = {}
+      this.state = {} // Unset -> isInitializing {true / false } -> isflipping { true / false } -> isZooming { true / false } -> isPeeling { true / false }
 
       // this.zoomed = false
       // this.flipped = true
-
-      // this.state = ['flipping', 'calm', 'zoomed', 'peeling', 'peeled']
     }
 
     // PROPERTIES
@@ -106,7 +105,7 @@
 
   let _book = new Book()
 
-  function _init (node, settings = { speed: 500, animate: true, peel: true, zoom: true }) {
+  function _init (node, settings = { speed: 500, animation: 'book', peel: true, zoom: true }) {
     _book.node = node
 
     _book.settings = settings
@@ -253,7 +252,6 @@
           _book.viewablePages = [_book.pages[`${currentIndex}`], _book.pages[`${q - 1}`]]
         } else {
           let p = (parseInt(currentPage) - 1) < 1 ? _book.pages.length : (parseInt(currentPage) - 1) % parseInt(_book.pages.length)
-
           _book.currentView = [`${p}`, `${currentPage}`]
           _book.viewablePages = [_book.pages[`${p - 1}`], _book.pages[`${currentIndex}`]]
         }
@@ -480,7 +478,6 @@
 
   let handler = (event) => {
     event.stopPropagation()
-
     event.preventDefault()
 
     switch (event.type) {
@@ -597,10 +594,10 @@
     if (!event.target) return
     // TODO: This is where we calculate range pages according to QI-QIV.
 
-    if (mouseDownOnPageDiv) {
-      _attachSidePages(memory)
-      _book.flippable = []
-    }
+    // if (mouseDownOnPageDiv) {
+    //   _attachSidePages(memory)
+    //   _book.flippable = []
+    // }
   }
 
   function _handleMouseMove (event) {
@@ -976,33 +973,19 @@
   /** ******* Helper methods *********/
   /**********************************/
 
-  function isEven (n) {
-    return n === parseFloat(n) ? !(n % 2) : void 0
-  }
+  const isEven = number => number === parseFloat(number) ? !(number % 2) : void 0
 
-  function isOdd (n) {
-    return Math.abs(n % 2) === 1
-  }
+  const isOdd = number => Math.abs(number % 2) === 1
 
-  function isTouch () {
-    return (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
-  }
+  const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
-  function _leftCircularIndex (currentIndex, indice) {
-    return (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
-  }
+  const _leftCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
 
-  function _rightCircularIndex (currentIndex, indice) {
-    return (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
-  }
+  const _rightCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) + parseInt(indice) >= parseInt(_book.pages.length)) ? (parseInt(currentIndex) + parseInt(indice)) - parseInt(_book.pages.length) : (parseInt(currentIndex) + parseInt(indice))
 
-  // function _radians (degrees) {
-  //   return degrees / 180 * π
-  // }
+  // const _radians = degrees => degrees / 180 * π
 
-  function _degrees (radians) {
-    return radians / π * 180
-  }
+  const _degrees = radians => radians / π * 180
 
   // function _getVendor (vendor = null) {
   //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
@@ -1063,9 +1046,7 @@
     }
   }
 
-  w.requestAnimationFrame = (() => {
-    return w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) }
-  })()
+  w.requestAnimationFrame = (() => w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame || function (callback) { w.setTimeout(callback, 1E3 / 60) })()
 
   /**********************************/
   /** ********* Exposed API **********/

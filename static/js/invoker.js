@@ -3,7 +3,7 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
+const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 13 }
 
 const node = document.getElementById('book')
 
