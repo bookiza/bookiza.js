@@ -102,54 +102,43 @@
 
   let _book = new Book()
 
-  function _init (node, settings = { speed: 500, animation: 'book', peel: true, zoom: true }) {
+  function _init (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) {
     _book.node = node
-    _book.plotter.bounds = _setGeometricalPremise(_book.node) // The premise.
+    _book.plotter.bounds = _setGeometricalPremise(_book.node)
 
     w.addEventListener('resize', _setGeometricalPremise(_book.node))
 
     let nodes = [..._book.node.children]
 
     _book.buttons = nodes.splice(0, 2)
-
     _book.pages = nodes.map((page, currentIndex) => _addBaseClasses(page, currentIndex))
-
-    _removeChildren(_book.node)
-
     _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
 
     _setView(_book.currentPage)
-
     _setRange(_book.currentPage)
+
+    _book.state.isInitializing = false
 
     _printBook()
   }
 
-  //  Window level listeners.
   _viewer.onChange('(orientation: landscape)', match => {
     _book.mode = match ? 'landscape' : 'portrait'
 
-    _removeChildren(_book.node)
-
     _setView(_book.currentPage)
-
     _setRange(_book.currentPage)
-
-    _printBook()
+    _printBook() // Rewrite to DOM.
   })
 
   const _setGeometricalPremise = node => node.getBoundingClientRect()
-
-  const _removeChildren = node => { node.innerHTML = '' }
 
   const _removePage = (index) => {
     _book.pages.splice(index, 1)
 
     _setView(_book.currentPage)
-
     _setRange(_book.currentPage)
 
-    _printBook()
+    _printBook() // Write to dom
   }
 
   const _addPage = (pageObj, index) => {
@@ -268,6 +257,8 @@
   ***********************************/
 
   const _printBook = () => {
+    _removeChildren(_book.node)
+
     _printElements('buttons', _book.buttons)
 
     _printElements('view', _book.viewablePages)
@@ -281,7 +272,7 @@
     _liveBook() // Set up events and state
   }
 
-  function _printElements (type, elements) {
+  const _printElements = (type, elements) => {
     const docfrag = d.createDocumentFragment()
 
     switch (type) {
@@ -324,7 +315,7 @@
     _book.node.appendChild(docfrag)
   }
 
-  function _applyStyles (pageObj, currentIndex, type) {
+  const _applyStyles = (pageObj, currentIndex, type) => {
     let cssString = ''
     switch (_book.mode) {
       case 'portrait':
@@ -395,7 +386,7 @@
     return pageObj
   }
 
-  function _removeElements (className) {
+  const _removeElements = (className) => {
     _book.node.getElementsByClassName(className).remove()
   }
 
@@ -570,7 +561,7 @@
     }
 
     if (_book.isFlipping && event.target.nodeName !== 'A') {
-      console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+      // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
 
@@ -942,6 +933,8 @@
     d.getElementById('originX').textContent = _book.plotter.origin.x
     d.getElementById('originY').textContent = _book.plotter.origin.y
   }
+
+  const _removeChildren = node => { node.innerHTML = '' }
 
   const _addBaseClasses = (pageObj, currentIndex) => {
     removeClasses(pageObj, 'page')

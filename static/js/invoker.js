@@ -3,7 +3,7 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 4 }
+const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
 
 const node = document.getElementById('book')
 
@@ -31,9 +31,9 @@ const superbook = Flippy.init(node, settings)
 
 // // PROPERTIES:
 
-let booklength = superbook.flippy('length')
+// let booklength = superbook.flippy('length')
 
-console.log('Book length:', booklength)
+// console.log('Book length:', booklength)
 
 // let currentPage = superbook.flippy('page')
 
@@ -62,8 +62,6 @@ console.log('Book length:', booklength)
 // console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
 
 // superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
-
-console.log('Book length:', booklength)
 
 // let pageObj = document.createElement('div')
 
