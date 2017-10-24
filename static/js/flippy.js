@@ -101,7 +101,7 @@
 
   let _book = new Book()
 
-  function _init (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) {
+  const _initializeSuperbook = (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) => {
     _book.node = node
     _book.plotter.bounds = _setGeometricalPremise(_book.node)
     _printGeometricalPremise() // Remove in production.
@@ -393,13 +393,13 @@
   *********** DOM/Manipulate **********
   *************************************/
 
-  // function _next(increment) {
+  // const _next = (increment) => {
   //     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
 
   //     // console.log('newCurrentPage', newCurrentPage)
   // }
 
-  // function _previous(increment) {
+  // const _previous = (increment) => {
   //     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
 
   //     // console.log('newCurrentPage', newCurrentPage)
@@ -475,20 +475,20 @@
       w.addEventListener(event, handler)
     })
 
-    w.addEventListener('mouseover', _applyBookEvents) // TODO: Optimization needed here.
-    w.addEventListener('mouseout', _removeBookEvents)
-
-    function _applyBookEvents () {
+    const _applyBookEvents = () => {
       mouseEvents.forEach(event => {
         delegateElement.addEventListener(event, handler)
       })
     }
 
-    function _removeBookEvents () {
+    const _removeBookEvents = () => {
       mouseEvents.forEach(event => {
         delegateElement.removeEventListener(event, handler)
       })
     }
+
+    w.addEventListener('mouseover', _applyBookEvents) // TODO: Optimization needed here.
+    w.addEventListener('mouseout', _removeBookEvents)
 
     if (isTouch()) {
       touchEvents.forEach(event => {
@@ -511,7 +511,7 @@
   // let Δ, θ, ω, Ω, α, β, δ = 0
 
   // Cone Angle λ (= )
-  // function λ (angle) {
+  // const λ = (angle) => {
 
   // }
 
@@ -764,37 +764,37 @@
 
 
   /* Don't worry about events below */
-  function _handleWheelEvent (event) {
+  const _handleWheelEvent = (event) => {
     // TODO: Determine forward / backward swipe.
 
     // console.log(event)
   }
 
-  function _handleKeyPressEvent (event) {
+  const _handleKeyPressEvent = (event) => {
     // console.log('pressed', event.keyCode)
   }
 
-  function _handleKeyDownEvent (event) {
+  const _handleKeyDownEvent = (event) => {
     // console.log('down', event.keyCode)
   }
 
-  function _handleKeyUpEvent (event) {
+  const _handleKeyUpEvent = (event) => {
     // console.log('up', event.keyCode)
   }
 
-  function _handleTouchStart (event) {
+  const _handleTouchStart = (event) => {
     if (event.touches.length === 2) {
-      _book.zoom = true
+      // _book.zoom = true
       // _pinchZoom(event, _book.zoom)
     }
     console.log(event.touches.length)
   }
 
-  function _handleTouchMove (event) {
+  const _handleTouchMove = (event) => {
     // console.log('Touch moving')
   }
 
-  function _handleTouchEnd (event) {
+  const _handleTouchEnd = (event) => {
     // console.log('Touch moving')
   }
 
@@ -802,7 +802,7 @@
   /** ******* Transition ends *******/
   /**********************************/
 
-  function _whichTransitionEvent () {
+  const _whichTransitionEvent = () => {
     let t
     const el = d.createElement('fakeelement')
     const transitions = {
@@ -829,7 +829,7 @@
   /** ******* Behavior methods *******/
   /**********************************/
 
-  // function _pinchZoom(event, zoom) {
+  // const _pinchZoom = (event, zoom) => {
   //     const fingerDistance =
   //         Math.sqrt(
   //             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
@@ -958,7 +958,7 @@
 
   const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
-  // function _getVendor (vendor = null) {
+  // const _getVendor = (vendor = null) => {
   //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
 
   //   prefixes.forEach(prefix => {
@@ -967,12 +967,12 @@
   //   return vendor
   // }
 
-  // function increment(mode) {
+  // const _increment = (mode) => {
   //     return (mode === 'portrait') ? 1 : 2
   // }
 
-  // function direction(mode) {
-  //     // return (mode === 'portrait') ? 'forward' : 'backward'
+  // const _direction = (mode) => {
+  //    return (mode === 'portrait') ? 'forward' : 'backward'
   // }
 
   /**********************************/
@@ -993,11 +993,11 @@
     }
   }
 
-  let addClasses = function (elem, classes) {
+  let addClasses = (elem, classes) => {
     elem.classList.addmany(classes)
   }
 
-  let removeClasses = function (elem, classes) {
+  let removeClasses = (elem, classes) => {
     elem.classList.removemany(classes)
   }
 
@@ -1043,7 +1043,7 @@
   if (typeof (w.Flippy) === 'undefined') {
     w.Flippy = {
       init (node, settings) {
-        _init(node, settings)
+        _initializeSuperbook(node, settings)
         return new Superbook()
       }
     }
