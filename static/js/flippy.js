@@ -12,9 +12,9 @@
 
   class Book {
     constructor () {
+      this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeling': false }
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
-      this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeling': false }
     }
 
     // PROPERTIES
@@ -216,8 +216,8 @@
         let r = _rightCircularIndex(currentIndex, 1)
         let s = _rightCircularIndex(currentIndex, 2)
 
-        _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-        _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
+        _book.plotter.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
+        _book.plotter.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
 
         break
 
@@ -233,8 +233,8 @@
           let r = _rightCircularIndex(currentIndex, 2)
           let s = _rightCircularIndex(currentIndex, 3)
 
-          _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-          _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
+          _book.plotter.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
+          _book.plotter.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
         } else {
           // let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
           // let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
@@ -246,8 +246,8 @@
           let r = _rightCircularIndex(currentIndex, 1)
           let s = _rightCircularIndex(currentIndex, 2)
 
-          _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-          _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
+          _book.plotter.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
+          _book.plotter.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
         }
         break
     }
@@ -264,9 +264,9 @@
 
     _printElements('view', _book.viewablePages)
 
-    _printElements('rightPages', _book.sidePagesRight)
+    _printElements('rightPages', _book.plotter.sidePagesRight)
 
-    _printElements('leftPages', _book.sidePagesLeft)
+    _printElements('leftPages', _book.plotter.sidePagesLeft)
 
     _liveBook() // Set up events and state
   }
@@ -522,28 +522,28 @@
   const _handleMouseOver = (event) => {
     if (!event.target) return
 
-    console.log(_book.side)
+    console.log(_book.plotter.side)
   }
 
   const _handleMouseOut = (event) => {
     if (!event.target) return
     // TODO: This is where we calculate range pages according to QI-QIV.
 
-    if (mouseDownOnPageDiv) {
-      _attachSidePages(memory)
-      _book.flippable = []
-    }
+    console.log('Out!')
+    // if (mouseDownOnPageDiv) {
+    //   _attachSidePages(memory)
+    //   _book.flippable = []
+    // }
   }
 
   const _handleMouseMove = (event) => {
     if (!event.target) return
 
-    d.getElementById('xaxis').textContent = event.pageX
-    d.getElementById('yaxis').textContent = event.pageY
+    _updateMouseLoc(event)
 
-    _book.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
+    _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
 
-    _book.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
+    _book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
 
     _book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`)
 
@@ -553,7 +553,9 @@
 
     _book.plotter.ε = (2 / parseInt(_book.plotter.bounds.height) - parseInt(_book.plotter.currentPointerPosition.y)) / 2 // y-distance from origin.
 
-    _book.plotter.quadrant = _book.side === 'right' ? (_book.region === 'upper') ? 'I' : 'IV' : (_book.region === 'upper') ? 'II' : 'III'
+    _book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
+
+    console.log(_book.plotter.quadrant)
 
     if (_book.zoomed) {
       _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 500s;`
@@ -642,9 +644,9 @@
 
         let [displayableIndex, removableIndex] = []
 
-        memory = _book.side
+        memory = _book.plotter.side
 
-        switch (_book.side) {
+        switch (_book.plotter.side) {
           case 'left':
             switch (_book.mode) {
               case 'portrait':
@@ -839,7 +841,7 @@
 
     switch (memory) {
       case 'left':
-        _printElements('rightPages', _book.sidePagesRight)
+        _printElements('rightPages', _book.plotter.sidePagesRight)
 
         switch (_book.mode) {
           case 'portrait':
@@ -856,7 +858,7 @@
         }
         break
       case 'right':
-        _printElements('leftPages', _book.sidePagesLeft)
+        _printElements('leftPages', _book.plotter.sidePagesLeft)
         switch (_book.mode) {
           case 'portrait':
             pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
@@ -951,6 +953,11 @@
   }
 
   const _setGeometricalPremise = (node) => node.getBoundingClientRect()
+
+  const _updateMouseLoc = (event) => {
+    d.getElementById('xaxis').textContent = event.pageX
+    d.getElementById('yaxis').textContent = event.pageY    
+  }
 
   // const _getVendor = (vendor = null) => {
   //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
