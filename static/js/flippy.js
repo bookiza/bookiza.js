@@ -11,7 +11,6 @@
   ***********************************/
 
   class Book {
-    // book object class
     constructor () {
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
@@ -105,11 +104,9 @@
   function _init (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) {
     _book.node = node
     _book.plotter.bounds = _setGeometricalPremise(_book.node)
-
-    w.addEventListener('resize', _setGeometricalPremise(_book.node))
+    _printGeometricalPremise() // Remove in production.
 
     let nodes = [..._book.node.children]
-
     _book.buttons = nodes.splice(0, 2)
     _book.pages = nodes.map((page, currentIndex) => _addBaseClasses(page, currentIndex))
     _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
@@ -122,6 +119,13 @@
     _printBook()
   }
 
+  const resetGeometricalPremise = () => {
+    _book.plotter.bounds = _setGeometricalPremise(_book.node)
+    _printGeometricalPremise() // Remove in production.
+  }
+
+  w.addEventListener('resize', resetGeometricalPremise)
+
   _viewer.onChange('(orientation: landscape)', match => {
     _book.mode = match ? 'landscape' : 'portrait'
 
@@ -129,8 +133,6 @@
     _setRange(_book.currentPage)
     _printBook() // Rewrite to DOM.
   })
-
-  const _setGeometricalPremise = node => node.getBoundingClientRect()
 
   const _removePage = (index) => {
     _book.pages.splice(index, 1)
@@ -171,7 +173,6 @@
         _book.currentView = [`${currentPage}`]
         _book.viewablePages = [_book.pages[`${currentIndex}`]]
         break
-
       case 'landscape':
         if (isEven(parseInt(currentPage))) {
           /***
@@ -266,8 +267,6 @@
     _printElements('rightPages', _book.sidePagesRight)
 
     _printElements('leftPages', _book.sidePagesLeft)
-
-    _printGeometricalPremise() // Remove in production.
 
     _liveBook() // Set up events and state
   }
@@ -471,7 +470,7 @@
 
   let keyEvents = ['keypress', 'keyup', 'keydown']
 
-  function _liveBook () {
+  const _liveBook = () => {
     keyEvents.forEach(event => {
       w.addEventListener(event, handler)
     })
@@ -520,23 +519,23 @@
   /** ********** Event handlers ************/
   /****************************************/
 
-  function _handleMouseOver (event) {
+  const _handleMouseOver = (event) => {
     if (!event.target) return
 
     console.log(_book.side)
   }
 
-  function _handleMouseOut (event) {
+  const _handleMouseOut = (event) => {
     if (!event.target) return
     // TODO: This is where we calculate range pages according to QI-QIV.
 
-    // if (mouseDownOnPageDiv) {
-    //   _attachSidePages(memory)
-    //   _book.flippable = []
-    // }
+    if (mouseDownOnPageDiv) {
+      _attachSidePages(memory)
+      _book.flippable = []
+    }
   }
 
-  function _handleMouseMove (event) {
+  const _handleMouseMove = (event) => {
     if (!event.target) return
 
     d.getElementById('xaxis').textContent = event.pageX
@@ -570,7 +569,7 @@
     }
   }
 
-  function _handleMouseClicks (event) {
+  const _handleMouseClicks = (event) => {
     if (!event.target) return
 
     event.preventDefault()
@@ -626,7 +625,7 @@
 
   let [mouseDownOnPageDiv, memory] = [false]
 
-  function _handleMouseDown (event) {
+  const _handleMouseDown = (event) => {
     if (!event.target) return
 
     switch (event.target.nodeName) {
@@ -719,7 +718,7 @@
     }
   }
 
-  function _handleMouseUp (event) {
+  const _handleMouseUp = (event) => {
     if (!event.target || !mouseDownOnPageDiv) return
 
     switch (event.target.nodeName) {
@@ -736,7 +735,7 @@
     }
   }
 
-  function _handleMouseDoubleClick (event) {
+  const _handleMouseDoubleClick = (event) => {
     if (!event.target || !_book.settings.zoom) return
 
     switch (event.target.nodeName) {
@@ -840,7 +839,7 @@
 
   // }
 
-  function _attachSidePages (memory) {
+  const _attachSidePages = (memory) => {
     let currentIndex = parseInt(_book.currentPage) - 1
     let pageIndices = []
 
@@ -938,36 +937,26 @@
 
   const _addBaseClasses = (pageObj, currentIndex) => {
     removeClasses(pageObj, 'page')
-
     let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
-
     classes += isEven(currentIndex) ? 'odd' : 'even'
-
     addClasses(pageObj, classes)
-
     let wrappedHtml = _wrapHtml(pageObj, currentIndex)
-
     return wrappedHtml
   }
 
   const _wrapHtml = (pageObj, currentIndex) => {
     const newWrapper = d.createElement('div')
-
     let classes = `wrapper ${parseInt(currentIndex) + 1}`
-
     classes += isEven(currentIndex) ? ' odd' : ' even'
-
     addClasses(newWrapper, classes)
-
     // newWrapper.setAttribute('data-page', parseInt(currentIndex) + 1)
-
     // Try :before :after pseudo elements instead.
     // newWrapper.innerHTML = `<div class="outer gradient"><h1> View[${parseInt(currentIndex) + 1}]  </h1></div>`
-
     newWrapper.appendChild(pageObj)
-
     return newWrapper
   }
+
+  const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
   // function _getVendor (vendor = null) {
   //   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']

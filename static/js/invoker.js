@@ -47,9 +47,9 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Mode:', mode)
 
-// let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
+let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
 
-// console.log('Dimensions:', dimensions)
+console.log('Dimensions:', dimensions)
 
 // // METHODS:
 
