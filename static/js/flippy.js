@@ -757,12 +757,6 @@
     }
   }
 
-
-
-
-
-
-
   /* Don't worry about events below */
   const _handleWheelEvent = (event) => {
     // TODO: Determine forward / backward swipe.
@@ -993,11 +987,11 @@
     }
   }
 
-  let addClasses = (elem, classes) => {
+  const addClasses = (elem, classes) => {
     elem.classList.addmany(classes)
   }
 
-  let removeClasses = (elem, classes) => {
+  const removeClasses = (elem, classes) => {
     elem.classList.removemany(classes)
   }
 
