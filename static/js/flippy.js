@@ -12,7 +12,7 @@
 
   class Book {
     constructor () {
-      this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeling': false }
+      this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeled': false, 'isZoomed': false }
       this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
       this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
     }
@@ -103,6 +103,7 @@
 
   const _initializeSuperbook = (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) => {
     _book.node = node
+    _book.settings = settings
     _book.plotter.bounds = _setGeometricalPremise(_book.node)
     _printGeometricalPremise() // Remove in production.
 
@@ -140,7 +141,7 @@
     _setView(_book.currentPage)
     _setRange(_book.currentPage)
 
-    _printBook() // Write to dom
+    _printBook() // Write to DOM.
   }
 
   const _addPage = (pageObj, index) => {
@@ -385,10 +386,6 @@
     return pageObj
   }
 
-  const _removeElements = (className) => {
-    _book.node.getElementsByClassName(className).remove()
-  }
-
   /************************************
   *********** DOM/Manipulate **********
   *************************************/
@@ -539,7 +536,7 @@
   const _handleMouseMove = (event) => {
     if (!event.target) return
 
-    _updateMouseLoc(event)
+    _printStateValues(event) // remove finally
 
     _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
 
@@ -555,13 +552,13 @@
 
     _book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
 
-    console.log(_book.plotter.quadrant)
+    // console.log(_book.plotter.quadrant)
 
-    if (_book.zoomed) {
+    if (_book.state.isZoomed) {
       _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 500s;`
     }
 
-    if (_book.isFlipping && event.target.nodeName !== 'A') {
+    if (!_book.state.isZoomed && event.target.nodeName !== 'A') {
       // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
@@ -572,9 +569,9 @@
   }
 
   const _handleMouseClicks = (event) => {
-    if (!event.target) return
+    if (!event.target || _book.state.isZoomed) return
 
-    event.preventDefault()
+    // event.preventDefault()
 
     // let currentIndex = parseInt(_book.currentPage) - 1
 
@@ -628,7 +625,7 @@
   let [mouseDownOnPageDiv, memory] = [false]
 
   const _handleMouseDown = (event) => {
-    if (!event.target) return
+    if (!event.target || _book.state.isZoomed) return
 
     switch (event.target.nodeName) {
       case 'A':
@@ -744,14 +741,14 @@
       case 'A':
         break
       case 'DIV':
-        if (_book.zoomed) {
+        if (_book.state.isZoomed) {
           _printElements('buttons', _book.buttons)
-          _book.zoomed = false
-          _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 100ms;'
+          _book.state.isZoomed = false
+          _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
         } else {
           _removeElements('classArrow-controls')
-          _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 100ms; will-change: transform;`
-          _book.zoomed = true
+          _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 500ms; will-change: transform;`
+          _book.state.isZoomed = true
         }
 
         break
@@ -900,6 +897,10 @@
     })
   }
 
+  const _removeElements = (className) => {
+    _book.node.getElementsByClassName(className).remove()
+  }
+
   /**********************************/
   /** ******* Helper methods *********/
   /**********************************/
@@ -919,6 +920,7 @@
   const _degrees = radians => radians / π * 180
 
   const _printGeometricalPremise = () => {
+    d.getElementById('state').textContent = _book.state.isInitializing
     d.getElementById('pwidth').textContent = _book.plotter.bounds.width
     d.getElementById('pheight').textContent = _book.plotter.bounds.height
     d.getElementById('ptop').textContent = _book.plotter.bounds.top
@@ -954,9 +956,10 @@
 
   const _setGeometricalPremise = (node) => node.getBoundingClientRect()
 
-  const _updateMouseLoc = (event) => {
+  const _printStateValues = (event) => {
     d.getElementById('xaxis').textContent = event.pageX
-    d.getElementById('yaxis').textContent = event.pageY    
+    d.getElementById('yaxis').textContent = event.pageY
+    d.getElementById('state').textContent = _book.state.isInitializing
   }
 
   // const _getVendor = (vendor = null) => {
