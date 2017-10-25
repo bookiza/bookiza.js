@@ -94,7 +94,7 @@
         const res = w.matchMedia(query)
         return res
       } else {
-        // ... add polyfill here or use polyfill.io for IE8 and below 
+        // ... add polyfill here or use polyfill.io for IE8 and below
       }
     }
   }
@@ -110,7 +110,8 @@
     let nodes = [..._book.node.children]
     _book.buttons = nodes.splice(0, 2)
     _book.pages = nodes.map((page, currentIndex) => _addBaseClasses(page, currentIndex))
-    _book.currentPage = (settings.start_page === undefined) ? 1 : (parseInt(settings.start_page) > 0 && parseInt(settings.start_page) < parseInt(_book.pages.length)) ? parseInt(settings.start_page) % parseInt(_book.pages.length) : (parseInt(settings.start_page) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.start_page) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.start_page) % parseInt(_book.pages.length) : parseInt(settings.start_page) % parseInt(_book.pages.length)
+
+    _book.currentPage = (settings.startPage === undefined) ? 1 : (parseInt(settings.startPage) > 0 && parseInt(settings.startPage) < parseInt(_book.pages.length)) ? parseInt(settings.startPage) % parseInt(_book.pages.length) : (parseInt(settings.startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(settings.startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(settings.startPage) % parseInt(_book.pages.length) : parseInt(settings.startPage) % parseInt(_book.pages.length)
 
     _setView(_book.currentPage)
     _setRange(_book.currentPage)
@@ -495,7 +496,7 @@
   }
 
   /********************************/
-  /** ********** Cone math *********/
+  /************ Cone math *********/
   /********************************/
 
   const π = Math.PI
@@ -503,7 +504,7 @@
   // Definitions:
   // const quadrants = ['I', 'II', 'III', 'IV']
   // const direction = ['forward', 'backward']
-  // μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint) 
+  // μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
   // ε = Epsilon = `y-distance` in pixels from origin of the book.
   // let Δ, θ, ω, Ω, α, β, δ = 0
 
@@ -527,16 +528,16 @@
     // TODO: This is where we calculate range pages according to QI-QIV.
 
     console.log('Out!')
-    // if (mouseDownOnPageDiv) {
-    //   _attachSidePages(memory)
-    //   _book.flippable = []
-    // }
+    if (mouseDownOnPageDiv) {
+      _attachSidePages(memory)
+      _book.flippable = []
+    }
   }
 
   const _handleMouseMove = (event) => {
     if (!event.target) return
 
-    _printStateValues(event) // remove finally
+    // _printStateValues(event) // remove finally
 
     _book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
 
@@ -555,10 +556,10 @@
     // console.log(_book.plotter.quadrant)
 
     if (_book.state.isZoomed) {
-      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; outline: 1px solid transparent; transition: all 500s;`
+      _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 100s;`
     }
 
-    if (!_book.state.isZoomed && event.target.nodeName !== 'A') {
+    if (_book.state.isFlippable && event.target.nodeName !== 'A') {
       // console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
       // console.log(`mu ${_book.plotter.μ}px`)
       // console.log(`epsilon ${_book.plotter.ε}px`)
@@ -633,7 +634,7 @@
         console.log('Execute partial flipping')
         break
       case 'DIV':
-        _book.isFlipping = true
+				_book.state.isFlippable = true
 
         mouseDownOnPageDiv = true
 
@@ -725,8 +726,8 @@
         console.log('Click event is complete. Pass the buck around.')
         break
       case 'DIV':
-        _book.isFlipping = false
-        mouseDownOnPageDiv = false
+				_book.state.isFlippable = false
+				mouseDownOnPageDiv = false
         _attachSidePages(memory)
         _book.flippable = []
         break
@@ -736,7 +737,6 @@
 
   const _handleMouseDoubleClick = (event) => {
     if (!event.target || !_book.settings.zoom) return
-
     switch (event.target.nodeName) {
       case 'A':
         break
@@ -744,13 +744,14 @@
         if (_book.state.isZoomed) {
           _printElements('buttons', _book.buttons)
           _book.state.isZoomed = false
+          _book.state.isFlippable = true
           _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
         } else {
           _removeElements('classArrow-controls')
           _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 500ms; will-change: transform;`
           _book.state.isZoomed = true
+          _book.state.isFlippable = false
         }
-
         break
       default:
     }
@@ -759,7 +760,6 @@
   /* Don't worry about events below */
   const _handleWheelEvent = (event) => {
     // TODO: Determine forward / backward swipe.
-
     // console.log(event)
   }
 
@@ -815,7 +815,7 @@
   const transitionEvent = _whichTransitionEvent()
 
   transitionEvent && d.addEventListener(transitionEvent, (event) => {
-    console.log('Transition Ended: Trigger `flipped`, `zoomed` events here')
+    console.log('Transition Ended: Trigger `flipped`, `zoomed` events here', event)
   })
 
   /**********************************/

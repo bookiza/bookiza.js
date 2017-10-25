@@ -3,7 +3,7 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-const settings = { speed: 600, animate: true, peel: true, zoom: true, start_page: 14 }
+const settings = { speed: 600, animate: true, peel: true, zoom: true, startPage: 8 }
 
 const node = document.getElementById('book')
 
@@ -13,7 +13,7 @@ const superbook = Flippy.init(node, settings)
 /** ****** Work in progress ********/
 /**********************************/
 
-// superbook('flipping', cb) // fire when turning the page 
+// superbook('flipping', cb) // fire when turning the page
 
 // superbook('flipped', cb) // fire when turn complete
 
