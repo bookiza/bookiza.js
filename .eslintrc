@@ -4,9 +4,11 @@
         "node": true,
         "browser": true
     },
-    "extends": "standard",
+    // "extends": "standard",
     "plugins": ["html", "markdown"],
     "rules": {
-        "semi": [0, 'never']
+        "semi": 0,
+        "indent": ["error", "tab"],
+        "no-tabs": 0
     }
 }
