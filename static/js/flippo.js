@@ -12,14 +12,9 @@
 
 	class Book {
 		constructor () {
-			this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isZoomed': false, 'isPeeling': false, 'isPeeled': false }
+			this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isPeeled': false, 'isZoomed': false }
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
-			this.plotter = {
-				'origin': JSON.parse(`{
-					"x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}",
-					"y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}"
-				}`)
-			}
+			this.plotter = { 'origin': JSON.parse(`{ "x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}", "y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}" }`) }
 		}
 
 		// PROPERTIES
@@ -247,6 +242,7 @@
 				// let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
 				// let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 1)
 				// let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? currentIndex + 1 - parseInt(_book.pages.length) + 1 : (currentIndex + 2)
+
 				let p = _leftCircularIndex(currentIndex, 3)
 				let q = _leftCircularIndex(currentIndex, 2)
 				let r = _rightCircularIndex(currentIndex, 1)
@@ -279,6 +275,7 @@
 
 	const _printElements = (type, elements) => {
 		const docfrag = d.createDocumentFragment()
+
 		switch (type) {
 		case 'buttons':
 			elements.forEach(elem => {
@@ -289,25 +286,31 @@
 			let pageList = elements.map((page, currentIndex) => {
 				return _applyStyles(page, currentIndex, type)
 			})
+
 			pageList.forEach(page => {
 				docfrag.appendChild(page)
 			})
+
 			break
 		case 'rightPages':
 			let rightPages = elements.map((page, currentIndex) => {
 				return _applyStyles(page, currentIndex, type)
 			})
+
 			rightPages.forEach(page => {
 				docfrag.appendChild(page)
 			})
+
 			break
 		case 'leftPages':
 			let leftPages = elements.map((page, currentIndex) => {
 				return _applyStyles(page, currentIndex, type)
 			})
+
 			leftPages.forEach(page => {
 				docfrag.appendChild(page)
 			})
+
 			break
 		}
 		_book.node.appendChild(docfrag)
@@ -517,24 +520,14 @@
 	const _handleMouseOver = (event) => {
 		if (!event.target) return
 
-		switch (event.target.nodeName) {
-			case 'A':
-				console.log('a')
-			break
-			case 'DIV':
-				console.log('div')
-				console.log(_book.plotter.side)
-			break
-			default:
-			break
-		}
+		console.log(_book.plotter.side)
 	}
 
 	const _handleMouseOut = (event) => {
 		if (!event.target) return
 		// TODO: This is where we calculate range pages according to QI-QIV.
 
-		// console.log('Out!')
+		console.log('Out!')
 	}
 
 	const _handleMouseMove = (event) => {
@@ -556,8 +549,10 @@
 
 		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
 
+		// console.log(_book.plotter.quadrant)
+
 		if (_book.state.isZoomed) {
-			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 200ms;`
+			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 100s;`
 		}
 
 		if (_book.state.isFlippable && event.target.nodeName !== 'A') {
@@ -656,6 +651,7 @@
 					removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
 					_book.flippablePages = [_book.currentView[0], `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+
 					break
 				default:
 					break
@@ -915,6 +911,18 @@
 
 	const _degrees = radians => radians / π * 180
 
+	const _printGeometricalPremise = () => {
+		d.getElementById('state').textContent = _book.state.isInitializing
+		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+		d.getElementById('pheight').textContent = _book.plotter.bounds.height
+		d.getElementById('ptop').textContent = _book.plotter.bounds.top
+		d.getElementById('pleft').textContent = _book.plotter.bounds.left
+		d.getElementById('pright').textContent = _book.plotter.bounds.right
+		d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+		d.getElementById('originX').textContent = _book.plotter.origin.x
+		d.getElementById('originY').textContent = _book.plotter.origin.y
+	}
+
 	const _removeChildren = node => { node.innerHTML = '' }
 
 	const _addBaseClasses = (pageObj, currentIndex) => {
@@ -944,18 +952,6 @@
 		d.getElementById('xaxis').textContent = event.pageX
 		d.getElementById('yaxis').textContent = event.pageY
 		d.getElementById('state').textContent = _book.state.isInitializing
-	}
-
-	const _printGeometricalPremise = () => {
-		d.getElementById('state').textContent = _book.state.isInitializing
-		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
-		d.getElementById('pheight').textContent = _book.plotter.bounds.height
-		d.getElementById('ptop').textContent = _book.plotter.bounds.top
-		d.getElementById('pleft').textContent = _book.plotter.bounds.left
-		d.getElementById('pright').textContent = _book.plotter.bounds.right
-		d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-		d.getElementById('originX').textContent = _book.plotter.origin.x
-		d.getElementById('originY').textContent = _book.plotter.origin.y
 	}
 
 	// const _getVendor = (vendor = null) => {
