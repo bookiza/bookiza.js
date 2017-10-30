@@ -7,7 +7,7 @@
 
 (((n, w, d) => {
 	/***********************************
-	************* Public API **********
+	************* Public API ***********
 	***********************************/
 
 	class Book {
@@ -126,23 +126,15 @@
 		_book.currentPage = _setCurrentPage(settings.startPage)
 		_book.currentView = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
-
-		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentView, ', rightPages:', _book.range.rightPageIndices, ' ]')
-
-		_setupEventsOnBook(_book.node)
-
-		// _printBook()
+		_applyEventListenersOnBook(_book.node)
+		_book.state.isInitializing = false
+    
 	}
 
 	_viewer.onChange('(orientation: landscape)', match => {
 		_book.mode = match ? 'landscape' : 'portrait'
-
 		_book.currentView = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
-
-		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentView, ', rightPages:', _book.range.rightPageIndices, ' ]')
-
-		// _printBook() // Write to DOM.
 	})
 
 	// const _removePage = (index) => {
@@ -177,7 +169,7 @@
 	// }
 
 	/**********************************/
-	/** ******* Events / Touch *********/
+	/********** Events / Touch ********/
 	/**********************************/
 
 	const delegateElement = d.getElementById('plotter')
@@ -243,7 +235,7 @@
 
 	const keyEvents = ['keypress', 'keyup', 'keydown']
 
-	const _setupEventsOnBook = () => {
+	const _applyEventListenersOnBook = () => {
 		keyEvents.forEach(event => {
 			w.addEventListener(event, handler)
 		})
@@ -268,9 +260,7 @@
 				delegateElement.addEventListener(event, handler)
 			})
 		}
-
-		_book.state.isInitializing = false
-		console.log(_book.state)
+		_printBook()    
 	}
 
 	/********************************/
@@ -349,38 +339,8 @@
 	const _handleMouseClicks = (event) => {
 		if (_book.state.isZoomed) return
 
-		// event.preventDefault()
-		// let currentIndex = parseInt(_book.currentPage) - 1
 		switch (event.target.nodeName) {
 		case 'A':
-			// Cache multiple clicks for flipping animation?
-
-			// switch (_book.mode) {
-			//     case 'portrait':
-
-			//         if (event.target.matches('a#next')) {
-			//             let increment = 1 // Forward
-			//             _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-			//         }
-
-			//         if (event.target.matches('a#previous')) {
-			//             let decrement = 1 // Backward
-			//             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-			//         }
-			//         break
-			//     case 'landscape':
-			//         if (event.target.matches('a#next')) {
-			//             let increment = isEven(_book.currentPage) ? 2 : 1 // Forward
-			//             _book.currentPage = _rightCircularIndex(currentIndex, increment) + 1
-			//         }
-
-			//         if (event.target.matches('a#previous')) {
-			//             let decrement = isOdd(_book.currentPage) ? 2 : 1 // Backward
-			//             _book.currentPage = _leftCircularIndex(currentIndex, decrement) + 1
-			//         }
-			//         break
-			// }
-
 			break
 		case 'DIV':
 			break
@@ -392,7 +352,7 @@
 
 	const _handleMouseDown = (event) => {
 		if (_book.state.isZoomed) return
-    _book.state.isFlippable = true
+		_book.state.isFlippable = true
     
 		switch (event.target.nodeName) {
 		case 'A':
@@ -553,7 +513,7 @@
 	}
 
 	/**********************************/
-	/** ******* Transition ends *******/
+	/********** Transition ends *******/
 	/**********************************/
 
 	const _whichTransitionEvent = () => {
@@ -599,13 +559,16 @@
 
 	const _printBook = () => {
 		// Populate the pages first
+
+		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentView, ', rightPages:', _book.range.rightPageIndices, ' ]')
+    
 		_printElements('buttons', _book.buttons)
+        
+		_printElements('view', _book.currentView.map(index => _book.pages[`${index}`]))
 
-		_printElements('view', _book.viewablePages)
+		_printElements('rightPages', _book.range.rightPageIndices.map(index => _book.pages[`${index}`]))
 
-		_printElements('rightPages', _book.sidePagesRight)
-
-		_printElements('leftPages', _book.sidePagesLeft)
+		_printElements('leftPages', _book.range.leftPageIndices.map(index => _book.pages[`${index}`]))
 	}
 
 	const _printElements = (type, elements) => {
@@ -869,11 +832,10 @@
 					***/
 				let q = (parseInt(currentPage) + 1) > parseInt(_book.pages.length) ? 1 : (parseInt(currentPage) + 1) % parseInt(_book.pages.length)
 				return [currentIndex, q - 1]
-				// _book.viewablePages = [_book.pages[`${currentIndex}`], _book.pages[`${q - 1}`]]
+				
 			} else {
 				let p = (parseInt(currentPage) - 1) < 1 ? _book.pages.length : (parseInt(currentPage) - 1) % parseInt(_book.pages.length)
 				return [p - 1, currentIndex]
-				// _book.viewablePages = [_book.pages[`${p - 1}`], _book.pages[`${currentIndex}`]]
 			}
 			break
 		}
