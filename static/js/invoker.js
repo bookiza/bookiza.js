@@ -70,7 +70,7 @@ const superbook = Flippy.init(node, settings)
 // superbook.flippy('addPage', pageObj, 3)
 
 // THE BOOK
-// console.log(superbook)
+console.log(superbook)
 // }, true)
 
 /** ********** Z' END **************/
