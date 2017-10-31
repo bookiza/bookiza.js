@@ -909,18 +909,6 @@
 		d.getElementById('yaxis').textContent = event.pageY
 	}
 
-	// const _printGeometricalPremise = () => {
-	//   d.getElementById('state').textContent = _book.state.isInitializing
-	//   d.getElementById('pwidth').textContent = _book.plotter.bounds.width
-	//   d.getElementById('pheight').textContent = _book.plotter.bounds.height
-	//   d.getElementById('ptop').textContent = _book.plotter.bounds.top
-	//   d.getElementById('pleft').textContent = _book.plotter.bounds.left
-	//   d.getElementById('pright').textContent = _book.plotter.bounds.right
-	//   d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-	//   d.getElementById('originX').textContent = _book.plotter.origin.x
-	//   d.getElementById('originY').textContent = _book.plotter.origin.y
-	// }
-
 	// const _getVendor = (vendor = null) => {
 	//   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
 
