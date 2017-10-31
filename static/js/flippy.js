@@ -160,10 +160,6 @@
 	// const _flipPage = (pageNo) => {
 	// 	_book.currentPage = pageNo
 
-	// 	_setView(_book.currentPage)
-
-	// 	_setRange(_book.currentPage)
-
 	// 	_printBook()
 	// }
 
@@ -269,11 +265,8 @@
 	const _handleMouseOver = (event) => {
 		switch (event.target.nodeName) {
 		case 'A':
-			console.log('a')
 			break
 		case 'DIV':
-			console.log('div')
-			console.log(_book.plotter.side)
 			break
 		default:
 			break
@@ -291,9 +284,8 @@
 		_printGeometricalPremise()
 		_setUpThePlot(event) // :D
 
-		if (_book.state.isZoomed) {
-			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 200ms;`
-		}
+		if (_book.state.isZoomed) _book.node.style = _panAround() 
+		
 
 		if (_book.state.isFlippable && event.target.nodeName !== 'A') {
 			console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
@@ -306,8 +298,6 @@
 	}
 
 	const _handleMouseClicks = (event) => {
-		if (_book.state.isZoomed) return
-
 		switch (event.target.nodeName) {
 		case 'A':
 			break
@@ -320,128 +310,25 @@
 	let [mouseDownOnPageDiv, memory] = [false]
 
 	const _handleMouseDown = (event) => {
-		if (_book.state.isZoomed) return
-		_book.state.isFlippable = true
     
-		switch (event.target.nodeName) {
-		case 'A':
-			mouseDownOnPageDiv = false
-			console.log('Execute partial flipping')
-			break
-		case 'DIV':
-			mouseDownOnPageDiv = true
-			let currentIndex = parseInt(_book.currentPage) - 1
-			let [displayablePageIndices, removablePageIndices] = []
-
-			memory = _book.plotter.side
-
-			switch (_book.plotter.side) {
-			case 'left':
-				switch (_book.mode) {
-				case 'portrait':
-					displayablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-					removablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-					break
-				case 'landscape':
-					_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 4
-					_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 1
-
-					displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-					removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
-					_book.flippablePages = [_book.currentViewIndices[0]+1, `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-					break
-				default:
-					break
-				}
-				break
-			case 'right':
-				switch (_book.mode) {
-				case 'portrait':
-					displayablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-					removablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-					break
-				case 'landscape':
-					_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 1
-					_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 4
-
-					displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-					removablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-
-					_book.flippablePages = [_book.currentViewIndices[1]+1, `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
-					break
-				default:
-					break
-				}
-				break
-			default:
-				break
-			}
-
-			displayablePageIndices.forEach(index => {
-				_book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
-				_book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
-
-				let ζ = null
-
-				switch (memory) {
-				case 'left':
-					ζ = isOdd(parseInt(index)) ? 6 : 2
-					break
-				case 'right':
-					ζ = isEven(parseInt(index)) ? 6 : 2
-					break
-				default:
-					break
-				}
-				_book.node.getElementsByClassName(index)[0].style.zIndex = ζ
-			})
-
-			removablePageIndices.forEach(index => {
-				_removeElement(index)
-			})
-			break
-		default:
-			console.log('outside')
-			break
-		}
 	}
 
 	const _handleMouseUp = (event) => {
-		if (!mouseDownOnPageDiv) return
-
 		switch (event.target.nodeName) {
 		case 'A':
 			console.log('Click event is complete. Pass the buck around.')
 			break
 		case 'DIV':
-			_book.state.isFlippable = false
-			mouseDownOnPageDiv = false
-			_attachSidePages(memory)
-			_book.flippablePages = []
 			break
 		default:
 		}
 	}
 
 	const _handleMouseDoubleClick = (event) => {
-		if (!_book.settings.zoom) return
 		switch (event.target.nodeName) {
 		case 'A':
 			break
 		case 'DIV':
-			if (_book.state.isZoomed) {
-				_printElementsToDOM('buttons', _book.buttons)
-				_book.state.isZoomed = false
-				_book.state.isFlippable = true
-				_book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
-			} else {
-				_removeElement('classArrow-controls')
-				_book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 500ms; will-change: transform;`
-				_book.state.isZoomed = true
-				_book.state.isFlippable = false
-			}
 			break
 		default:
 		}
@@ -521,6 +408,8 @@
 	//     console.log('distance', fingerDistance)
 
 	// }
+  
+	const _panAround = () => `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 200ms;`
   
 	/***********************************
 	*********** Print2DOM  *************
@@ -661,76 +550,6 @@
 	//     // console.log('newCurrentPage', newCurrentPage)
 	// }  
 
-
-	const _attachSidePages = memory => {
-		let currentIndex = parseInt(_book.currentPage) - 1
-		let pageIndices = []
-
-		switch (memory) {
-		case 'left':
-			_printElementsToDOM('rightPages', _book.plotter.sidePagesRight)
-
-			switch (_book.mode) {
-			case 'portrait':
-				pageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-				break
-			case 'landscape':
-				_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
-				_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
-
-				pageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-				break
-			default:
-				break
-			}
-			break
-		case 'right':
-			_printElementsToDOM('leftPages', _book.plotter.sidePagesLeft)
-			switch (_book.mode) {
-			case 'portrait':
-				pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
-				break
-			case 'landscape':
-				_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
-				_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
-
-				pageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
-				break
-			default:
-				break
-			}
-			break
-		case 'default':
-			break
-		}
-
-		pageIndices.forEach(index => {
-			_book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
-			_book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
-
-			let ζ = null
-
-			switch (memory) {
-			case 'left':
-				ζ = isOdd(parseInt(index)) ? 2 : 1
-				break
-			case 'right':
-				ζ = isEven(parseInt(index)) ? 2 : 1
-				break
-			default:
-				break
-			}
-
-			_book.node.getElementsByClassName(index)[0].style.zIndex = ζ
-		})
-	}
-
-	const _removeElement = (className) => {
-		_book.node.getElementsByClassName(className).remove()
-	}
-
 	/**********************************/
 	/** ******* Helper methods *********/
 	/**********************************/
@@ -756,11 +575,8 @@
 	const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
 		_removeClassesFromElem(pageObj, 'page')
 		let classes = `promoted inner page-${parseInt(currentIndex) + 1}`
-
 		classes += isEven(currentIndex) ? 'odd' : 'even'
-
 		_addClassesToElem(pageObj, classes)
-
 		let wrappedHtml = _wrapHtml(pageObj, currentIndex)
 		return wrappedHtml
 	}
@@ -891,19 +707,18 @@
   
 	// }
     
-	const bezierTimeCurve = ( ) => { return }
+	const bezierCurve = ( ) => {  }
   
 
   
 	const _setUpThePlot = (event)   => {
 		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'    
 		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'    
+		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'    
 		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`)
 		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x)  // x-coord from origin.
-		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y)  // y-coord from origin.
-    
-		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'    
+		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y)  // y-coord from origin.  
 	}
 
 	const _printGeometricalPremise = () => {
@@ -1014,3 +829,174 @@
 		}
 	}
 }))(navigator, window, document)
+
+
+
+
+// switch (event.target.nodeName) {
+//   case 'A':
+//     mouseDownOnPageDiv = false
+//     console.log('Execute partial flipping')
+//     break
+//   case 'DIV':
+//     mouseDownOnPageDiv = true
+//     let currentIndex = parseInt(_book.currentPage) - 1
+//     let [displayablePageIndices, removablePageIndices] = []
+
+//     memory = _book.plotter.side
+
+//     switch (_book.plotter.side) {
+//     case 'left':
+//       switch (_book.mode) {
+//       case 'portrait':
+//         displayablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//         removablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+//         break
+//       case 'landscape':
+//         _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 4
+//         _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 1
+
+//         displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//         removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+
+//         _book.flippablePages = [_book.currentViewIndices[0]+1, `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//         break
+//       default:
+//         break
+//       }
+//       break
+//     case 'right':
+//       switch (_book.mode) {
+//       case 'portrait':
+//         displayablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+//         removablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//         break
+//       case 'landscape':
+//         _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 1
+//         _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 4
+
+//         displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+//         removablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+
+//         _book.flippablePages = [_book.currentViewIndices[1]+1, `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+
+//         break
+//       default:
+//         break
+//       }
+//       break
+//     default:
+//       break
+//     }
+
+//     displayablePageIndices.forEach(index => {
+//       _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
+//       _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
+
+//       let ζ = null
+
+//       switch (memory) {
+//       case 'left':
+//         ζ = isOdd(parseInt(index)) ? 6 : 2
+//         break
+//       case 'right':
+//         ζ = isEven(parseInt(index)) ? 6 : 2
+//         break
+//       default:
+//         break
+//       }
+//       _book.node.getElementsByClassName(index)[0].style.zIndex = ζ
+//     })
+
+//     removablePageIndices.forEach(index => {
+//       _removeElement(index)
+//     })
+//     break
+//   default:
+//     console.log('outside')
+//     break
+//   }
+
+
+// const _attachSidePages = memory => {
+//   let currentIndex = parseInt(_book.currentPage) - 1
+//   let pageIndices = []
+
+//   switch (memory) {
+//   case 'left':
+//     _printElementsToDOM('rightPages', _book.plotter.sidePagesRight)
+
+//     switch (_book.mode) {
+//     case 'portrait':
+//       pageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//       break
+//     case 'landscape':
+//       _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
+//       _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
+
+//       pageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+//       break
+//     default:
+//       break
+//     }
+//     break
+//   case 'right':
+//     _printElementsToDOM('leftPages', _book.plotter.sidePagesLeft)
+//     switch (_book.mode) {
+//     case 'portrait':
+//       pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+
+//       break
+//     case 'landscape':
+//       _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
+//       _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
+
+//       pageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
+
+//       break
+//     default:
+//       break
+//     }
+//     break
+//   case 'default':
+//     break
+//   }
+
+//   pageIndices.forEach(index => {
+//     _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
+//     _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
+
+//     let ζ = null
+
+//     switch (memory) {
+//     case 'left':
+//       ζ = isOdd(parseInt(index)) ? 2 : 1
+//       break
+//     case 'right':
+//       ζ = isEven(parseInt(index)) ? 2 : 1
+//       break
+//     default:
+//       break
+//     }
+
+//     _book.node.getElementsByClassName(index)[0].style.zIndex = ζ
+//   })
+// }
+
+// const _removeElement = (className) => {
+//   _book.node.getElementsByClassName(className).remove()
+// }
+
+
+
+// if (_book.state.isZoomed) {
+//   _printElementsToDOM('buttons', _book.buttons)
+//   _book.state.isZoomed = false
+//   _book.state.isFlippable = true
+//   _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
+// } else {
+//   _removeElement('classArrow-controls')
+//   _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 500ms; will-change: transform;`
+//   _book.state.isZoomed = true
+//   _book.state.isFlippable = false
+// }
