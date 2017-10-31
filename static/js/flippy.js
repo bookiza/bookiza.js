@@ -12,7 +12,7 @@
 
 	class Book {
 		constructor () {
-			this.state = { 'isInitializing': true, 'isFlipping': false, 'isZooming': false, 'isZoomed': false, 'isPeeling': false, 'isPeeled': false }
+			this.state = { 'isInitializing': true, 'isZooming': false, 'isZoomed': false, 'isPeeling': false, 'isPeeled': false, 'isFlippable': false }
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			this.plotter = {
 				'origin': JSON.parse(`{
@@ -21,18 +21,17 @@
 				}`)
 			}
 		}
-
 		// PROPERTIES
 		dimensions () {
 			return JSON.parse(
 				`{
-						"width" : "${_book.plotter.bounds.width}",
-						"height" : "${_book.plotter.bounds.height}"
+          "width" : "${_book.plotter.bounds.width}",
+          "height" : "${_book.plotter.bounds.height}"
 				}`)
 		}
 
 		view () {
-			return _book.currentView
+			return _book.currentViewIndices.map(i => i + 1) // Array of page numbers in View.
 		}
 
 		page () {
@@ -124,7 +123,7 @@
 		_removeChildren(_book.node)
 
 		_book.currentPage = _setCurrentPage(settings.startPage)
-		_book.currentView = _setViewIndices(_book.currentPage, _book.mode)
+		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
 		_applyEventListenersOnBook(_book.node)
 		_book.state.isInitializing = false
@@ -133,7 +132,7 @@
 
 	_viewer.onChange('(orientation: landscape)', match => {
 		_book.mode = match ? 'landscape' : 'portrait'
-		_book.currentView = _setViewIndices(_book.currentPage, _book.mode)
+		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
 	})
 
@@ -241,13 +240,13 @@
 		})
 
 		const _applyBookEvents = () => {
-			mouseEvents.forEach(event => {
+			mouseEvents.map(event => {
 				delegateElement.addEventListener(event, handler)
 			})
 		}
 
 		const _removeBookEvents = () => {
-			mouseEvents.forEach(event => {
+			mouseEvents.map(event => {
 				delegateElement.removeEventListener(event, handler)
 			})
 		}
@@ -256,30 +255,12 @@
 		w.addEventListener('mouseout', _removeBookEvents)
 
 		if (isTouch()) {
-			touchEvents.forEach(event => {
+			touchEvents.map(event => {
 				delegateElement.addEventListener(event, handler)
 			})
 		}
-		_printBook()    
+		_printBook()
 	}
-
-	/********************************/
-	/** ********** Cone math *********/
-	/********************************/
-
-	const π = Math.PI
-
-	// Definitions:
-	// const quadrants = ['I', 'II', 'III', 'IV']
-	// const direction = ['forward', 'backward']
-	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
-	// ε = Epsilon = `y-distance` in pixels from origin of the book.
-	// let Δ, θ, ω, Ω, α, β, δ = 0
-
-	// Cone Angle λ (= )
-	// const λ = (angle) => {
-
-	// }
 
 	/****************************************/
 	/** ********** Event handlers ************/
@@ -306,28 +287,16 @@
 	}
 
 	const _handleMouseMove = (event) => {
-		_printStateValues(event) // remove finally
-
-		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
-
-		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
-
-		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`)
-
-		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
-
-		_book.plotter.μ = (2 / parseInt(_book.plotter.bounds.width) - parseInt(_book.plotter.currentPointerPosition.x)) / 2 // x-distance from origin.
-
-		_book.plotter.ε = (2 / parseInt(_book.plotter.bounds.height) - parseInt(_book.plotter.currentPointerPosition.y)) / 2 // y-distance from origin.
-
-		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
+		_printStateValues(event)
+		_printGeometricalPremise()
+		_setUpThePlot(event) // :D
 
 		if (_book.state.isZoomed) {
 			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 200ms;`
 		}
 
 		if (_book.state.isFlippable && event.target.nodeName !== 'A') {
-			// console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
+			console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
 			// console.log(`mu ${_book.plotter.μ}px`)
 			// console.log(`epsilon ${_book.plotter.ε}px`)
 
@@ -374,13 +343,13 @@
 					removablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 					break
 				case 'landscape':
-					_book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 4
-					_book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 1
+					_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 4
+					_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 1
 
 					displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 					removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
-					_book.flippablePages = [_book.currentView[0], `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
+					_book.flippablePages = [_book.currentViewIndices[0]+1, `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 					break
 				default:
 					break
@@ -393,13 +362,13 @@
 					removablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 					break
 				case 'landscape':
-					_book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 1
-					_book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 4
+					_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 1
+					_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 4
 
 					displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 					removablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
-					_book.flippablePages = [_book.currentView[1], `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
+					_book.flippablePages = [_book.currentViewIndices[1]+1, `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 
 					break
 				default:
@@ -463,7 +432,7 @@
 			break
 		case 'DIV':
 			if (_book.state.isZoomed) {
-				_printElements('buttons', _book.buttons)
+				_printElementsToDOM('buttons', _book.buttons)
 				_book.state.isZoomed = false
 				_book.state.isFlippable = true
 				_book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
@@ -558,20 +527,18 @@
 	***********************************/
 
 	const _printBook = () => {
-		// Populate the pages first
-
-		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentView, ', rightPages:', _book.range.rightPageIndices, ' ]')
+		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentViewIndices, ', rightPages:', _book.range.rightPageIndices, ' ]')
     
-		_printElements('buttons', _book.buttons)
+		_printElementsToDOM('buttons', _book.buttons)
         
-		_printElements('view', _book.currentView.map(index => _book.pages[`${index}`]))
+		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
 
-		_printElements('rightPages', _book.range.rightPageIndices.map(index => _book.pages[`${index}`]))
+		_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.pages[`${index}`]))
 
-		_printElements('leftPages', _book.range.leftPageIndices.map(index => _book.pages[`${index}`]))
+		_printElementsToDOM('leftPages', _book.range.leftPageIndices.map(index => _book.pages[`${index}`]))
 	}
 
-	const _printElements = (type, elements) => {
+	const _printElementsToDOM = (type, elements) => {
 		const docfrag = d.createDocumentFragment()
 		switch (type) {
 		case 'buttons':
@@ -701,15 +668,15 @@
 
 		switch (memory) {
 		case 'left':
-			_printElements('rightPages', _book.plotter.sidePagesRight)
+			_printElementsToDOM('rightPages', _book.plotter.sidePagesRight)
 
 			switch (_book.mode) {
 			case 'portrait':
 				pageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 				break
 			case 'landscape':
-				_book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 3
-				_book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 3
+				_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
+				_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
 
 				pageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 				break
@@ -718,15 +685,15 @@
 			}
 			break
 		case 'right':
-			_printElements('leftPages', _book.plotter.sidePagesLeft)
+			_printElementsToDOM('leftPages', _book.plotter.sidePagesLeft)
 			switch (_book.mode) {
 			case 'portrait':
 				pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 
 				break
 			case 'landscape':
-				_book.node.getElementsByClassName(_book.currentView[1])[0].style.zIndex = 3
-				_book.node.getElementsByClassName(_book.currentView[0])[0].style.zIndex = 3
+				_book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
+				_book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
 
 				pageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
@@ -771,7 +738,9 @@
 	const isEven = number => number === parseFloat(number) ? !(number % 2) : void 0
 
 	const isOdd = number => Math.abs(number % 2) === 1
-
+  
+	const sign = (x) =>  typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN
+  
 	const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
 	const _leftCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
@@ -904,10 +873,55 @@
 	}
 
 
+	/********************************/
+	/** ********** Cone math *********/
+	/********************************/
+
+	const π = Math.PI
+  
+	// Definitions:
+	// const quadrants = ['I', 'II', 'III', 'IV']
+	// const direction = ['forward', 'backward']
+	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
+	// ε = Epsilon = `y-distance` in pixels from origin of the book.
+	// let Δ, θ, ω, Ω, α, β, δ = 0
+  
+	// Cone Angle λ (= )
+	// const λ = (angle) => {
+  
+	// }
+    
+	const bezierTimeCurve = ( ) => { return }
+  
+
+  
+	const _setUpThePlot = (event)   => {
+		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'    
+		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'    
+		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`)
+		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
+		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x)  // x-coord from origin.
+		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y)  // y-coord from origin.
+    
+		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'    
+	}
+
+	const _printGeometricalPremise = () => {
+		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+		d.getElementById('pheight').textContent = _book.plotter.bounds.height
+		d.getElementById('ptop').textContent = _book.plotter.bounds.top
+		d.getElementById('pleft').textContent = _book.plotter.bounds.left
+		d.getElementById('pright').textContent = _book.plotter.bounds.right
+		d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+		d.getElementById('originX').textContent = _book.plotter.origin.x
+		d.getElementById('originY').textContent = _book.plotter.origin.y
+	}
+
 	const _printStateValues = (event) => {
 		d.getElementById('xaxis').textContent = event.pageX
 		d.getElementById('yaxis').textContent = event.pageY
 	}
+
 
 	// const _getVendor = (vendor = null) => {
 	//   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
