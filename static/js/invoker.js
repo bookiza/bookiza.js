@@ -3,7 +3,7 @@
 /** ***** Initialize  Flippy *******/
 /**********************************/
 
-const settings = { duration: 600, animate: true, peel: true, zoom: true, startPage: 14 }
+const settings = { duration: 600, animate: true, peel: true, zoom: true, startPage: 1 }
 
 const node = document.getElementById('book')
 
@@ -35,9 +35,9 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Book length:', booklength)
 
-// let currentPage = superbook.flippy('page')
+let currentPage = superbook.flippy('page')
 
-// console.log('Current page:', currentPage)
+console.log('Current page:', currentPage)
 
 // let view = superbook.flippy('view')
 
