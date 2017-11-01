@@ -12,7 +12,7 @@
 
 	class Book {
 		constructor () {
-			this.state = { 'isInitializing': true, 'isFlippable': true, 'isZoomable': true, 'isPeelable': false, 'isZoomed': false,  'isPeeled': false }
+			this.state = { 'isInitializing': true, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false,  'isPeeled': false }
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			this.plotter = {
 				'origin': JSON.parse(`{
@@ -161,6 +161,19 @@
 	// 	_printBook()
 	// }
 
+	// const _next = (increment) => {
+	//     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+	//     // console.log('newCurrentPage', newCurrentPage)
+	// }
+
+	// const _previous = (increment) => {
+	//     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
+
+	//     // console.log('newCurrentPage', newCurrentPage)
+	// }
+
+
 	/**********************************/
 	/********** Events / Touch ********/
 	/**********************************/
@@ -286,9 +299,9 @@
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
 
-		if (!_book.state.isFlippable && event.target.nodeName !== 'A') {
-			_book.node.getElementsByClassName(_book.flippablePages[0])[0].children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-			_book.node.getElementsByClassName(_book.flippablePages[1])[0].children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
+		if (_book.state.isFlipping && event.target.nodeName !== 'A') {
+			// _book.node.getElementsByClassName(_book.flippablePages[0])[0].children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+			// _book.node.getElementsByClassName(_book.flippablePages[1])[0].children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
 		}
 	}
 
@@ -309,6 +322,8 @@
 			console.log('Mouse down on anchor')
 			break
 		case 'DIV':
+			_book.state.isFlipping = !_book.state.isFlipping
+			_renderOrUpdateBook()
 			break
 		default:
 		}
@@ -339,7 +354,6 @@
 
 	/* Don't worry about events below */
 	const _handleWheelEvent = (event) => {
-		// TODO: Equivalent left/right swipe.
 		// console.log(event)
 	}
 
@@ -356,10 +370,7 @@
 	}
 
 	const _handleTouchStart = (event) => {
-		if (event.touches.length === 2) {
-			// _book.zoom = true
-			// _pinchZoom(event, _book.zoom)
-		}
+		if (event.touches.length === 2) { }
 		console.log(event.touches.length)
 	}
 
@@ -395,7 +406,11 @@
 	const transitionEvent = _whichTransitionEvent()
 
 	transitionEvent && d.addEventListener(transitionEvent, (event) => {
-		console.log(event)
+    
+    
+
+
+    
 	})
 
 	/**********************************/
@@ -408,7 +423,7 @@
 	// 									(event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
 
 	const _panAround = () =>
-								`transform: scale3d(1.2, 1.2, 1.2)
+		`transform: scale3d(1.2, 1.2, 1.2)
 								translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
 	   						backface-visibility: hidden; -webkit-filter: blur(0);
 	   						will-change: transform;
@@ -537,20 +552,6 @@
 		return pageObj
 	}
 
-	const _renderOrUpdateBook = () => {
-		if (_book.state.isZoomed) {
-			  _book.node.style = `transform: scale3d(1.2, 1.2, 1.2)
-			  										translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
-			  										backface-visibility: hidden;
-			  										transition: all ${_book.settings.duration}ms;
-			  										will-change: transform;`
-			  _removeElementsFromDOM('arrow-controls')
-			} else {
-			  _printElementsToDOM('buttons', _book.buttons)
-			  _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
-			}
-	}
-
 	const _printGeometricalPremise = () => {
 		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
 		d.getElementById('pheight').textContent = _book.plotter.bounds.height
@@ -571,18 +572,21 @@
 	*********** DOM/Manipulate **********
 	*************************************/
 
-	// const _next = (increment) => {
-	//     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
-
-	//     // console.log('newCurrentPage', newCurrentPage)
-	// }
-
-	// const _previous = (increment) => {
-	//     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
-
-	//     // console.log('newCurrentPage', newCurrentPage)
-	// }
-
+	const _renderOrUpdateBook = () => {
+		console.log(_book.state)
+		if (_book.state.isZoomed) {
+			  _book.node.style = `transform: scale3d(1.2, 1.2, 1.2)
+			  										translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+			  										backface-visibility: hidden;
+			  										transition: all ${_book.settings.duration}ms;
+			  										will-change: transform;`
+			  _removeElementsFromDOM('arrow-controls')
+		} else {
+			  _printElementsToDOM('buttons', _book.buttons)
+			  _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
+		}
+	}
+  
 	/**********************************/
 	/** ******* Helper methods *********/
 	/**********************************/
