@@ -12,7 +12,7 @@
 
 	class Book {
 		constructor () {
-			this.state = { 'isInitializing': true, 'isZooming': false, 'isZoomed': false, 'isPeeling': false, 'isPeeled': false, 'isFlippable': false }
+			this.state = { 'isInitializing': true, 'isFlippable': true, 'isZoomable': true, 'isPeelable': false, 'isZoomed': false,  'isPeeled': false }
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			this.plotter = {
 				'origin': JSON.parse(`{
@@ -109,7 +109,7 @@
 
 	let _book = new Book()
 
-	const _initializeSuperbook = (node, settings = { speed: 500, animation: true, peel: true, zoom: true }) => {
+	const _initializeSuperbook = (node, settings = { duration: 500, animation: true, peel: true, zoom: true }) => {
 		console.log(_book.state)
 		_book.node = node
 		_book.settings = settings
@@ -126,8 +126,6 @@
 		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
 		_applyEventListenersOnBook(_book.node)
-		_book.state.isInitializing = false
-    
 	}
 
 	_viewer.onChange('(orientation: landscape)', match => {
@@ -255,6 +253,7 @@
 				delegateElement.addEventListener(event, handler)
 			})
 		}
+		_book.state.isInitializing = false
 		_printBook()
 	}
 
@@ -284,14 +283,10 @@
 		_printGeometricalPremise()
 		_setUpThePlot(event) // :D
 
-		if (_book.state.isZoomed) _book.node.style = _panAround() 
-		
+		if (_book.state.isZoomed) _book.node.style = _panAround()
 
-		if (_book.state.isFlippable && event.target.nodeName !== 'A') {
-			console.log(`rotateY(${_degrees(_book.plotter.θ)}deg)`)
-			// console.log(`mu ${_book.plotter.μ}px`)
-			// console.log(`epsilon ${_book.plotter.ε}px`)
 
+		if (!_book.state.isFlippable && event.target.nodeName !== 'A') {
 			_book.node.getElementsByClassName(_book.flippablePages[0])[0].children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
 			_book.node.getElementsByClassName(_book.flippablePages[1])[0].children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
 		}
@@ -302,21 +297,27 @@
 		case 'A':
 			break
 		case 'DIV':
+		  console.log('click')
 			break
 		default:
 		}
 	}
 
-	let [mouseDownOnPageDiv, memory] = [false]
-
 	const _handleMouseDown = (event) => {
-    
+		switch (event.target.nodeName) {
+		case 'A':
+			console.log('Mouse down on anchor')
+			break
+		case 'DIV':
+			break
+		default:
+		}
 	}
 
 	const _handleMouseUp = (event) => {
 		switch (event.target.nodeName) {
 		case 'A':
-			console.log('Click event is complete. Pass the buck around.')
+			console.log('Mouse up on anchor')
 			break
 		case 'DIV':
 			break
@@ -329,6 +330,8 @@
 		case 'A':
 			break
 		case 'DIV':
+			_book.state.isZoomed = !_book.state.isZoomed
+			_renderOrUpdateBook()
 			break
 		default:
 		}
@@ -392,34 +395,34 @@
 	const transitionEvent = _whichTransitionEvent()
 
 	transitionEvent && d.addEventListener(transitionEvent, (event) => {
-		console.log('Transition Ended: Trigger `flipped`, `zoomed` events here', event)
+		console.log(event)
 	})
 
 	/**********************************/
 	/** ******* Behavior methods *******/
 	/**********************************/
 
-	// const _pinchZoom = (event, zoom) => {
-	//     const fingerDistance =
-	//         Math.sqrt(
-	//             (event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
-	//             (event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
+	// const pinchZoomFingerDistance = (event) =>
+	// 							Math.sqrt(
+	// 									(event.touches[0].x - event.touches[1].x) * (event.touches[0].x - event.touches[1].x) +
+	// 									(event.touches[0].y - event.touches[1].y) * (event.touches[0].y - event.touches[1].y))
 
-	//     console.log('distance', fingerDistance)
+	const _panAround = () =>
+								`transform: scale3d(1.2, 1.2, 1.2)
+								translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+	   						backface-visibility: hidden; -webkit-filter: blur(0);
+	   						will-change: transform;
+	   						transition: all 10ms;`
 
-	// }
-  
-	const _panAround = () => `transform: scale3d(1.2, 1.2, 1.2) translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0); backface-visibility: hidden; -webkit-filter: blur(0); will-change: transform; transition: all 200ms;`
-  
 	/***********************************
 	*********** Print2DOM  *************
 	***********************************/
 
 	const _printBook = () => {
 		console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentViewIndices, ', rightPages:', _book.range.rightPageIndices, ' ]')
-    
+
 		_printElementsToDOM('buttons', _book.buttons)
-        
+
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
 
 		_printElementsToDOM('rightPages', _book.range.rightPageIndices.map(index => _book.pages[`${index}`]))
@@ -534,6 +537,36 @@
 		return pageObj
 	}
 
+	const _renderOrUpdateBook = () => {
+		if (_book.state.isZoomed) {
+			  _book.node.style = `transform: scale3d(1.2, 1.2, 1.2)
+			  										translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
+			  										backface-visibility: hidden;
+			  										transition: all ${_book.settings.duration}ms;
+			  										will-change: transform;`
+			  _removeElementsFromDOM('arrow-controls')
+			} else {
+			  _printElementsToDOM('buttons', _book.buttons)
+			  _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
+			}
+	}
+
+	const _printGeometricalPremise = () => {
+		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
+		d.getElementById('pheight').textContent = _book.plotter.bounds.height
+		d.getElementById('ptop').textContent = _book.plotter.bounds.top
+		d.getElementById('pleft').textContent = _book.plotter.bounds.left
+		d.getElementById('pright').textContent = _book.plotter.bounds.right
+		d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
+		d.getElementById('originX').textContent = _book.plotter.origin.x
+		d.getElementById('originY').textContent = _book.plotter.origin.y
+	}
+
+	const _printStateValues = (event) => {
+		d.getElementById('xaxis').textContent = event.pageX
+		d.getElementById('yaxis').textContent = event.pageY
+	}
+
 	/************************************
 	*********** DOM/Manipulate **********
 	*************************************/
@@ -548,7 +581,7 @@
 	//     // newCurrentPage = parseInt(_book.currentPage) + parseInt(increment)
 
 	//     // console.log('newCurrentPage', newCurrentPage)
-	// }  
+	// }
 
 	/**********************************/
 	/** ******* Helper methods *********/
@@ -557,9 +590,9 @@
 	const isEven = number => number === parseFloat(number) ? !(number % 2) : void 0
 
 	const isOdd = number => Math.abs(number % 2) === 1
-  
+
 	const sign = (x) =>  typeof x === 'number' ? x ? x < 0 ? -1 : 1 : x === x ? 0 : NaN : NaN
-  
+
 	const isTouch = () => (('ontouchstart' in w) || (n.MaxTouchPoints > 0) || (n.msMaxTouchPoints > 0))
 
 	const _leftCircularIndex = (currentIndex, indice) => (parseInt(currentIndex) - parseInt(indice) < 0) ? parseInt(_book.pages.length) + (parseInt(currentIndex) - parseInt(indice)) : (parseInt(currentIndex) - parseInt(indice))
@@ -571,6 +604,10 @@
 	const _degrees = radians => radians / π * 180
 
 	const _removeChildren = node => { node.innerHTML = '' }
+
+	const _removeElementsFromDOM = (className) => {
+	  _book.node.getElementsByClassName(className).remove()
+	}
 
 	const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
 		_removeClassesFromElem(pageObj, 'page')
@@ -594,7 +631,7 @@
 	}
 
 	const _setGeometricalPremise = (node) => node.getBoundingClientRect()
-  
+
 	const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(_book.node) }
 
 	w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise upon resize.
@@ -617,7 +654,7 @@
 					***/
 				let q = (parseInt(currentPage) + 1) > parseInt(_book.pages.length) ? 1 : (parseInt(currentPage) + 1) % parseInt(_book.pages.length)
 				return [currentIndex, q - 1]
-				
+
 			} else {
 				let p = (parseInt(currentPage) - 1) < 1 ? _book.pages.length : (parseInt(currentPage) - 1) % parseInt(_book.pages.length)
 				return [p - 1, currentIndex]
@@ -694,49 +731,30 @@
 	/********************************/
 
 	const π = Math.PI
-  
+
 	// Definitions:
 	// const quadrants = ['I', 'II', 'III', 'IV']
 	// const direction = ['forward', 'backward']
 	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
 	// ε = Epsilon = `y-distance` in pixels from origin of the book.
 	// let Δ, θ, ω, Ω, α, β, δ = 0
-  
+
 	// Cone Angle λ (= )
 	// const λ = (angle) => {
-  
-	// }
-    
-	const bezierCurve = ( ) => {  }
-  
 
-  
+	// }
+
+	const bezierCurve = ( ) => {  }
+
 	const _setUpThePlot = (event)   => {
-		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'    
-		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'    
-		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'    
+		_book.plotter.side = ((event.pageX - _book.plotter.origin.x) > 0) ? 'right' : 'left'
+		_book.plotter.region = ((event.pageY - _book.plotter.origin.y) > 0) ? 'lower' : 'upper'
+		_book.plotter.quadrant = _book.plotter.side === 'right' ? (_book.plotter.region === 'upper') ? 'I' : 'IV' : (_book.plotter.region === 'upper') ? 'II' : 'III'
 		_book.plotter.currentPointerPosition = JSON.parse(`{ "x": "${event.pageX - _book.plotter.origin.x}", "y": "${event.pageY - _book.plotter.origin.y}" }`)
 		_book.plotter.θ = Math.acos(parseInt(_book.plotter.currentPointerPosition.x) * 2 / parseInt(_book.plotter.bounds.width)) // θ in radians
 		_book.plotter.μ = parseInt(_book.plotter.currentPointerPosition.x)  // x-coord from origin.
-		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y)  // y-coord from origin.  
+		_book.plotter.ε = parseInt(_book.plotter.currentPointerPosition.y)  // y-coord from origin.
 	}
-
-	const _printGeometricalPremise = () => {
-		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
-		d.getElementById('pheight').textContent = _book.plotter.bounds.height
-		d.getElementById('ptop').textContent = _book.plotter.bounds.top
-		d.getElementById('pleft').textContent = _book.plotter.bounds.left
-		d.getElementById('pright').textContent = _book.plotter.bounds.right
-		d.getElementById('pbottom').textContent = _book.plotter.bounds.bottom
-		d.getElementById('originX').textContent = _book.plotter.origin.x
-		d.getElementById('originY').textContent = _book.plotter.origin.y
-	}
-
-	const _printStateValues = (event) => {
-		d.getElementById('xaxis').textContent = event.pageX
-		d.getElementById('yaxis').textContent = event.pageY
-	}
-
 
 	// const _getVendor = (vendor = null) => {
 	//   const prefixes = ['Moz', 'Webkit', 'Khtml', 'O', 'ms']
@@ -983,20 +1001,6 @@
 //   })
 // }
 
-// const _removeElement = (className) => {
-//   _book.node.getElementsByClassName(className).remove()
-// }
 
 
 
-// if (_book.state.isZoomed) {
-//   _printElementsToDOM('buttons', _book.buttons)
-//   _book.state.isZoomed = false
-//   _book.state.isFlippable = true
-//   _book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 500ms;'
-// } else {
-//   _removeElement('classArrow-controls')
-//   _book.node.style = `transform: scale3d(1.2, 1.2, 1.2) translate3d(0, 0, 0); transition: all 500ms; will-change: transform;`
-//   _book.state.isZoomed = true
-//   _book.state.isFlippable = false
-// }
