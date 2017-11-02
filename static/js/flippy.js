@@ -16,19 +16,15 @@
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
 			this.direction = 'forward'
 			this.plotter = {
-				'origin': JSON.parse(`{
-					"x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}",
-					"y": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}"
-				}`)
+				'origin': {
+					"x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
+					"y": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}`
+				}
 			}
 		}
 		// PROPERTIES
 		dimensions () {
-			return JSON.parse(
-				`{
-					"width" : "${_book.plotter.bounds.width}",
-					"height" : "${_book.plotter.bounds.height}"
-				}`)
+			return { "width" : `${_book.plotter.bounds.width}`, "height" : `${_book.plotter.bounds.height}` }
 		}
 
 		view () {
@@ -293,7 +289,9 @@
 		_printStateValues(event)
 		_printGeometricalPremise()
 		_setUpThePlot(event) // :D
+		_book.flippablePageIds = _determineFlippablePageIds()
 
+		console.log(_book.flippablePageIds)
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
 		if (_book.state.isFlipping && event.target.nodeName !== 'A') {
@@ -303,17 +301,6 @@
 			// })
 			// d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
 			// d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
-		}
-	}
-
-	const _handleMouseClicks = (event) => {
-		switch (event.target.nodeName) {
-		case 'A':
-			break
-		case 'DIV':
-			console.log('click')
-			break
-		default:
 		}
 	}
 
@@ -347,9 +334,25 @@
 		}
 	}
 
+	const _handleMouseClicks = (event) => {
+		switch (event.target.nodeName) {
+		case 'A':
+			_book.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
+			_book.state.eventsCache.push([event, _book.direction])
+			break
+		case 'DIV':
+			console.log('click')
+			break
+		default:
+		}
+	}
+
+
 	const _handleMouseDoubleClick = (event) => {
 		switch (event.target.nodeName) {
 		case 'A':
+			_book.direction = (event.target.id) === 'next' ? 'forward' : 'backward'
+			_book.state.eventsCache.push([event, _book.direction])
 			break
 		case 'DIV':
 			_book.state.isZoomed = !_book.state.isZoomed
@@ -361,9 +364,8 @@
 
 	/* Don't worry about events below */
 	const _handleWheelEvent = (event) => {
-		 (event.deltaY < 0) ? console.log('scrolling up') : console.log('scrolling down')
-	   _book.state.eventsCache.push(event)
-	   console.log(_book.state.eventsCache)
+		_book.direction = (event.deltaY < 0) ? 'backward' : 'forward'
+		_book.state.eventsCache.push([event, _book.direction])
 	}
 
 	const _handleKeyPressEvent = (event) => {
@@ -592,7 +594,6 @@
 		}
 
 		if (_book.state.isFlipping) {
-			_book.flippablePageIds = _determineFlippablePageIds()
 			_book.direction = _determineFlippingDirection()
 			console.log(_book.flippablePageIds)
 			console.log(_book.direction)
@@ -653,7 +654,16 @@
 
 	const _resetGeometricalPremise = () => { _book.plotter.bounds = _setGeometricalPremise(_book.node) }
 
-	w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise upon resize.
+	w.addEventListener('resize', _resetGeometricalPremise) // Recalibrate geometrical premise.
+
+	const _setGeometricalOrigin = () => ({
+		"x": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}`,
+		"y": `${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().height) / 2}`
+	})
+
+	const _resetGeometricalOrigin = () => { _book.plotter.origin = _setGeometricalOrigin() }
+
+	w.addEventListener('resize', _resetGeometricalOrigin) // Recalibrate geometrical origin.
 
 	const _setCurrentPage = startPage => (startPage === undefined) ? 1 : (parseInt(startPage) > 0 && parseInt(startPage) < parseInt(_book.pages.length)) ? parseInt(startPage) % parseInt(_book.pages.length) : (parseInt(startPage) % parseInt(_book.pages.length) === 0) ? parseInt(_book.pages.length) : parseInt(startPage) < 0 ? parseInt(_book.pages.length) + 1 + parseInt(startPage) % parseInt(_book.pages.length) : parseInt(startPage) % parseInt(_book.pages.length) // Cyclic array
 
@@ -913,7 +923,6 @@
 //     displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 //     removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 
-//     _book.flippablePages = [_book.currentViewIndices[0]+1, `${isEven(currentIndex) ? parseInt(_leftCircularIndex(currentIndex, 2)) + 1 : parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 //     break
 //   default:
 //     break
@@ -932,7 +941,6 @@
 //     displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
 //     removablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
 
-//     _book.flippablePages = [_book.currentViewIndices[1]+1, `${isEven(currentIndex) ? parseInt(_rightCircularIndex(currentIndex, 1)) + 1 : parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
 //     break
 //   }
 //   break
