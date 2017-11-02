@@ -120,8 +120,6 @@
 		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
 		_applyEventListenersOnBook(_book.node)
-		console.log(_book.range.rightPageIndices)
-
 	}
 
 	_viewer.onChange('(orientation: landscape)', match => {
@@ -296,14 +294,8 @@
 
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
-		if (_book.state.isFlipping && event.target.nodeName !== 'A') {
-			// _book.flippablePageIds.map(each => {
-			// 	// d.getElementById(each).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-			// 	// d.getElementById(each).children[0].animate({ transform: [`rotateY(${-_degrees(_book.plotter.θ)}deg)`], easing: 'ease-in-out'}, {duration: 1000, iterations: 1})
-			// })
-			// d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-			// d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
-		}
+		if (_book.state.isFlipping) _flipAnimation()
+
 	}
 
 	const _handleMouseDown = (event) => {
@@ -449,7 +441,7 @@
 	const _printBookToDOM = () => {
 		_removeChildren(_book.node)
 
-		// console.log('currPage:', _book.currentPage, ' [ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentViewIndices, ', rightPages:', _book.range.rightPageIndices, ' ]')
+		console.log('[ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentViewIndices, ', rightPages:', _book.range.rightPageIndices, ' ]')
 
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
@@ -521,7 +513,7 @@
 				pageObj.childNodes[0].style = cssString
 				// wrapper
 				cssString = 'float: left; left: 0; pointer-events:none; visibility: hidden;'
-				cssString += isEven(currentIndex) ? 'z-index: 1; ' : 'z-index: 0;'
+				cssString += isEven(currentIndex) ? 'z-index: 0; ' : 'z-index: 1;'
 				pageObj.style.cssText = cssString
 				break
 			}
@@ -562,6 +554,18 @@
 		}
 
 		return pageObj
+	}
+
+	const _flipAnimation = () => {
+		switch (_book.mode) {
+		case 'portrait':
+			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
+			break
+		case 'landscape':
+			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+			d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
+			break
+		}
 	}
 
 	const _printGeometricalPremise = () => {
@@ -714,36 +718,25 @@
 
 		switch (_book.mode) {
 		case 'portrait':
-
 			// let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
 			// let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
 			// let r = (currentIndex + 1 >= parseInt(_book.pages.length)) ? (currentIndex + 1) - parseInt(_book.pages.length) : (currentIndex + 1)
 			// let s = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
-
 			p = _leftCircularIndex(currentIndex, 2)
 			q = _leftCircularIndex(currentIndex, 1)
 			r = _rightCircularIndex(currentIndex, 1)
 			s = _rightCircularIndex(currentIndex, 2)
-
-			// _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-			// _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
-
 			break
-
 		case 'landscape':
 			if (isEven(parseInt(currentPage))) {
 				// let p = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
 				// let q = (currentIndex - 1 < 0) ? parseInt(_book.pages.length) + (currentIndex - 1) : (currentIndex - 1)
 				// let r = (currentIndex + 2 >= parseInt(_book.pages.length)) ? (currentIndex + 2) - parseInt(_book.pages.length) : (currentIndex + 2)
 				// let s = (currentIndex + 3 >= parseInt(_book.pages.length)) ? (currentIndex + 3) - parseInt(_book.pages.length) : (currentIndex + 3)
-
 				p = _leftCircularIndex(currentIndex, 2)
 				q = _leftCircularIndex(currentIndex, 1)
 				r = _rightCircularIndex(currentIndex, 2)
 				s = _rightCircularIndex(currentIndex, 3)
-
-				// _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-				// _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
 			} else {
 				// let p = (currentIndex - 3 < 0) ? parseInt(_book.pages.length) + (currentIndex - 3) : (currentIndex - 3)
 				// let q = (currentIndex - 2 < 0) ? parseInt(_book.pages.length) + (currentIndex - 2) : (currentIndex - 2)
@@ -753,13 +746,9 @@
 				q = _leftCircularIndex(currentIndex, 2)
 				r = _rightCircularIndex(currentIndex, 1)
 				s = _rightCircularIndex(currentIndex, 2)
-
-				// _book.sidePagesLeft = [_book.pages[`${p}`], _book.pages[`${q}`]]
-				// _book.sidePagesRight = [_book.pages[`${r}`], _book.pages[`${s}`]]
 			}
 			break
 		}
-
 		return { 'leftPageIndices': [p, q], 'rightPageIndices': [r, s] }
 	}
 
@@ -795,7 +784,11 @@
 		case 'left':
 		  switch (_book.mode) {
 		  case 'portrait':
-		  	console.log(_book.range.leftPageIndices) //
+		  	_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 3
+				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
+
 		    break
 		  case 'landscape':
 				_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
@@ -813,8 +806,9 @@
 		case 'right':
 			switch (_book.mode) {
 			case 'portrait':
-				console.log(_book.range.rightPageIndices) //
-
+		  	_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+				d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
 				break
 			case 'landscape':
 				_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index+1) })
