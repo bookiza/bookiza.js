@@ -107,7 +107,6 @@
 	let _book = new Book()
 
 	const _initializeSuperbook = (node, settings = { duration: 500, animation: true, peel: true, zoom: true }) => {
-		console.log(_book.state)
 		_book.node = node
 		_book.settings = settings
 		_book.plotter.bounds = _setGeometricalPremise(_book.node)
@@ -288,10 +287,11 @@
 	const _handleMouseMove = (event) => {
 		_printStateValues(event)
 		_printGeometricalPremise()
+
 		_setUpThePlot(event) // :D
+
 		_book.flippablePageIds = _determineFlippablePageIds()
 
-		console.log(_book.flippablePageIds)
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
 		if (_book.state.isFlipping && event.target.nodeName !== 'A') {
@@ -307,11 +307,12 @@
 	const _handleMouseDown = (event) => {
 		switch (event.target.nodeName) {
 		case 'A':
-			console.log('Mouse down on anchor')
+			console.log('Execute half flip')
 			break
 		case 'DIV':
 			if (!_book.state.isZoomed) {
 				_book.state.isFlipping = !_book.state.isFlipping
+				_book.direction = _determineFlippingDirection()
 				_renderOrUpdateBook()
 			}
 			break
@@ -322,7 +323,7 @@
 	const _handleMouseUp = (event) => {
 		switch (event.target.nodeName) {
 		case 'A':
-			console.log('Mouse up on anchor')
+			console.log('Complete the flip')
 			break
 		case 'DIV':
 			if (!_book.state.isZoomed) {
@@ -366,6 +367,8 @@
 	const _handleWheelEvent = (event) => {
 		_book.direction = (event.deltaY < 0) ? 'backward' : 'forward'
 		_book.state.eventsCache.push([event, _book.direction])
+				console.log(_book.direction)
+
 	}
 
 	const _handleKeyPressEvent = (event) => {
@@ -580,24 +583,20 @@
 	*************************************/
 
 	const _renderOrUpdateBook = () => {
-		console.log(_book.state)
 		if (_book.state.isZoomed) {
+			_removeElementsFromDOM('arrow-controls')
+
 			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2)
 														translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
 														backface-visibility: hidden;
 														transition: all ${_book.settings.duration}ms;
 														will-change: transform;`
-			_removeElementsFromDOM('arrow-controls')
 		} else {
 			_printElementsToDOM('buttons', _book.buttons)
 			_book.node.style = 'transform: scale3d(1, 1, 1) translate3d(0, 0, 0); transition: all 1000ms; will-change: transform;'
 		}
 
 		if (_book.state.isFlipping) {
-			_book.direction = _determineFlippingDirection()
-			console.log(_book.flippablePageIds)
-			console.log(_book.direction)
-		} else {
 
 		}
 	}
