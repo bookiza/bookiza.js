@@ -784,7 +784,7 @@
 		case 'left':
 		  switch (_book.mode) {
 		  case 'portrait':
-		  	_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+		  	_removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 3
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
@@ -806,7 +806,7 @@
 		case 'right':
 			switch (_book.mode) {
 			case 'portrait':
-		  	_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+				_removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
 				d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
 				break
