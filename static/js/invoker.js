@@ -35,9 +35,9 @@ const superbook = Flippy.init(node, settings)
 
 // console.log('Book length:', booklength)
 
-// let currentPage = superbook.flippy('page')
+let currentPage = superbook.flippy('page')
 
-// console.log('Current page:', currentPage)
+console.log('Current page:', currentPage)
 
 // let view = superbook.flippy('view')
 

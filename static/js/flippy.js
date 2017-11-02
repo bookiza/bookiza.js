@@ -120,6 +120,8 @@
 		_book.currentViewIndices = _setViewIndices(_book.currentPage, _book.mode)
 		_book.range = _setRangeIndices(_book.currentPage, _book.mode)
 		_applyEventListenersOnBook(_book.node)
+		console.log(_book.range.rightPageIndices)
+
 	}
 
 	_viewer.onChange('(orientation: landscape)', match => {
@@ -584,7 +586,7 @@
 
 	const _renderOrUpdateBook = () => {
 		if (_book.state.isZoomed) {
-			_removeElementsFromDOM('arrow-controls')
+			_removeElementsFromDOMByClassName('arrow-controls')
 
 			_book.node.style = `transform: scale3d(1.2, 1.2, 1.2)
 														translate3d(${(_book.plotter.currentPointerPosition.x * -1) / 5}px, ${(_book.plotter.currentPointerPosition.y * -1) / 5}px, 0);
@@ -597,7 +599,7 @@
 		}
 
 		if (_book.state.isFlipping) {
-
+			_sampleOnlyDisplayablePages()
 		}
 	}
 
@@ -623,8 +625,16 @@
 
 	const _removeChildren = node => { node.innerHTML = '' }
 
-	const _removeElementsFromDOM = (className) => {
+	const _removeElementsFromDOMByClassName = (className) => {
 		_book.node.getElementsByClassName(className).remove()
+	}
+
+	const _removeElementFromDOMById = (id) => {
+		d.getElementById(id).remove()
+	}
+
+	const _determineFlippingDirection = () => {
+		return (_book.plotter.side === 'right') ? 'forward' : 'backward'
 	}
 
 	const _addPageWrappersAndBaseClasses = (pageObj, currentIndex) => {
@@ -779,9 +789,49 @@
 		}
 	}
 
-	const _determineFlippingDirection = () => {
-		return (_book.plotter.side === 'right') ? 'forward' : 'backward'
+	const _sampleOnlyDisplayablePages = () => {
+		let currentIndex = parseInt(_book.currentPage) - 1
+		switch (_book.plotter.side) {
+		case 'left':
+		  switch (_book.mode) {
+		  case 'portrait':
+		  	console.log(_book.range.leftPageIndices) //
+		    break
+		  case 'landscape':
+				_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
+				d.getElementById(_book.currentViewIndices[1]+1).style.zIndex = 1
+				d.getElementById(_book.range.leftPageIndices[0]+1).style.zIndex = 4
+				d.getElementById(_book.range.leftPageIndices[0]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.leftPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
+				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
+		    break
+		  default:
+		    break
+		  }
+		  break
+		case 'right':
+			switch (_book.mode) {
+			case 'portrait':
+				console.log(_book.range.rightPageIndices) //
+
+				break
+			case 'landscape':
+				_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index+1) })
+				d.getElementById(_book.currentViewIndices[0]+1).style.zIndex = 1
+				d.getElementById(_book.range.rightPageIndices[0]+1).style.zIndex = 4
+				d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
+				d.getElementById(_book.range.rightPageIndices[1]+1).style.visibility = 'visible'
+				d.getElementById(_book.range.rightPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
+
+		    break
+		  }
+		  break
+		}
 	}
+
+
 
 	/********************************/
 	/************ Cone math *********/
@@ -894,151 +944,3 @@
 		}
 	}
 }))(navigator, window, document)
-
-
-
-
-// switch (event.target.nodeName) {
-//   case 'A':
-//     mouseDownOnPageDiv = false
-//     console.log('Execute partial flipping')
-//     break
-//   case 'DIV':
-//     mouseDownOnPageDiv = true
-//     let currentIndex = parseInt(_book.currentPage) - 1
-// let [displayablePageIndices, removablePageIndices] = []
-
-// switch (_book.plotter.side) {
-// case 'left':
-//   switch (_book.mode) {
-//   case 'portrait':
-//     displayablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-//     removablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-//     break
-//   case 'landscape':
-//     _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 4
-//     _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 1
-
-//     displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-//     removablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
-//     break
-//   default:
-//     break
-//   }
-//   break
-// case 'right':
-//   switch (_book.mode) {
-//   case 'portrait':
-//     displayablePageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-//     removablePageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-//     break
-//   case 'landscape':
-//     _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 1
-//     _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 4
-
-//     displayablePageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-//     removablePageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-
-//     break
-//   }
-//   break
-// }
-
-//     displayablePageIndices.forEach(index => {
-//       _book.node.getElementsByClassName(index)[0].style.visibility = 'visible'
-//       _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'visible'
-
-//       let ζ = null
-
-//       switch (memory) {
-//       case 'left':
-//         ζ = isOdd(parseInt(index)) ? 6 : 2
-//         break
-//       case 'right':
-//         ζ = isEven(parseInt(index)) ? 6 : 2
-//         break
-//       default:
-//         break
-//       }
-//       _book.node.getElementsByClassName(index)[0].style.zIndex = ζ
-//     })
-
-//     removablePageIndices.forEach(index => {
-//       _removeElement(index)
-//     })
-//     break
-//   default:
-//     console.log('outside')
-//     break
-//   }
-
-
-// const _attachSidePages = memory => {
-//   let currentIndex = parseInt(_book.currentPage) - 1
-//   let pageIndices = []
-
-//   switch (memory) {
-//   case 'left':
-//     _printElementsToDOM('rightPages', _book.plotter.sidePagesRight)
-
-//     switch (_book.mode) {
-//     case 'portrait':
-//       pageIndices = [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-//       break
-//     case 'landscape':
-//       _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
-//       _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
-
-//       pageIndices = isEven(currentIndex) ? [`${parseInt(_leftCircularIndex(currentIndex, 3)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_leftCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_leftCircularIndex(currentIndex, 1)) + 1}`]
-//       break
-//     default:
-//       break
-//     }
-//     break
-//   case 'right':
-//     _printElementsToDOM('leftPages', _book.plotter.sidePagesLeft)
-//     switch (_book.mode) {
-//     case 'portrait':
-//       pageIndices = [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`]
-
-//       break
-//     case 'landscape':
-//       _book.node.getElementsByClassName(_book.currentViewIndices[1]+1)[0].style.zIndex = 3
-//       _book.node.getElementsByClassName(_book.currentViewIndices[0]+1)[0].style.zIndex = 3
-
-//       pageIndices = isEven(currentIndex) ? [`${parseInt(_rightCircularIndex(currentIndex, 1)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`] : [`${parseInt(_rightCircularIndex(currentIndex, 2)) + 1}`, `${parseInt(_rightCircularIndex(currentIndex, 3)) + 1}`]
-
-//       break
-//     default:
-//       break
-//     }
-//     break
-//   case 'default':
-//     break
-//   }
-
-//   pageIndices.forEach(index => {
-//     _book.node.getElementsByClassName(index)[0].style.visibility = 'hidden'
-//     _book.node.getElementsByClassName(index)[0].childNodes[0].style.visibility = 'hidden'
-
-//     let ζ = null
-
-//     switch (memory) {
-//     case 'left':
-//       ζ = isOdd(parseInt(index)) ? 2 : 1
-//       break
-//     case 'right':
-//       ζ = isEven(parseInt(index)) ? 2 : 1
-//       break
-//     default:
-//       break
-//     }
-
-//     _book.node.getElementsByClassName(index)[0].style.zIndex = ζ
-//   })
-// }
-
-
-
-
