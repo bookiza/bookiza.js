@@ -12,8 +12,9 @@
 
 	class Book {
 		constructor () {
-			this.state = { 'isInitializing': true, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false,  'isPeeled': false }
+			this.state = { 'isInitializing': true, 'isFlipping': false, 'isPeelable': false, 'isZoomed': false,  'isPeeled': false, 'eventsCache': [] }
 			this.mode = _viewer.getMatch('(orientation: landscape)') ? 'landscape' : 'portrait'
+			this.direction = 'forward'
 			this.plotter = {
 				'origin': JSON.parse(`{
 					"x": "${parseInt(d.getElementsByTagName('body')[0].getBoundingClientRect().width) / 2}",
@@ -295,10 +296,13 @@
 
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
-		// if (_book.state.isFlipping && event.target.nodeName !== 'A') {
-		// 	d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-		// 	d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
-		// }
+		if (_book.state.isFlipping && event.target.nodeName !== 'A') {
+		// 	// _book.flippablePageIds.map(each => {
+		// 	// 	d.getElementById(each).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+		// 	// })
+			// d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+			// d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
+		}
 	}
 
 	const _handleMouseClicks = (event) => {
@@ -355,8 +359,13 @@
 	}
 
 	/* Don't worry about events below */
+	var eventsCache = []
 	const _handleWheelEvent = (event) => {
-		// console.log(event)
+		 (event.deltaY < 0) ? console.log('scrolling up') : console.log('scrolling down')
+		 console.log(event)
+	   eventsCache.push(event)
+	   	   console.log(eventsCache.length)
+
 	}
 
 	const _handleKeyPressEvent = (event) => {
@@ -586,7 +595,9 @@
 
 		if (_book.state.isFlipping) {
 			_book.flippablePageIds = _determineFlippablePageIds()
+			_book.direction = _determineFlippingDirection()
 			console.log(_book.flippablePageIds)
+			console.log(_book.direction)
 		} else {
 
 		}
@@ -761,6 +772,9 @@
 		}
 	}
 
+	const _determineFlippingDirection = () => {
+		return (_book.plotter.side === 'right') ? 'forward' : 'backward'
+	}
 
 	/********************************/
 	/************ Cone math *********/
@@ -769,8 +783,6 @@
 	const π = Math.PI
 
 	// Definitions:
-	// const quadrants = ['I', 'II', 'III', 'IV']
-	// const direction = ['forward', 'backward']
 	// μ = Mu = `x-distance` in pixels from origin of the book. (for mousePosition/touchPoint)
 	// ε = Epsilon = `y-distance` in pixels from origin of the book.
 	// let Δ, θ, ω, Ω, α, β, δ = 0
@@ -799,14 +811,6 @@
 	//     if (`${prefix}Transform` in d.body.style) { vendor = `-${prefix.toLowerCase()}-` }
 	//   })
 	//   return vendor
-	// }
-
-	// const _increment = (mode) => {
-	//     return (mode === 'portrait') ? 1 : 2
-	// }
-
-	// const _direction = (mode) => {
-	//    return (mode === 'portrait') ? 'forward' : 'backward'
 	// }
 
 	/**********************************/
