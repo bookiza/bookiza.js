@@ -362,10 +362,8 @@
 	var eventsCache = []
 	const _handleWheelEvent = (event) => {
 		 (event.deltaY < 0) ? console.log('scrolling up') : console.log('scrolling down')
-		 console.log(event)
-	   eventsCache.push(event)
-	   	   console.log(eventsCache.length)
-
+	   _book.state.eventsCache.push(event)
+	   console.log(_book.state.eventsCache)
 	}
 
 	const _handleKeyPressEvent = (event) => {
