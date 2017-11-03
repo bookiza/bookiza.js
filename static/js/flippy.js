@@ -287,14 +287,15 @@
 	const _handleMouseMove = (event) => {
 		_printStateValues(event)
 		_printGeometricalPremise()
-
 		_setUpThePlot(event) // :D
-
-		_book.flippablePageIds = _determineFlippablePageIds()
 
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
-		if (_book.state.isFlipping) _flipAnimation()
+		if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
+
+		console.log(_book.flippablePageIds)
+
+		if (_book.state.isFlipping) _animateFlippablePages() // TODO: Pass animationType here
 
 	}
 
@@ -438,10 +439,11 @@
 	*********** Print2DOM  *************
 	***********************************/
 
+	// One time DOM printing
 	const _printBookToDOM = () => {
 		_removeChildren(_book.node)
 
-		console.log('[ leftPages: ', _book.range.leftPageIndices, ', currView:', _book.currentViewIndices, ', rightPages:', _book.range.rightPageIndices, ' ]')
+		console.log('[ l: ', _book.range.leftPageIndices, ', v:', _book.currentViewIndices, ', r:', _book.range.rightPageIndices, ' ]')
 
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
@@ -556,7 +558,7 @@
 		return pageObj
 	}
 
-	const _flipAnimation = () => {
+	const _animateFlippablePages = () => {
 		switch (_book.mode) {
 		case 'portrait':
 			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
@@ -793,7 +795,7 @@
 		  case 'landscape':
 				_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
 				d.getElementById(_book.currentViewIndices[1]+1).style.zIndex = 1
-				d.getElementById(_book.range.leftPageIndices[0]+1).style.zIndex = 4
+				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 4
 				d.getElementById(_book.range.leftPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
