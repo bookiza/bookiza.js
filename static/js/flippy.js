@@ -561,6 +561,9 @@
 	const _animateFlippablePages = () => {
 		switch (_book.mode) {
 		case 'portrait':
+			_book.direction === 'forward' ?
+			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+			:
 			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
 			break
 		case 'landscape':
