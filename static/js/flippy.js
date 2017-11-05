@@ -293,8 +293,6 @@
 
 		if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
 
-		console.log(_book.flippablePageIds)
-
 		if (_book.state.isFlipping) _animateFlippablePages() // TODO: Pass animationType here
 
 	}
@@ -362,7 +360,7 @@
 	const _handleWheelEvent = (event) => {
 		_book.direction = (event.deltaY < 0) ? 'backward' : 'forward'
 		_book.state.eventsCache.push([event, _book.direction])
-				console.log(_book.direction)
+		console.log(_book.direction)
 
 	}
 
@@ -562,9 +560,9 @@
 		switch (_book.mode) {
 		case 'portrait':
 			_book.direction === 'forward' ?
-			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-			:
-			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
+				d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+				:
+				d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
 			break
 		case 'landscape':
 			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
@@ -572,7 +570,7 @@
 			break
 		}
 	}
-
+  
 	const _printGeometricalPremise = () => {
 		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
 		d.getElementById('pheight').textContent = _book.plotter.bounds.height
@@ -791,7 +789,7 @@
 		  case 'portrait':
 		  	_removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 3
-				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
 
 		    break
@@ -799,9 +797,9 @@
 				_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
 				d.getElementById(_book.currentViewIndices[1]+1).style.zIndex = 1
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 4
-				d.getElementById(_book.range.leftPageIndices[0]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.leftPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
-				d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
 		    break
 		  default:
@@ -812,16 +810,16 @@
 			switch (_book.mode) {
 			case 'portrait':
 				_removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-				d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
 				break
 			case 'landscape':
 				_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index+1) })
 				d.getElementById(_book.currentViewIndices[0]+1).style.zIndex = 1
 				d.getElementById(_book.range.rightPageIndices[0]+1).style.zIndex = 4
-				d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
-				d.getElementById(_book.range.rightPageIndices[1]+1).style.visibility = 'visible'
+				// d.getElementById(_book.range.rightPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
 
 		    break
