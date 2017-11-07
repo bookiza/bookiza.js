@@ -303,11 +303,13 @@
 			console.log('Execute half flip')
 			break
 		case 'DIV':
-			if (!_book.state.isZoomed) {
-				_book.state.isFlipping = !_book.state.isFlipping
-				_book.direction = _determineFlippingDirection()
-				_renderOrUpdateBook()
-			}
+			if (_book.state.isZoomed) return
+			_book.state.isFlipping = !_book.state.isFlipping
+			_book.direction = _determineFlippingDirection()
+			_renderOrUpdateBook()
+
+			_applyTransitionToSpot()
+
 			break
 		default:
 		}
@@ -431,7 +433,6 @@
 								backface-visibility: hidden; -webkit-filter: blur(0);
 								will-change: transform;
 								transition: all 10ms;`
-
 
 	/***********************************
 	*********** Print2DOM  *************
@@ -570,7 +571,27 @@
 			break
 		}
 	}
-  
+
+	const _applyTransitionToSpot = () => {
+		switch (_book.mode) {
+		case 'portrait':
+			_book.direction === 'forward' ?
+				d.getElementById(_book.flippablePageIds[0]).children[0].style = `rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms;`
+				:
+				d.getElementById(_book.flippablePageIds[0]).children[0].style = `rotateY(${90-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms;`
+			break
+		case 'landscape':
+					d.getElementById(_book.flippablePageIds[0]).children[0].animate( { transform: [ 'rotateY(0deg)', 'rotateY(360deg)' ] },
+             { duration: 1000, iterations: Infinity })
+
+			// d.getElementById(_book.flippablePageIds[0]).children[0].style = `pointer-events: none; transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
+			// d.getElementById(_book.flippablePageIds[1]).children[0].style = `pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(${180 - _degrees(_book.plotter.θ)}deg) skewY(0deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
+			break
+		}
+	}
+
+
+
 	const _printGeometricalPremise = () => {
 		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
 		d.getElementById('pheight').textContent = _book.plotter.bounds.height
