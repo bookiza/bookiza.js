@@ -289,6 +289,8 @@
 		_printGeometricalPremise()
 		_setUpThePlot(event) // :D
 
+    console.log(sign(_book.plotter.μ))
+    
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
 		if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
@@ -442,7 +444,7 @@
 	const _printBookToDOM = () => {
 		_removeChildren(_book.node)
 
-		console.log('[ l: ', _book.range.leftPageIndices, ', v:', _book.currentViewIndices, ', r:', _book.range.rightPageIndices, ' ]')
+		// console.log('[ l: ', _book.range.leftPageIndices, ', v:', _book.currentViewIndices, ', r:', _book.range.rightPageIndices, ' ]')
 
 		_printElementsToDOM('buttons', _book.buttons)
 		_printElementsToDOM('view', _book.currentViewIndices.map(index => _book.pages[`${index}`]))
@@ -561,13 +563,13 @@
 		switch (_book.mode) {
 		case 'portrait':
 			_book.direction === 'forward' ?
-				d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
+				d.getElementById(_book.flippablePageIds[0]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;`
 				:
-				d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${90-_degrees(_book.plotter.θ)}deg)`
+				d.getElementById(_book.flippablePageIds[0]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${90-_degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;`
 			break
 		case 'landscape':
-			d.getElementById(_book.flippablePageIds[0]).children[0].style.webkitTransform = `rotateY(${-_degrees(_book.plotter.θ)}deg)`
-			d.getElementById(_book.flippablePageIds[1]).children[0].style.webkitTransform = `rotateY(${180 - _degrees(_book.plotter.θ)}deg)`
+			d.getElementById(_book.flippablePageIds[0]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;`
+			d.getElementById(_book.flippablePageIds[1]).children[0].style = `transform: translate3d(0, 0, 0) rotateY(${180 - _degrees(_book.plotter.θ)}deg); transition-duration: 0; transform-origin: 0px center 0px;`
 			break
 		}
 	}
@@ -581,11 +583,11 @@
 				d.getElementById(_book.flippablePageIds[0]).children[0].style = `rotateY(${90-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms;`
 			break
 		case 'landscape':
-					d.getElementById(_book.flippablePageIds[0]).children[0].animate( { transform: [ 'rotateY(0deg)', 'rotateY(360deg)' ] },
-             { duration: 1000, iterations: Infinity })
+			// d.getElementById(_book.flippablePageIds[0]).children[0].animate( { transform: [ 'rotateY(0deg)', 'rotateY(360deg)' ] },
+			// 	{ duration: 1000, iterations: Infinity })
 
-			// d.getElementById(_book.flippablePageIds[0]).children[0].style = `pointer-events: none; transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
-			// d.getElementById(_book.flippablePageIds[1]).children[0].style = `pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(${180 - _degrees(_book.plotter.θ)}deg) skewY(0deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
+			d.getElementById(_book.flippablePageIds[0]).children[0].style = `pointer-events: none; transform: translate3d(0, 0, 0) rotateY(${-_degrees(_book.plotter.θ)}deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
+			d.getElementById(_book.flippablePageIds[1]).children[0].style = `pointer-events: none; transform: translate3d(0px, 0px, 0px) rotateY(${180 - _degrees(_book.plotter.θ)}deg) skewY(0deg); transition-duration: ${_book.settings.duration}ms; transform-origin: 0px center 0px;`
 			break
 		}
 	}
@@ -810,17 +812,13 @@
 		  case 'portrait':
 		  	_removeElementFromDOMById(_book.range.rightPageIndices[1] + 1) // Right most eliminated, but not next to currrentView.
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 3
-				// d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
-
 		    break
 		  case 'landscape':
 				_book.range.rightPageIndices.map(index => { _removeElementFromDOMById(index + 1) })
 				d.getElementById(_book.currentViewIndices[1]+1).style.zIndex = 1
 				d.getElementById(_book.range.leftPageIndices[1]+1).style.zIndex = 4
-				// d.getElementById(_book.range.leftPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
-				// d.getElementById(_book.range.leftPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.leftPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
 		    break
 		  default:
@@ -831,18 +829,14 @@
 			switch (_book.mode) {
 			case 'portrait':
 				_removeElementFromDOMById(_book.range.leftPageIndices[0] + 1) // Left most eliminated, but not previous to currrentView.
-				// d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
 				break
 			case 'landscape':
 				_book.range.leftPageIndices.map(index => { _removeElementFromDOMById(index+1) })
 				d.getElementById(_book.currentViewIndices[0]+1).style.zIndex = 1
 				d.getElementById(_book.range.rightPageIndices[0]+1).style.zIndex = 4
-				// d.getElementById(_book.range.rightPageIndices[0]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[0]+1).childNodes[0].style.visibility = 'visible'
-				// d.getElementById(_book.range.rightPageIndices[1]+1).style.visibility = 'visible'
 				d.getElementById(_book.range.rightPageIndices[1]+1).childNodes[0].style.visibility = 'visible'
-
 		    break
 		  }
 		  break
@@ -887,6 +881,35 @@
 	//   })
 	//   return vendor
 	// }
+  
+	const _toggleFullScreen = () => {
+		if (document.fullscreenElement || (document.mozFullScreenElement || document.webkitFullscreenElement)) {
+			if (document.cancelFullScreen) {
+				document.cancelFullScreen()
+			} else {
+				if (document.mozCancelFullScreen) {
+					document.mozCancelFullScreen()
+				} else {
+					if (document.webkitCancelFullScreen) {
+						document.webkitCancelFullScreen()
+					}
+				}
+			}
+		} else {
+			const element = document.documentElement
+			if (element.requestFullscreen) {
+				element.requestFullscreen()
+			} else {
+				if (element.mozRequestFullScreen) {
+					element.mozRequestFullScreen()
+				} else {
+					if (element.webkitRequestFullscreen) {
+						element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT)
+					}
+				}
+			}
+		}
+	}
 
 	/**********************************/
 	/************* Polyfills **********/
