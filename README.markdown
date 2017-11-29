@@ -10,23 +10,22 @@ A leafy responsive alternative to Turnjs. No jQuery dependency along with a no j
 
 In your HTML:
 
+```html
+<div id = "book">
+    <div class = "page"> Page-1 HTML </div>
+    <div class = "page"> Page-2 HTML </div>
+    <div class = "page"> Page-3 HTML </div>
+    …
+    …
+    <div class = "page"> Page-2N content here…</div>
+</div>
 ```
-  <div id = "book">
-      <div class = "page"> Page-1 HTML </div>
-      <div class = "page"> Page-2 HTML </div>
-      <div class = "page"> Page-3 HTML </div>
-      …
-      …
-      <div class = "page"> Page-2N content here…</div>
-  </div>
 
-```
 Note the `2N` number of `pages` in the book because a `leaf` has two sides to it.
 
 Invocation with `script.js`:
 
-```
-
+```javascript
 // document.addEventListener('DOMContentLoaded', function(event) {
 /**********************************/
 /** **** Initialize Flippy ********/
@@ -105,7 +104,4 @@ superbook.flippy('addPage', pageObj, 3)
 // }, true)
 
 /************ Z' END **************/
-
-
-
 ```
