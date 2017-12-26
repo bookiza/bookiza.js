@@ -290,7 +290,7 @@
 		_setUpThePlot(event) // :D
 
     console.log(sign(_book.plotter.μ))
-    
+
 		if (_book.state.isZoomed) _book.node.style = _panAround()
 
 		if (!_book.state.isFlipping) _book.flippablePageIds = _determineFlippablePageIds()
@@ -593,7 +593,6 @@
 	}
 
 
-
 	const _printGeometricalPremise = () => {
 		d.getElementById('pwidth').textContent = _book.plotter.bounds.width
 		d.getElementById('pheight').textContent = _book.plotter.bounds.height
@@ -881,7 +880,7 @@
 	//   })
 	//   return vendor
 	// }
-  
+
 	const _toggleFullScreen = () => {
 		if (document.fullscreenElement || (document.mozFullScreenElement || document.webkitFullscreenElement)) {
 			if (document.cancelFullScreen) {
