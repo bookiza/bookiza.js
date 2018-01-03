@@ -24,11 +24,11 @@
 		}
 		// PROPERTIES
 		dimensions () {
-			return { "width" : `${_book.plotter.bounds.width}`, "height" : `${_book.plotter.bounds.height}` }
+			return { 'width' : `${_book.plotter.bounds.width}`, 'height' : `${_book.plotter.bounds.height}` }
 		}
 
 		view () {
-			return _book.currentViewIndices.map(i => i + 1) // Array of page numbers in View.
+			return _book.currentViewIndices.map(i => i + 1) // Array of page numbers in the [View].
 		}
 
 		page () {
