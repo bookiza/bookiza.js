@@ -12,7 +12,7 @@
 // https://on.cypress.io/introduction-to-cypress
 
 describe('Kitchen Sink', function(){
-  it('.should() - assert that <title> is correct', function(){
+  it('.should() - assert that <title> is correct', () => {
     // https://on.cypress.io/visit
     cy.visit('https://example.cypress.io')
 
@@ -28,8 +28,8 @@ describe('Kitchen Sink', function(){
     // subject        chainer      value
   })
 
-  context('Querying', function(){
-    beforeEach(function(){
+  context('Querying', () => {
+    beforeEach(() =>{
       // Visiting our app before each test removes any state build up from
       // previous tests. Visiting acts as if we closed a tab and opened a fresh one
       cy.visit('https://example.cypress.io/commands/querying')
