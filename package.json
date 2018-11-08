@@ -52,7 +52,7 @@
       "path": "cz-conventional-changelog"
     },
     "ghooks": {
-      "pre-commit": "npm run cypress:open"
+      "pre-commit": ""
     }
   }
 }
