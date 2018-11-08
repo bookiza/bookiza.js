@@ -32,9 +32,6 @@ module.exports = {
         }),
         new hwp({
             template: `${__dirname}/html/index.html`
-        }),
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false })
+        })
     ]
 }
