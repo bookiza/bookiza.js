@@ -1,8 +1,8 @@
-[![Build Status](https://travis-ci.org/marvindanig/flippy.JS.svg?branch=master)](https://travis-ci.org/marvindanig/flippy.JS)
+[![Build Status](https://travis-ci.org/marvindanig/Bookiza.JS.svg?branch=master)](https://travis-ci.org/marvindanig/Bookiza.JS)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
-[![npm](https://img.shields.io/npm/dt/flippy.JS.svg?maxAge=2592000)](https://www.npmjs.com/package/flippy)
+[![npm](https://img.shields.io/npm/dt/Bookiza.JS.svg?maxAge=2592000)](https://www.npmjs.com/package/Bookiza)
 
-# flippy.JS
+# Bookiza.JS
 
 A leafy responsive alternative to Turnjs. No jQuery dependency along with a no javascript fallback.
 
@@ -28,13 +28,13 @@ Invocation with `script.js`:
 ```javascript
 // document.addEventListener('DOMContentLoaded', function(event) {
 /**********************************/
-/** **** Initialize Flippy ********/
+/** **** Initialize Bookiza ********/
 /**********************************/
 let settings = { duration: 100, animation: true, curl: true, peel: true, zoom: false, start_page: 16 }
 
 let node = document.getElementById('book')
 
-const superbook = Flippy.init(node, settings)
+const superbook = Bookiza.init(node, settings)
 
 /**********************************/
 /** ****** Work in progress ********/
@@ -48,9 +48,9 @@ const superbook = Flippy.init(node, settings)
 
 // superbook.zoomed = true // boolean state
 
-// superbook.flippy('next')
+// superbook.Bookiza('next')
 
-// superbook.flippy('previous')
+// superbook.Bookiza('previous')
 
 /**********************************/
 /******** Implemented  API ********/
@@ -58,44 +58,44 @@ const superbook = Flippy.init(node, settings)
 
 // // PROPERTIES:
 
-let booklength = superbook.flippy('length')
+let booklength = superbook.Bookiza('length')
 
 console.log('Book length:', booklength)
 
-let currentPage = superbook.flippy('page')
+let currentPage = superbook.Bookiza('page')
 
 console.log('Current page:', currentPage)
 
-let view = superbook.flippy('view')
+let view = superbook.Bookiza('view')
 
 console.log('Current view:', view)
 
-let mode = superbook.flippy('mode')
+let mode = superbook.Bookiza('mode')
 
 console.log('Mode:', mode)
 
-let dimensions = superbook.flippy('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
+let dimensions = superbook.Bookiza('dimensions') // Returns object: { width: bookWidthInPixels, height: bookHeightInPixels }
 
 console.log('Dimensions:', dimensions)
 
 
 // // METHODS:
 
-superbook.flippy('page', 5)
+superbook.Bookiza('page', 5)
 
-console.log(superbook.flippy('page')) // Logs the current page of the book
+console.log(superbook.Bookiza('page')) // Logs the current page of the book
 
-console.log(superbook.flippy('view')) // Logs the current view of the book
+console.log(superbook.Bookiza('view')) // Logs the current view of the book
 
-console.log(superbook.flippy('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
+console.log(superbook.Bookiza('hasPage', 18)) // Logs true / false if the book has a page at pageNo.
 
-superbook.flippy('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
+superbook.Bookiza('removePage', 3) // Removes the page number 3 from the stack. Lowers the length of the book by 1.
 
 let pageObj = document.createElement('div')
 
 pageObj.innerHTML = 'something something'
 
-superbook.flippy('addPage', pageObj, 3)
+superbook.Bookiza('addPage', pageObj, 3)
 
 // // THE BOOK
 // console.log(superbook)
