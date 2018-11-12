@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/marvindanig/Bookiza.JS.svg?branch=master)](https://travis-ci.org/marvindanig/Bookiza.JS)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 [![npm](https://img.shields.io/npm/dt/Bookiza.JS.svg?maxAge=2592000)](https://www.npmjs.com/package/Bookiza)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-green.svg)](https://github.com/bookiza/bookiza.js/pulls)
 
 # Bookiza.JS
 
